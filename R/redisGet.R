@@ -7,14 +7,15 @@ function(key)
   cat(msg, file=con)
   socketSelect(list(con))
   l <- readLines(con,n=1)
+  if(substr(l,1,1)=='-') stop(l)
   if(substr(l,1,1)!='$') {
-# XXX ping/pong here to stabilize the connection
+# Unexpected, reset connection? XXX
     return(NULL)
   }
   substr(l,1,1) <- ' '
   l <- as.numeric(l)
   if(l<0) {
-# XXX ping/pong here to stabilize the connection
+# Unexpected, reset connection? XXX
     return(NULL)
   }
   socketSelect(list(con))

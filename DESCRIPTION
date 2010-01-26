@@ -1,4 +1,4 @@
-Package: redis
+Package: rredis
 Type: Package
 Title: Redis client for R
 Version: 0.01
