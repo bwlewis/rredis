@@ -5,17 +5,10 @@ function(key)
   con <- .redis()
   socketSelect(list(con),write=TRUE)
   cat(msg, file=con)
-  socketSelect(list(con))
-  l <- readLines(con,n=1)
-  if(substr(l,1,1)=='-') stop(l)
-  if(substr(l,1,1)!='$') {
-# Unexpected, reset connection? XXX
-    return(NULL)
-  }
-  substr(l,1,1) <- ' '
+  l <- .inlineRecv()
   l <- as.numeric(l)
   if(l<0) {
-# Unexpected, reset connection? XXX
+# Unexpected result, reset connection? XXX
     return(NULL)
   }
   socketSelect(list(con))

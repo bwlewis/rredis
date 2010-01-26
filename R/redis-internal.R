@@ -18,6 +18,21 @@ function()
   if(substr(l,1,5)!='+PONG') stop ('Ping/pong error')
 }
 
+.inlineRecv <-
+function()
+{
+  con <- .redis()
+  socketSelect(list(con))
+  l <- readLines(con=con,n=1)
+  if(nchar(l)<2) stop ("Truncated message")
+  switch(substr(l,1,1),
+    '-' = stop(l),
+    '+' = substr(l,2,nchar(l)),
+    ':' = substr(l,2,nchar(l)),
+    '$' = substr(l,2,nchar(l)),
+    '*' = substr(l,2,nchar(l)))
+}
+
 `.onLoad` <-
 function(libname,pkgname)
 {
