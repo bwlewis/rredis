@@ -10,3 +10,7 @@ redisDelete <- function(key) {
   ans==0
 }
 
+redisType <- function(key) {
+  msg <- paste('TYPE ',key,'\r\n',sep='')
+  sendCmd(msg)
+}
