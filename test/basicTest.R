@@ -18,15 +18,15 @@ test05 <- function() {
   checkEquals('OK', redisSet('foo', 'bar'))
 }
 
-test05 <- function() {
+test06 <- function() {
   checkEquals('bar', redisGetSet('foo', 'zip'))
 }
 
-test06 <- function() {
+test07 <- function() {
   checkEquals('zip', redisGet('foo'))
 }
 
-test07 <- function() {
+test08 <- function() {
   foo <- runif(10)
   redisSet('foo', foo)
   checkEqualsNumeric(foo, redisGet('foo'))
