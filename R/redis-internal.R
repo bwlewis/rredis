@@ -18,20 +18,28 @@ getResponse <- function() {
          '-' = stop(substr(l,2,nchar(l))),
          '+' = substr(l,2,nchar(l)),
          ':' = as.numeric(substr(l,2,nchar(l))),
-         "$" = {
-           dat <- as.numeric(substr(l,2,nchar(l)))
-           if (dat < 0) {
-             return(NULL)
-           }
-           else {
+         '$' = {
+             dat <- as.numeric(substr(l,2,nchar(l)))
+             if (dat < 0) {
+               return(NULL)
+             }
              socketSelect(list(con))
              dat <- readBin(con, 'raw', n=dat)
              l <- readLines(con,n=1)
              # Try retrieving an R object, otherwise default to character:
              tryCatch(unserialize(dat),
                       error=function(e) rawToChar(dat))
+           },
+         '*' = {
+           numVars <- as.numeric(substr(l,2,nchar(l)))
+           vals <- list()
+           for (i in 1:numVars) {
+             resp <- getResponse()
+             vals <- c(vals, list(resp))
            }
-         }, stop('Unknown message type'))
+           vals
+         },
+         stop('Unknown message type'))
 }
 
 sendCmd <- function(cmd, bin=NULL) {
