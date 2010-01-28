@@ -3,11 +3,11 @@ test01 <- function() {
 }
 
 test02 <- function() {
-  checkEquals(0, redisExists('foo'))
+  checkEquals(FALSE, redisExists('foo'))
 }
 
 test03 <- function() {
-  checkEquals(0, redisDelete('foo'))
+  checkEquals(FALSE, redisDelete('foo'))
 }
 
 test04 <- function() {
