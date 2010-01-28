@@ -10,12 +10,7 @@ function()
 function()
 {
 # Ping-pong
-  con <- .redis()
-  socketSelect(list(con),write=TRUE)
-  cat('PING\r\n',file=con)
-  socketSelect(list(con))
-  l <- readLines(con=con)
-  if(substr(l,1,5)!='+PONG') stop ('Ping/pong error')
+  sendCmd('PING\r\n')
 }
 
 .inlineRecv <-
@@ -39,3 +34,24 @@ function(libname,pkgname)
 }
 
 # XXX add .onUnload cleanup
+getResponse <- function() {
+  con <- .redis()
+  l <- readLines(con=con)
+  c <- substr(l, 1, 1)
+  if (c == '+') {
+    return(substr(l,2,nchar(l)))
+  }
+  if (c == ':') {
+    return(as.numeric(substr(l,2,nchar(l))))
+  }
+  else {
+    cat('This is too complicated\n')
+  }
+}
+
+sendCmd <- function(cmd) {
+  con <- .redis()
+  socketSelect(list(con), write=TRUE)
+  cat(cmd, file=con)
+  getResponse()
+}

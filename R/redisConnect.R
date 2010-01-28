@@ -8,6 +8,7 @@ function(host='localhost', port=6379, returnRef=FALSE)
   assign('port',port,envir=.redisEnv)
   tryCatch(.redisPP(), 
     error=function(e) {
+      cat(paste('Error: ',e,'\n'))
             close(con);
             rm(list='con',envir=.redisEnv)
           })
