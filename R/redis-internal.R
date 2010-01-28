@@ -36,7 +36,7 @@ function(libname,pkgname)
 # XXX add .onUnload cleanup
 getResponse <- function() {
   con <- .redis()
-  l <- readLines(con=con)
+  l <- readLines(con=con, n=1)
   c <- substr(l, 1, 1)
   if (c == '+') {
     return(substr(l,2,nchar(l)))
