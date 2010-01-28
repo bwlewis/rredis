@@ -1,1 +1,11 @@
 rredis: An easy to use R client package for Redis
+
+example:
+> library(rredis)
+> redisConnect()         
+> redisSet('foo', runif(10))
+> bar <- redisGet('foo') 
+> bar
+ [1] 0.93499818 0.47159536 0.30597259 0.58325228 0.41589498 0.63914212
+ [7] 0.34658694 0.08633471 0.18111369 0.15763507
+> redisClose()
