@@ -32,6 +32,17 @@ test08 <- function() {
   checkEqualsNumeric(foo, redisGet('foo'))
 }
 
+test09 <- function() {
+  checkEquals('string', redisType('foo'))
+}
+
+test10 <- function() {
+  redisSet('foo', 'bar')
+  redisSet('bar', 'foo')
+  checkEquals(list('bar', 'foo'), redisMGet(c('foo', 'bar')))
+}
+
+
 test99 <- function() {
   redisClose()
 }
