@@ -72,4 +72,5 @@ redisFlushDB <- function() {
 
 redisFlushAll <- function() {
   msg <- 'FLUSHALL\r\n'
+  sendCmd(msg)
 }
