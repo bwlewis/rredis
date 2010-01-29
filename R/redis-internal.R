@@ -13,6 +13,7 @@ getResponse <- function() {
   con <- .redis()
   socketSelect(list(con))
   l <- readLines(con=con, n=1)
+  if (nchar(l) < 2) stop('Message garbled')
   c <- substr(l, 1, 1)
   switch(c,
          '-' = stop(substr(l,2,nchar(l))),
@@ -42,7 +43,7 @@ getResponse <- function() {
          stop('Unknown message type'))
 }
 
-sendCmd <- function(cmd, bin=NULL) {
+sendCmd <- function(cmd, bin=NULL, checkResponse=TRUE) {
   con <- .redis()
   socketSelect(list(con), write=TRUE)
   cat(cmd, file=con)
@@ -51,6 +52,23 @@ sendCmd <- function(cmd, bin=NULL) {
     writeBin(bin, con)
     socketSelect(list(con), write=TRUE)
     cat('\r\n', file=con)
+  }
+  if (checkResponse) getResponse()
+}
+
+sendCmdMulti <- function(cmd, keys, values) {
+  numItems <- length(keys)
+  foo <- paste('*', as.character((2* numItems) + 1), '\r\n',
+                '$', as.character(nchar(cmd)), '\r\n',
+                cmd, '\r\n', sep='')
+  sendCmd(foo,checkResponse=FALSE)
+  for (i in 1:numItems) {
+    foo <- paste('$', as.character(nchar(keys[[i]])), '\r\n',
+                  keys[[i]], '\r\n', sep='')
+    bar <- paste('$', as.character(nchar(values[[i]])), '\r\n',
+                  paste(values[[i]], collapse=''), '\r\n', sep='')
+    sendCmd(foo, checkResponse=FALSE)
+    sendCmd(bar, checkResponse=FALSE)
   }
   getResponse()
 }
