@@ -13,6 +13,11 @@ cerealize <- function(value) {
   if(!is.raw(value)) serialize(value,ascii=FALSE,connection=NULL)
 }
 
+msg <- function(...) {
+  dat <- list(...)
+  paste(paste(dat,collapse=' '), '\r\n', sep='')
+}
+
 getResponse <- function() {
   con <- .redis()
   socketSelect(list(con))

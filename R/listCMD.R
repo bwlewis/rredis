@@ -1,46 +1,41 @@
 redisRPush <- function(key, value) {
   value <- cerealize(value)
-  msg <- paste('RPUSH ',key,' ',length(value),'\r\n',sep='')
-  sendCmd(msg, value)
+  sendCmd(msg('RPUSH',key,length(value)), value)
 }
 
 redisLPush <- function(key, value) {
   value <- cerealize(value)
-  msg <- paste('LPUSH ',key,' ',length(value),'\r\n',sep='')
-  sendCmd(msg, value)
+  sendCmd(msg('LPUSH',key,length(value)), value)
 }
 
 redisLLen <- function(key) {
-  msg <- paste('LLEN ',key,'\r\n',sep='')
-  sendCmd(msg)
+  sendCmd(msg('LLEN',key))
 }
 
 redisLRange <- function(key, start, end) {
-  msg <- paste('LRANGE ',key,' ',start,' ',end,'\r\n',sep='')
-  sendCmd(msg)
+  sendCmd(msg('LRANGE', key, start, end))
 }
 
 redisLTrim <- function(key,start,end) {
-  msg <- paste('LTRIM ',key,' ',start,' ',end,'\r\n',sep='')
-  sendCmd(msg)
+  sendCmd(msg('LTRIM', key, start, end))
 }
 
 redisLIndex <- function(key, index) {
-  msg <- paste('LINDEX ',key,' ',start,'\r\n',sep='')
-  sendCmd(msg)
+  sendCmd(msg('LINDEX', key, start))
 }
 
 redisLSet <- function(key, index, value) {
-  msg <- paste('LSET ',key,' ',index,' ',value,'\r\n',sep='')
-  sendCmd(msg)
+  sendCmd(msg('LSET', key, index, value))
 }
 
 redisLRem <- function(key, count, value) {
-  msg <- paste('LREM ',key,' ',count,' ',value,'\r\n',sep='')
-  sendCmd(msg)
+  sendCmd(msg('LREM', key, count, value))
 }
 
 redisRPop <- function(key) {
-  msg <- paste('RPOP ',key,'\r\n',sep='')
-  sendCmd(msg)
+  sendCmd(msg('RPOP', key))
+}
+
+redisRPopLPush <- function(src, dest) {
+  sendCmd(msg('RPOPLPUSH',src,dest))
 }
