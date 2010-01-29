@@ -32,14 +32,11 @@ redisRandomKey <- function() {
   sendCmd(msg)
 }
 
-redisRename <- function(old, new) {
-  msg <- paste('RENAME ', old, ' ', new, '\r\n', sep='')
-  sendCmd(msg)
-}
-
-redisRenameNX <- function(old, new) {
-  msg <- paste('RENAMENX ', old, ' ', new, '\r\n', sep='')
-  1==sendCmd(msg)
+redisRename <- function(old, new, NX=FALSE) {
+  if (NX) cmd <- 'RENAMENX ' else cmd <- 'RENAME '
+  msg <- paste(cmd, old, ' ', new, '\r\n', sep='')
+  ret <- sendCmd(msg)
+  if (NX) 1==ret else ret
 }
 
 redisDBSize <- function() {

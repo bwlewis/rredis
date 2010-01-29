@@ -110,9 +110,9 @@ test18 <- function() {
   redisRename('foo', 'bar')
   checkEquals(1, redisGet('bar'))
   redisSet('foo', 2)
-  checkEquals(FALSE, redisRenameNX('foo', 'bar'))
+  checkEquals(FALSE, redisRename('foo', 'bar', NX=TRUE))
   redisDelete('bar')
-  redisRenameNX('foo', 'bar')
+  redisRename('foo', 'bar', NX=TRUE)
   checkEquals(2, redisGet('bar'))
 }
 
