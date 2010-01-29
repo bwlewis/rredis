@@ -39,3 +39,11 @@ redisRPop <- function(key) {
 redisRPopLPush <- function(src, dest) {
   sendCmd(msg('RPOPLPUSH',src,dest))
 }
+
+redisBRPop <- function(keys, timeout=0) {
+  sendCmd(msg('BRPOP', paste(keys, collapse=' '), timeout))
+}
+
+redisBLPop <- function(keys, timeout=0) {
+  sendCmd(msg('BLPOP', paste(keys, collapse=' '), timeout))
+}
