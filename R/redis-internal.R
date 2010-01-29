@@ -56,6 +56,9 @@ sendCmd <- function(cmd, bin=NULL, checkResponse=TRUE) {
   if (checkResponse) getResponse()
 }
 
+# The multi bulk command protocol.  I set this up to work with MSET.
+# I expect it will need a refactor (soon) to clean up and a
+# rework (eventually) to make it more general. -PS
 sendCmdMulti <- function(cmd, keys, values) {
   numItems <- length(keys)
   foo <- paste('*', as.character((2* numItems) + 1), '\r\n',
@@ -65,10 +68,10 @@ sendCmdMulti <- function(cmd, keys, values) {
   for (i in 1:numItems) {
     foo <- paste('$', as.character(nchar(keys[[i]])), '\r\n',
                   keys[[i]], '\r\n', sep='')
-    bar <- paste('$', as.character(nchar(values[[i]])), '\r\n',
-                  paste(values[[i]], collapse=''), '\r\n', sep='')
+    bar <- paste('$', as.character(length(values[[i]])), '\r\n', sep='')
     sendCmd(foo, checkResponse=FALSE)
-    sendCmd(bar, checkResponse=FALSE)
+    sendCmd(bar, bin = values[[i]], checkResponse=FALSE)
+    sendCmd('\r\n', checkResponse=FALSE)
   }
   getResponse()
 }

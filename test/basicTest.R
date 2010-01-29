@@ -42,22 +42,23 @@ test10 <- function() {
   checkEquals(list('bar', 'foo'), redisMGet(c('foo', 'bar')))
 }
 
-#test11 <- function() {
-#  redisMSet(c('foo', 'bar'), c('foo','bar'))
-#  checkEquals(list('foo', 'bar'), redisMGet(c('foo', 'bar')))
-#}
-
 test11 <- function() {
-  checkEquals('OK', redisMSet(list('foo'), list('bar')))
+  checkEquals('OK', redisMSet(c('foo'), c('foo')))
 }
 
 test12 <- function() {
-  print(redisGet('foo'))
-  checkEquals('bar', redisGet('foo'))
+  checkEquals('foo', redisGet('foo'))
+}
+
+test13 <- function() {
+  redisDelete('foo')
+  redisDelete('bar')
+  redisMSet(c('foo', 'bar'), c('foo','bar'))
+  checkEquals(list('foo', 'bar'), redisMGet(c('foo', 'bar')))
 }
 
 test98 <- function() {
-  #redisDelete('foo')
+  redisDelete('foo')
   redisDelete('bar')
 }
 

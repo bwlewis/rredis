@@ -20,13 +20,12 @@ redisMGet <- function(keys) {
   sendCmd(msg)
 }
 
-# Is this the right API for this? Maybe list with key=value?
+# Is this the right API for this? Maybe list with key=value? -PS
+# Also, lapply "optimization" might be a red herring here.  This
+# might need to be changed to a for loop. -PS
 redisMSet <- function(keys, values) {
   cereal <- function(value) {
-    if(!is.raw(value)) value <- serialize(value,ascii=TRUE,connection=NULL)
-    value <- paste(value, collapse='')
-    #cat(paste('value', value, 'length', nchar(value), sep='\n'))
-    value
+    if(!is.raw(value)) serialize(value,ascii=FALSE,connection=NULL)
   }
   values <- lapply(values, cereal)
   sendCmdMulti('MSET', keys, values)
