@@ -116,6 +116,16 @@ test18 <- function() {
   checkEquals(2, redisGet('bar'))
 }
 
+test19 <- function() {
+  # set/mset nx mode test
+  checkTrue(redisSet('foo', 1, NX=TRUE))
+  checkEquals(FALSE, redisSet('foo', 1, NX=TRUE))
+  checkEquals(FALSE, redisMSet('foo', 1, NX=TRUE))
+  redisDelete(c('foo','bar'))
+  checkTrue(redisMSet(c('foo','bar'), c(1,2), NX=TRUE))
+  redisDelete(c('foo','bar'))
+}  
+
 test98 <- function() {
   suppressWarnings(redisDelete(c('foo','bar')))
 }
