@@ -63,12 +63,10 @@ test12 <- function() {
 
 test13 <- function() {
   # real mset test
-  redisDelete('foo')
-  redisDelete('bar')
+  redisDelete(c('foo', 'bar'))
   redisMSet(c('foo', 'bar'), c('foo','bar'))
   checkEquals(list('foo', 'bar'), redisMGet(c('foo', 'bar')))
-  redisDelete('foo')
-  redisDelete('bar')
+  redisDelete(c('foo', 'bar'))
 }
 
 test14 <- function() {
@@ -119,8 +117,7 @@ test18 <- function() {
 }
 
 test98 <- function() {
-  suppressWarnings(redisDelete('foo'))
-  suppressWarnings(redisDelete('bar'))
+  suppressWarnings(redisDelete(c('foo','bar')))
 }
 
 test99 <- function() {

@@ -4,6 +4,9 @@ redisExists <- function(key) {
 }
 
 redisDelete <- function(key) {
+  if (length(key) > 1) {
+    key <- paste(key, collapse=' ')
+  }
   msg <- paste('DEL ',key,'\r\n',sep='')
   ans <- sendCmd(msg)
   if (ans == 0) warning(paste('The key',key,'was not found.'))
