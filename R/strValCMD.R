@@ -4,7 +4,7 @@ redisGet <- function(key) {
 }
 
 redisSet <- function(key, value, NX=FALSE) {
-  if (!is.raw(value)) value <- serialize(value,ascii=FALSE,connection=NULL)
+  value <- cerealize(value)
   if (NX) cmd <- 'SETNX ' else cmd <- 'SET '
   msg <- paste(cmd,key,' ',length(value),'\r\n',sep='')
   ret <- sendCmd(msg,value)
@@ -12,7 +12,7 @@ redisSet <- function(key, value, NX=FALSE) {
 }
 
 redisGetSet <- function(key, value) {
-  if(!is.raw(value)) value <- serialize(value,ascii=FALSE,connection=NULL)
+  value <- cerealize(value)
   msg <- paste('GETSET ',key,' ',length(value),'\r\n',sep='')
   sendCmd(msg,value)
 }
@@ -27,10 +27,7 @@ redisMGet <- function(keys) {
 # might need to be changed to a for loop. -PS
 redisMSet <- function(keys, values, NX=FALSE) {
   if (NX) cmd <- 'MSETNX' else cmd <- 'MSET'
-  cereal <- function(value) {
-    if(!is.raw(value)) serialize(value,ascii=FALSE,connection=NULL)
-  }
-  values <- lapply(values, cereal)
+  values <- lapply(values, cerealize)
   ret <- sendCmdMulti(cmd, keys, values)
   if (NX) 1==ret else ret
 }

@@ -9,6 +9,10 @@
   sendCmd('PING\r\n')
 }
 
+cerealize <- function(value) {
+  if(!is.raw(value)) serialize(value,ascii=FALSE,connection=NULL)
+}
+
 getResponse <- function() {
   con <- .redis()
   socketSelect(list(con))
