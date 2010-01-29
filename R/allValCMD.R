@@ -4,13 +4,17 @@ redisExists <- function(key) {
 }
 
 redisDelete <- function(key) {
-  if (length(key) > 1) {
+  nkeys <- length(key)
+  if (nkeys > 1) {
     key <- paste(key, collapse=' ')
   }
   msg <- paste('DEL ',key,'\r\n',sep='')
   ans <- sendCmd(msg)
-  if (ans == 0) warning(paste('The key',key,'was not found.'))
-  ans>0
+  if (ans == 0) warning(paste('No keys were deleted!'))
+  else if(nkeys != ans)
+    warning(paste(as.character(ans), ' keys were deleted, but ',
+                  as.character(nkeys - ans), ' were not!', sep=''))
+  ans==nkeys
 }
 
 redisType <- function(key) {
