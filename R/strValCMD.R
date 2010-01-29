@@ -3,6 +3,9 @@ redisGet <- function(key) {
   sendCmd(msg)
 }
 
+# This is only useful right now because it is faster than mset.
+# We could probably roll them together, but I'm not sure if that
+# will be a pain later. -PS
 redisSet <- function(key, value, NX=FALSE) {
   value <- cerealize(value)
   if (NX) cmd <- 'SETNX ' else cmd <- 'SET '
