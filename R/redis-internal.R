@@ -13,8 +13,14 @@ getResponse <- function() {
   con <- .redis()
   socketSelect(list(con))
   l <- readLines(con=con, n=1)
-  if (nchar(l) < 2) stop('Message garbled')
   c <- substr(l, 1, 1)
+  if (nchar(l) < 2) {
+    if(c == '+') {
+      # '+' is a valid retrun message on at least one cmd (RANDOMKEY)
+      return('')
+    }
+    stop('Message garbled')
+  }
   switch(c,
          '-' = stop(substr(l,2,nchar(l))),
          '+' = substr(l,2,nchar(l)),
