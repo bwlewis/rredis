@@ -1,3 +1,5 @@
+# This file contains functions that operate on all kinds of Redis values.
+
 redisExists <- function(key) {
   msg <- paste('EXISTS ',key,'\r\n',sep='')
   .sendCmd(msg)==1

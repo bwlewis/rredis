@@ -1,3 +1,5 @@
+# This file contains functions that operate on Redis 'string' values.
+
 redisGet <- function(key) {
   msg <- paste('GET ',key,'\r\n',sep='')
   .sendCmd(msg)
@@ -25,12 +27,34 @@ redisMGet <- function(keys) {
   .sendCmd(msg)
 }
 
-# Is this the right API for this? Maybe list with key=value? -PS
-# Also, lapply "optimization" might be a red herring here.  This
-# might need to be changed to a for loop. -PS
-redisMSet <- function(keys, values, NX=FALSE) {
+redisMSet <- function(keyvalues, NX=FALSE) {
   if (NX) cmd <- 'MSETNX' else cmd <- 'MSET'
-  values <- lapply(values, .cerealize)
-  ret <- .sendCmdMulti(cmd, keys, values)
+  ret <- .sendCmdMulti(cmd, keyvalues)
   if (NX) 1==ret else ret
+}
+
+redisIncr <- function(key)
+{
+  msg <- paste('INCR ',key,'\r\n',sep='')
+  .sendCmd(msg)
+}
+
+redisIncrBy <- function(key, value)
+{
+# XXX Add check for integer value
+  msg <- paste('INCRBY ',key,' ',value,'\r\n',sep='')
+  .sendCmd(msg)
+}
+
+redisDecrBy <- function(key, value)
+{
+# XXX Add check for integer value
+  msg <- paste('DECRBY ',key,' ',value,'\r\n',sep='')
+  .sendCmd(msg)
+}
+
+redisDecr <- function(key)
+{
+  msg <- paste('DECR ',key,'\r\n',sep='')
+  .sendCmd(msg)
 }

@@ -1,3 +1,5 @@
+# This file contains functions that operate on Redis lists.
+
 redisRPush <- function(key, value) {
   value <- .cerealize(value)
   .sendCmd(.redismsg('RPUSH',key,length(value)), value)
@@ -34,6 +36,10 @@ redisLRem <- function(key, count, value) {
 
 redisRPop <- function(key) {
   .sendCmd(.redismsg('RPOP', key))
+}
+
+redisLPop <- function(key) {
+  .sendCmd(.redismsg('LPOP', key))
 }
 
 redisRPopLPush <- function(src, dest) {

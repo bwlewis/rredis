@@ -14,6 +14,7 @@
 
 .cerealize <- function(value) {
   if(!is.raw(value)) serialize(value,ascii=FALSE,connection=NULL)
+  else value
 }
 
 .redismsg <- function(...) {
@@ -74,22 +75,27 @@
   if (checkResponse) .getResponse()
 }
 
-# The multi bulk command protocol.  I set this up to work with MSET.
-# I expect it will need a refactor (soon) to clean up and a
-# rework (eventually) to make it more general. -PS
-.sendCmdMulti <- function(cmd, keys, values) {
-  numItems <- length(keys)
+# Requires a list of key1=value1, key2=value2, ...
+# It's OK to have a NULL value in which case only the key will be transmitted.
+.sendCmdMulti <- function(cmd, keyvalues) {
+  numItems <- length(keyvalues)
+  keys <- names(keyvalues)
+  if(any(nchar(keys)==0)) stop("Invalid key name")
   foo <- paste('*', as.character((2* numItems) + 1), '\r\n',
                 '$', as.character(nchar(cmd)), '\r\n',
                 cmd, '\r\n', sep='')
   .sendCmd(foo,checkResponse=FALSE)
   for (i in 1:numItems) {
+    keyvalues[[i]] <- .cerealize(keyvalues[[i]])
+    l <- length(keyvalues[[i]])
     foo <- paste('$', as.character(nchar(keys[[i]])), '\r\n',
-                  keys[[i]], '\r\n', sep='')
-    bar <- paste('$', as.character(length(values[[i]])), '\r\n', sep='')
+                keys[[i]], '\r\n', sep='')
     .sendCmd(foo, checkResponse=FALSE)
-    .sendCmd(bar, bin = values[[i]], checkResponse=FALSE)
-    .sendCmd('\r\n', checkResponse=FALSE)
+    if(l>0) {
+      bar <- paste('$', as.character(l), '\r\n', sep='')
+      .sendCmd(bar, bin = keyvalues[[i]], checkResponse=FALSE)
+      .sendCmd('\r\n', checkResponse=FALSE)
+     }
   }
   .getResponse()
 }
