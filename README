@@ -1,4 +1,4 @@
-rredis: An easy to use R client package for Redis
+rredis: An R client for Redis
 
 example:
 > library(rredis)
@@ -8,4 +8,13 @@ example:
 > bar
  [1] 0.93499818 0.47159536 0.30597259 0.58325228 0.41589498 0.63914212
  [7] 0.34658694 0.08633471 0.18111369 0.15763507
+
+> redisMSet(list(x=pi,y='Cazart',z=runif(2)))
+> redisMGet(list('z','y'))
+$z
+[1] 0.1155711 0.7166137
+
+$y
+[1] "Cazart"
+
 > redisClose()
