@@ -1,3 +1,6 @@
+# This file contains functions and environments used internally 
+# by the rredis package (not exported in the namespace).
+
 .redisEnv <- new.env()
 
 .redis <- function() {
@@ -6,19 +9,19 @@
 
 .redisPP <- function() {
   # Ping-pong
-  sendCmd('PING\r\n')
+  .sendCmd('PING\r\n')
 }
 
-cerealize <- function(value) {
+.cerealize <- function(value) {
   if(!is.raw(value)) serialize(value,ascii=FALSE,connection=NULL)
 }
 
-msg <- function(...) {
+.redismsg <- function(...) {
   dat <- list(...)
   paste(paste(dat,collapse=' '), '\r\n', sep='')
 }
 
-getResponse <- function() {
+.getResponse <- function() {
   con <- .redis()
   socketSelect(list(con))
   l <- readLines(con=con, n=1)
@@ -50,7 +53,7 @@ getResponse <- function() {
            numVars <- as.numeric(substr(l,2,nchar(l)))
            vals <- list()
            for (i in 1:numVars) {
-             resp <- getResponse()
+             resp <- .getResponse()
              vals <- c(vals, list(resp))
            }
            vals
@@ -58,7 +61,7 @@ getResponse <- function() {
          stop('Unknown message type'))
 }
 
-sendCmd <- function(cmd, bin=NULL, checkResponse=TRUE) {
+.sendCmd <- function(cmd, bin=NULL, checkResponse=TRUE) {
   con <- .redis()
   socketSelect(list(con), write=TRUE)
   cat(cmd, file=con)
@@ -68,25 +71,25 @@ sendCmd <- function(cmd, bin=NULL, checkResponse=TRUE) {
     socketSelect(list(con), write=TRUE)
     cat('\r\n', file=con)
   }
-  if (checkResponse) getResponse()
+  if (checkResponse) .getResponse()
 }
 
 # The multi bulk command protocol.  I set this up to work with MSET.
 # I expect it will need a refactor (soon) to clean up and a
 # rework (eventually) to make it more general. -PS
-sendCmdMulti <- function(cmd, keys, values) {
+.sendCmdMulti <- function(cmd, keys, values) {
   numItems <- length(keys)
   foo <- paste('*', as.character((2* numItems) + 1), '\r\n',
                 '$', as.character(nchar(cmd)), '\r\n',
                 cmd, '\r\n', sep='')
-  sendCmd(foo,checkResponse=FALSE)
+  .sendCmd(foo,checkResponse=FALSE)
   for (i in 1:numItems) {
     foo <- paste('$', as.character(nchar(keys[[i]])), '\r\n',
                   keys[[i]], '\r\n', sep='')
     bar <- paste('$', as.character(length(values[[i]])), '\r\n', sep='')
-    sendCmd(foo, checkResponse=FALSE)
-    sendCmd(bar, bin = values[[i]], checkResponse=FALSE)
-    sendCmd('\r\n', checkResponse=FALSE)
+    .sendCmd(foo, checkResponse=FALSE)
+    .sendCmd(bar, bin = values[[i]], checkResponse=FALSE)
+    .sendCmd('\r\n', checkResponse=FALSE)
   }
-  getResponse()
+  .getResponse()
 }
