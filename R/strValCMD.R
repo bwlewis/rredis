@@ -24,7 +24,7 @@ redisGetSet <- function(key, value) {
 
 redisMGet <- function(keys) {
   msg <- paste('MGET ',paste(keys, collapse=' '),'\r\n',sep='')
-  .sendCmd(msg)
+  .sendCmd(msg,names=keys)
 }
 
 redisMSet <- function(keyvalues, NX=FALSE) {

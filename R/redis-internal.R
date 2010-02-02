@@ -22,7 +22,7 @@
   paste(paste(dat,collapse=' '), '\r\n', sep='')
 }
 
-.getResponse <- function() {
+.getResponse <- function(names=NULL) {
   con <- .redis()
   socketSelect(list(con))
   l <- readLines(con=con, n=1)
@@ -52,17 +52,17 @@
            },
          '*' = {
            numVars <- as.numeric(substr(l,2,nchar(l)))
-           vals <- list()
+           vals <- vector('list',numVars)
+           if(!is.null(names)) names(vals) <- names
            for (i in 1:numVars) {
-             resp <- .getResponse()
-             vals <- c(vals, list(resp))
+             vals[[i]] <- .getResponse()
            }
            vals
          },
          stop('Unknown message type'))
 }
 
-.sendCmd <- function(cmd, bin=NULL, checkResponse=TRUE) {
+.sendCmd <- function(cmd, bin=NULL, checkResponse=TRUE, ...) {
   con <- .redis()
   socketSelect(list(con), write=TRUE)
   cat(cmd, file=con)
@@ -72,7 +72,7 @@
     socketSelect(list(con), write=TRUE)
     cat('\r\n', file=con)
   }
-  if (checkResponse) .getResponse()
+  if (checkResponse) .getResponse(...)
 }
 
 # Requires a list of key1=value1, key2=value2, ...
