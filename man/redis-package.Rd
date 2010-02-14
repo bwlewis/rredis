@@ -4,13 +4,10 @@
 \docType{package}
 \title{An R client for Redis}
 \description{
-Redis is a high-performance networked 
-persistent key/value structured data store.
-The redis package for R provides an easy to use native R language interface
+Redis is a high-performance, networked, key/value database.
+The redis package for R provides a native R language interface
 to Redis. The R client can store and read arbitrary serializable R objects 
-as well as access raw objects like strings from other clients. The redis
-package presently supports only a useful subset of the many available Redis
-features. A more full-featured client implementation is in process.
+as well as access raw objects like strings and binary blobs from other clients.
 }
 \details{
 \tabular{ll}{

@@ -16,10 +16,11 @@ The (required) character identifier for the value to be looked up.
 The key must not contain spaces or newline characters (otherwise an error will be thrown).
 }
 \value{
-The retrieved value is returned, or NULL if no matching key was found.
+The value corresponding to the specified key, 
+or NULL if the matching key contained no value or if no matching key was found.
 }
 \references{
-{\link{http://code.google.com/p/redis/}}
+http://code.google.com/p/redis/wiki/GetCommand
 }
 \author{
 B. W. Lewis

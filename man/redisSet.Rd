@@ -6,7 +6,7 @@ in the Redis database. Any existing value with the same key will be replaced
 by the new value.
 }
 \usage{
-redisSet(key, value)
+redisSet(key, value, NX = FALSE)
 }
 \arguments{
   \item{key}{
@@ -15,12 +15,15 @@ The (required) character identifier for the value to be stored.
   \item{value}{
 The (required) object to associate with the key. 
 }
+  \item{NX}{
+If NX = TRUE, existing values will not be replaced.
+}
 }
 \details{
 The key must not contain spaces or newline characters (otherwise an error will be thrown).
 
-The value object is copied to the Redis server.
-The value to be stored may can be any
+The value is copied to the Redis server.
+The value to be stored can be any
 serializable R object up to the Redis maximum object size 
 (excluding, for example, external pointer references).
 References to other R objects or environments inside the value are not
@@ -32,7 +35,9 @@ convert the character object using the
 examples.
 }
 \value{
-Nothing is returned. Errors are displayed if something goes wrong.
+The character string "OK" is returned on success. 
+If NX = FALSE and a value already exists, the value will not be replaced
+and FALSE will be returned.
 }
 \references{
 {\link{http://code.google.com/p/redis/}}
