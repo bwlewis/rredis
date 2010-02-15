@@ -40,7 +40,7 @@ If NX = FALSE and a value already exists, the value will not be replaced
 and FALSE will be returned.
 }
 \references{
-{\link{http://code.google.com/p/redis/}}
+http://code.google.com/p/redis/wiki/SetCommand
 }
 \author{
 B. W. Lewis
