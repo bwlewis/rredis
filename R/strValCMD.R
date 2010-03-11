@@ -29,7 +29,8 @@ redisMGet <- function(keys) {
 
 redisMSet <- function(keyvalues, NX=FALSE) {
   if (NX) cmd <- 'MSETNX' else cmd <- 'MSET'
-  ret <- .sendCmdMulti(cmd, keyvalues)
+  cmd <- c(list(charToRaw(cmd)),keyvalues)
+  ret <- .sendCmdMulti(cmd)
   if (NX) 1==ret else ret
 }
 

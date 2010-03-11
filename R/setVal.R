@@ -1,9 +1,7 @@
-
 redisSAdd <- function(set, element)
 {
-  cmd <- list(element)
-  names(cmd) <- set
-  .sendCmdMulti('SADD',cmd)
+  cmd <- list(SADD=charToRaw(set),element)
+  .sendCmdMulti(cmd)
 }
 
 redisSPop <- function(set)
@@ -18,10 +16,10 @@ redisSMembers <- function(set)
   .sendCmd(msg)
 }
 
-redisSRem <- function(set)
+redisSRem <- function(set, element)
 {
-  msg <- paste('SREM ',set,'\r\n',sep='')
-  .sendCmd(msg)
+  cmd <- list(SREM=charToRaw(set),element)
+  .sendCmdMulti(cmd)
 }
 
 redisSCard <- function(set)
@@ -32,7 +30,7 @@ redisSCard <- function(set)
 
 redisSMove <- function(setA, setB, element)
 {
-  msg <- paste('SMOVE ',setA,' ',setB, ' ',element,'\r\n',sep='')
-  .sendCmd(msg)
+  cmd <- list(SMOVE=charToRaw(setA),charToRaw(setB),element)
+  .sendCmdMulti(cmd)
 }
 

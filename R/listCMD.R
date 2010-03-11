@@ -23,7 +23,7 @@ redisLTrim <- function(key,start,end) {
 }
 
 redisLIndex <- function(key, index) {
-  .sendCmd(.redismsg('LINDEX', key, start))
+  .sendCmd(.redismsg('LINDEX', key, index))
 }
 
 redisLSet <- function(key, index, value) {

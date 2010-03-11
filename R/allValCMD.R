@@ -24,7 +24,8 @@ redisType <- function(key) {
   .sendCmd(msg)
 }
 
-redisKeys <- function(pattern) {
+redisKeys <- function(pattern="*") 
+{
   msg <- paste('KEYS ', pattern, '\r\n', sep='')
   .sendCmd(msg)
 }

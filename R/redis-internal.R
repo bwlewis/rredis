@@ -53,9 +53,11 @@
          '*' = {
            numVars <- as.numeric(substr(l,2,nchar(l)))
            vals <- vector('list',numVars)
-           if(!is.null(names)) names(vals) <- names
-           for (i in 1:numVars) {
-             vals[[i]] <- .getResponse()
+           if(numVars > 0) {
+             if(!is.null(names)) names(vals) <- names
+             for (i in 1:numVars) {
+               vals[[i]] <- .getResponse()
+             }
            }
            vals
          },
@@ -76,21 +78,27 @@
 }
 
 # Requires a list of key1=value1, key2=value2, ...
-# It's OK to have a NULL value in which case only the key will be transmitted.
-.sendCmdMulti <- function(cmd, keyvalues) {
+# This represents the multi-bulk send protocol. Keys are sent as plain
+# text (not as R objects), values as serialized objects.
+# NA or zero-length keys are allowed, for example: 
+# list(SADD=charToRaw("mykey"), myvalue)
+# NA or zero-length keys are simply skipped in the outgoing message.
+.sendCmdMulti <- function(keyvalues) {
   numItems <- length(keyvalues)
   keys <- names(keyvalues)
-  if(any(nchar(keys)==0)) stop("Invalid key name")
-  foo <- paste('*', as.character((2* numItems) + 1), '\r\n',
-                '$', as.character(nchar(cmd)), '\r\n',
-                cmd, '\r\n', sep='')
+  n <- numItems + length(keys[(nchar(keys)!=0) & !is.na(keys)])
+  foo <- paste('*', as.character(n), '\r\n',sep='')
   .sendCmd(foo,checkResponse=FALSE)
   for (i in 1:numItems) {
+    if((nchar(keys[[i]])>0) & (!is.na(keys[[i]]))) {
+      foo <- paste('$', as.character(nchar(keys[[i]])), '\r\n',
+                keys[[i]], '\r\n', sep='')
+      .sendCmd(foo, checkResponse=FALSE)
+    }
     keyvalues[[i]] <- .cerealize(keyvalues[[i]])
     l <- length(keyvalues[[i]])
-    foo <- paste('$', as.character(nchar(keys[[i]])), '\r\n',
-                keys[[i]], '\r\n', sep='')
-    .sendCmd(foo, checkResponse=FALSE)
+# Check for null value, use special -1 length designation
+    if(l<1) l <- -1
     if(l>0) {
       bar <- paste('$', as.character(l), '\r\n', sep='')
       .sendCmd(bar, bin = keyvalues[[i]], checkResponse=FALSE)
