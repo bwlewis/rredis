@@ -18,7 +18,7 @@ Remove elements matching this value from the list.
 }
 }
 \details{
-Remove the first \code{count} occurrences of the \count{value} element from the
+Remove the first \code{count} occurrences of the \code{value} element from the
 list. If \code{count} is zero all the elements are removed.  If count is
 negative elements are removed from tail to head, instead of the default removal
 behavior from head to tail.  So for example \code{redisLRem} with count -2 and
