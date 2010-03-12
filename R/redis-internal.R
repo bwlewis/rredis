@@ -26,15 +26,15 @@
   con <- .redis()
   socketSelect(list(con))
   l <- readLines(con=con, n=1)
-  c <- substr(l, 1, 1)
+  s <- substr(l, 1, 1)
   if (nchar(l) < 2) {
-    if(c == '+') {
+    if(s == '+') {
       # '+' is a valid retrun message on at least one cmd (RANDOMKEY)
       return('')
     }
     stop('Message garbled')
   }
-  switch(c,
+  switch(s,
          '-' = stop(substr(l,2,nchar(l))),
          '+' = substr(l,2,nchar(l)),
          ':' = as.numeric(substr(l,2,nchar(l))),
@@ -51,9 +51,10 @@
                       error=function(e) rawToChar(dat))
            },
          '*' = {
+           vals <- NULL
            numVars <- as.numeric(substr(l,2,nchar(l)))
-           vals <- vector('list',numVars)
            if(numVars > 0) {
+             vals <- vector('list',numVars)
              if(!is.null(names)) names(vals) <- names
              for (i in 1:numVars) {
                vals[[i]] <- .getResponse()
@@ -86,6 +87,10 @@
 .sendCmdMulti <- function(keyvalues) {
   numItems <- length(keyvalues)
   keys <- names(keyvalues)
+  if(is.null(keys)) {
+    names(keyvalues) <- NA
+    keys <- names(keyvalues)
+  }
   n <- numItems + length(keys[(nchar(keys)!=0) & !is.na(keys)])
   foo <- paste('*', as.character(n), '\r\n',sep='')
   .sendCmd(foo,checkResponse=FALSE)
@@ -97,8 +102,6 @@
     }
     keyvalues[[i]] <- .cerealize(keyvalues[[i]])
     l <- length(keyvalues[[i]])
-# Check for null value, use special -1 length designation
-    if(l<1) l <- -1
     if(l>0) {
       bar <- paste('$', as.character(l), '\r\n', sep='')
       .sendCmd(bar, bin = keyvalues[[i]], checkResponse=FALSE)

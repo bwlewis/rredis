@@ -1,8 +1,7 @@
 # This file contains functions that operate on Redis 'string' values.
 
 redisGet <- function(key) {
-  msg <- paste('GET ',key,'\r\n',sep='')
-  .sendCmd(msg)
+  .sendCmd(.redismsg('GET',key))
 }
 
 # This is only useful right now because it is faster than mset.
@@ -36,26 +35,20 @@ redisMSet <- function(keyvalues, NX=FALSE) {
 
 redisIncr <- function(key)
 {
-  msg <- paste('INCR ',key,'\r\n',sep='')
-  .sendCmd(msg)
+  .sendCmd(.redismsg('INCR',key))
 }
 
 redisIncrBy <- function(key, value)
 {
-# XXX Add check for integer value
-  msg <- paste('INCRBY ',key,' ',value,'\r\n',sep='')
-  .sendCmd(msg)
+  .sendCmd(.redismsg('INCRBY',key,value))
 }
 
 redisDecrBy <- function(key, value)
 {
-# XXX Add check for integer value
-  msg <- paste('DECRBY ',key,' ',value,'\r\n',sep='')
-  .sendCmd(msg)
+  .sendCmd(.redismsg('DECRBY',key,value))
 }
 
 redisDecr <- function(key)
 {
-  msg <- paste('DECR ',key,'\r\n',sep='')
-  .sendCmd(msg)
+  .sendCmd(.redismsg('DECR',key))
 }

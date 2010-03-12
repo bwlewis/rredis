@@ -26,58 +26,31 @@ redisType <- function(key) {
 
 redisKeys <- function(pattern="*") 
 {
-  msg <- paste('KEYS ', pattern, '\r\n', sep='')
-  .sendCmd(msg)
+  .sendCmd(.redismsg('KEYS',pattern))
 }
 
 redisRandomKey <- function() {
-  msg <- 'RANDOMKEY\r\n'
-  .sendCmd(msg)
+  .sendCmd(.redismsg('RANDOMKEY'))
 }
 
 redisRename <- function(old, new, NX=FALSE) {
   if (NX) cmd <- 'RENAMENX ' else cmd <- 'RENAME '
-  msg <- paste(cmd, old, ' ', new, '\r\n', sep='')
-  ret <- .sendCmd(msg)
+  ret <- .sendCmd(.redismsg(cmd,old,new))
   if (NX) 1==ret else ret
 }
 
-redisDBSize <- function() {
-  msg <- 'DBSIZE\r\n'
-  .sendCmd(msg)
-}
-
 redisExpire <- function(key, seconds) {
-  msg <- paste('EXPIRE ', key, ' ', seconds, '\r\n', sep='')
-  1==.sendCmd(msg)
+  1==.sendCmd(.redismsg('EXPIRE',key,seconds))
 }
 
 redisExpireAt <- function(key, time) {
-  msg <- paste('EXPIREAT ', key, ' ', time, '\r\n', sep='')
-  1==.sendCmd(msg)
+  1==.sendCmd(.redismsg('EXPIREAT',key,time))
 }
 
 redisTTL <- function(key) {
-  msg <- paste('TTL ', key, '\r\n', sep='')
-  .sendCmd(msg)
-}
-
-redisSelect <- function(index) {
-  msg <- paste('SELECT ', index, '\r\n', sep='')
-  .sendCmd(msg)
+  .sendCmd(.redismsg('TTL',key))
 }
 
 redisMove <- function(key, dbindex) {
-  msg <- paste('MOVE ', key, ' ', dbindex, '\r\n', sep='')
-  1==.sendCmd(msg)
-}
-
-redisFlushDB <- function() {
-  msg <- 'FLUSHDB\r\n'
-  .sendCmd(msg)
-}
-
-redisFlushAll <- function() {
-  msg <- 'FLUSHALL\r\n'
-  .sendCmd(msg)
+  1==.sendCmd(.redismsg('MOVE',key,dbindex))
 }

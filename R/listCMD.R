@@ -15,7 +15,10 @@ redisLLen <- function(key) {
 }
 
 redisLRange <- function(key, start, end) {
-  .sendCmd(.redismsg('LRANGE', key, start, end))
+  start <- charToRaw(as.character(start))
+  end <- charToRaw(as.character(end))
+  cmd <- list(LRANGE=charToRaw(key),start,end)
+  .sendCmdMulti(cmd)
 }
 
 redisLTrim <- function(key,start,end) {
