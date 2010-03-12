@@ -57,7 +57,11 @@
              vals <- vector('list',numVars)
              if(!is.null(names)) names(vals) <- names
              for (i in 1:numVars) {
-               vals[[i]] <- .getResponse()
+# XXX This extra copy is unfortunate, but the default R behavior is
+# not acceptable (assigning a list entry to NULL removes it from the list!)
+# Does anyone have a better idea here?
+               vi <- .getResponse()
+               if(!is.null(vi)) vals[[i]] <- vi
              }
            }
            vals

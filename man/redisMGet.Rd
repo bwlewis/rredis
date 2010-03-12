@@ -12,7 +12,7 @@ redisMGet(keys)
 \details{
 }
 \value{
-A list of retrieved key/value pairs.
+A list of retrieved key/value pairs. Missing values return NULL.
 }
 \references{
 http://code.google.com/p/redis/wiki/MGetCommand
