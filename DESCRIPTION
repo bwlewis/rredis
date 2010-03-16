@@ -6,5 +6,5 @@ Date: 2010-01-26
 Author: B. W. Lewis
 Maintainer: B. W. Lewis <blewis@illposed.net>
 Description: The 'redis' package provides a simple R client for the Redis persistent key-value database available from http://code.google.com/p/redis/.
-License: Apache 2.0
+License: Apache License 2.0
 LazyLoad: yes
