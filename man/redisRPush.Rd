@@ -18,8 +18,7 @@ If the key does not exist an empty list is created just before the
 append operation. If the key exists but is not a list an error is returned.
 }
 \value{
-TRUE if the element was successfully added, FALSE or an error condition 
-otherwise.
+The length of the list after the successfull push operation.
 }
 \references{
 http://code.google.com/p/redis/wiki/RpushCommand

@@ -2,12 +2,12 @@
 
 redisRPush <- function(key, value) {
   value <- .cerealize(value)
-  .sendCmd(.redismsg('RPUSH',key,length(value)), value) == "OK"
+  .sendCmd(.redismsg('RPUSH',key,length(value)), value)
 }
 
 redisLPush <- function(key, value) {
   value <- .cerealize(value)
-  .sendCmd(.redismsg('LPUSH',key,length(value)), value) == "OK"
+  .sendCmd(.redismsg('LPUSH',key,length(value)), value)
 }
 
 redisLLen <- function(key) {
@@ -40,7 +40,7 @@ redisLSet <- function(key, index, value) {
 }
 
 redisLRem <- function(key, count, value) {
-  .sendCmd(.redismsg('LREM', key, count, value)) == "OK"
+  .sendCmd(.redismsg('LREM', key, count, value))
 }
 
 redisRPop <- function(key) {
@@ -56,9 +56,21 @@ redisRPopLPush <- function(src, dest) {
 }
 
 redisBRPop <- function(keys, timeout=0) {
-  .sendCmd(.redismsg('BRPOP', paste(keys, collapse=' '), timeout))
+  x <- .sendCmd(.redismsg('BRPOP', paste(keys, collapse=' '), timeout))
+  if(length(x)>1) {
+    n <- x[[1]]
+    x <- list(x[[2]])
+    names(x) <- n
+  }
+  x
 }
 
 redisBLPop <- function(keys, timeout=0) {
-  .sendCmd(.redismsg('BLPOP', paste(keys, collapse=' '), timeout))
+  x <- .sendCmd(.redismsg('BLPOP', paste(keys, collapse=' '), timeout))
+  if(length(x)>1) {
+    n <- x[[1]]
+    x <- list(x[[2]])
+    names(x) <- n
+  }
+  x
 }

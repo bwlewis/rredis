@@ -4,7 +4,7 @@
 \description{Decrement the value corresponding to the specified key.
 }
 \usage{
-redisDecr(key, value)
+redisDecrBy(key, value)
 }
 \arguments{
   \item{key}{A key corresponding to the value to decrement.}
@@ -20,12 +20,11 @@ The new value of key after the decrement, returned as a character
 string.
 }
 \references{
-http://code.google.com/p/redis/wiki/IncrCommand
+http://code.google.com/p/redis/wiki/DecrCommand
 }
 \author{
 B. W. Lewis
 }
-
 \seealso{
 \code{\link{redisIncr}}
 }

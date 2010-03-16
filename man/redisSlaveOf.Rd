@@ -2,14 +2,14 @@
 \alias{redisSlaveOf}
 \title{redisSlaveOf}
 \description{
+Change Redis replication settings.
 }
 \usage{
-redisSlaveOf(pwd)
+redisSlaveOf(host, port)
 }
 \arguments{
-  \item{pwd}{
-The (required) password.
-}
+  \item{host}{The host name of a master Redis server.}
+  \item{port}{The port of a master Redis server.}
 }
 \details{
 (The following details are adapted from the Redis Wiki manual 

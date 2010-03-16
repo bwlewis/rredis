@@ -23,7 +23,7 @@ http://code.google.com/p/redis/wiki/LlenCommand
 B. W. Lewis
 }
 \seealso{
-\code{\link{redisBRpop}}
+\code{redisBRpop}
 }
 \examples{
 \dontrun{

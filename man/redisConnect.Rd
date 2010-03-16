@@ -8,7 +8,7 @@ redisConnect(host = "localhost", port = 6379, returnRef = FALSE)
 \arguments{
   \item{host}{The Redis server host name or inet address (optional, character)}
   \item{port}{The Redis port number (optional, numeric or integer)}
-  \item{returnRef=FALSE}{Set returnRef=TRUE to return a list describing the Redis connection.}
+  \item{returnRef}{Set returnRef=TRUE to return a list describing the Redis connection.}
 }
 \details{A running instance of a Redis server is required. See
 http://code.google.com/p/redis/ for details.}
@@ -19,7 +19,7 @@ with redisClose.
 
 If returnRef is set to TRUE and no error occurs, a list describing the 
 Redis connection will be returned. The list can be used to manage multiple
-Redis connections with the \code{\link{attachRedis}} function.
+Redis connections with the \code{attachRedis} function.
 }
 \references{
 See http://code.google.com/p/redis/ for details.

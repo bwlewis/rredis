@@ -11,8 +11,9 @@ redisSet <- function(key, value, NX=FALSE) {
   value <- .cerealize(value)
   if (NX) cmd <- 'SETNX ' else cmd <- 'SET '
   msg <- paste(cmd,key,' ',length(value),'\r\n',sep='')
-  ret <- .sendCmd(msg,value)
-  if (NX) 1==ret else ret
+  retval <- .sendCmd(msg,value)
+  if(NX) 1 == retval
+  else "OK" == retval
 }
 
 redisGetSet <- function(key, value) {
@@ -32,8 +33,9 @@ redisMGet <- function(keys) {
 redisMSet <- function(keyvalues, NX=FALSE) {
   if (NX) cmd <- 'MSETNX' else cmd <- 'MSET'
   cmd <- c(list(charToRaw(cmd)),keyvalues)
-  ret <- .sendCmdMulti(cmd)
-  if (NX) 1==ret else ret
+  retval <- .sendCmdMulti(cmd)
+  if(NX) 1 == retval
+  else "OK" == retval
 }
 
 redisIncr <- function(key)

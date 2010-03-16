@@ -29,7 +29,7 @@ http://code.google.com/p/redis/wiki/LindexCommand
 B. W. Lewis
 }
 \seealso{
-\code{\link{redisLpop}}
+\code{\link{redisLPop}}
 }
 \examples{
 \dontrun{

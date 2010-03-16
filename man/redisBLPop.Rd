@@ -31,7 +31,7 @@ http://code.google.com/p/redis/wiki/BlpopCommand
 B. W. Lewis
 }
 \seealso{
-\code{\link{redisBRpop}}
+\code{redisBRpop}
 }
 \examples{
 \dontrun{

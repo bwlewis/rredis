@@ -35,7 +35,7 @@ convert the character object using the
 examples.
 }
 \value{
-The character string "OK" is returned on success. 
+TRUE is returned on success. 
 If NX = FALSE and a value already exists, the value will not be replaced
 and FALSE will be returned.
 }

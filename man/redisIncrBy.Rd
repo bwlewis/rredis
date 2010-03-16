@@ -4,7 +4,7 @@
 \description{Increment the value corresponding to the specified key.
 }
 \usage{
-redisIncr(key, value)
+redisIncrBy(key, value)
 }
 \arguments{
   \item{key}{A key corresponding to the value to increment.}

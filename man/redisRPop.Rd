@@ -23,7 +23,7 @@ http://code.google.com/p/redis/wiki/LpopCommand
 B. W. Lewis
 }
 \seealso{
-\code{\link{redisLpop}}, \code{\link{redisLPush}}
+\code{\link{redisLPop}}, \code{\link{redisLPush}}
 }
 \examples{
 \dontrun{
