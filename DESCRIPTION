@@ -1,7 +1,7 @@
 Package: rredis
 Type: Package
 Title: Redis client for R
-Version: 0.01
+Version: 1.0
 Date: 2010-01-26
 Author: B. W. Lewis
 Maintainer: B. W. Lewis <blewis@illposed.net>
