@@ -16,9 +16,10 @@ redisLSet(key, index, value)
 }
 }
 \details{
-Out of range indices throw an error.
+Indices begin at zero. Out of range indices throw an error.
 }
 \value{
+TRUE if successful, FALSE otherwise.
 }
 \references{
 http://code.google.com/p/redis/wiki/LSetCommand
@@ -27,10 +28,13 @@ http://code.google.com/p/redis/wiki/LSetCommand
 B. W. Lewis
 }
 \seealso{
-\code{\link{redisBRpop}}
+\code{\link{redisLPush}}
 }
 \examples{
 \dontrun{
 redisConnect()
+redisLPush('list',pi)
+redisLSet('list',0,5)
+redisLIndex('list',0)
 }
 }

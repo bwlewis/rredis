@@ -7,12 +7,14 @@
 redisMGet(keys)
 }
 \arguments{
-  \item{keys}{A character vector or list of keys to retrieve.}
-}
-\details{
+  \item{keys}{A vector or list of character strings  corresponding to 
+keys to retrieve.}
 }
 \value{
 A list of retrieved key/value pairs. Missing values return NULL.
+}
+\details{
+Values are returned in a list with names corresponding to keys.
 }
 \references{
 http://code.google.com/p/redis/wiki/MGetCommand
@@ -20,7 +22,6 @@ http://code.google.com/p/redis/wiki/MGetCommand
 \author{
 B. W. Lewis
 }
-
 \seealso{
 \code{\link{redisMSet}}
 }

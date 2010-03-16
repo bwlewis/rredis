@@ -22,6 +22,10 @@ redisGetSet <- function(key, value) {
 }
 
 redisMGet <- function(keys) {
+#  keylist <- as.list(keys)
+#  cmd <- list(charToRaw('MGET'))
+#  cmd <- c(cmd, lapply(keylist,charToRaw))
+#  .sendCmdMulti(cmd, names=keys)
   .sendCmd(.redismsg('MGET',paste(keys,collapse=' ')),names=keys)
 }
 

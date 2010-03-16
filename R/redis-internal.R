@@ -39,12 +39,25 @@
          '+' = substr(l,2,nchar(l)),
          ':' = as.numeric(substr(l,2,nchar(l))),
          '$' = {
-             dat <- as.numeric(substr(l,2,nchar(l)))
-             if (dat < 0) {
+             n <- as.numeric(substr(l,2,nchar(l)))
+             if (n < 0) {
                return(NULL)
              }
              socketSelect(list(con))
-             dat <- readBin(con, 'raw', n=dat)
+             dat <- tryCatch(readBin(con, 'raw', n=n),
+                             error=function(e) {
+                               stop("error reading from socket: ",e$message)
+                             })
+             m <- length(dat)
+             while(m<n) {
+# Short read; we need to retrieve the rest of this message.
+               socketSelect(list(con))
+               dat <- c(dat, tryCatch(readBin(con, 'raw', n=(n-m)),
+                               error=function(e) {
+                                 stop("error reading from socket: ",e$message)
+                             }))
+               m <- length(dat)
+             }
              l <- readLines(con,n=1)
              # Try retrieving an R object, otherwise default to character:
              tryCatch(unserialize(dat),
@@ -57,8 +70,8 @@
              vals <- vector('list',numVars)
              if(!is.null(names)) names(vals) <- names
              for (i in 1:numVars) {
-# XXX This extra copy is unfortunate, but the default R behavior is
-# not acceptable (assigning a list entry to NULL removes it from the list!)
+# XXX This extra copy is unfortunate, but so is the default R behavior:
+# assigning a list entry to NULL removes it from the list!
 # Does anyone have a better idea here?
                vi <- .getResponse()
                if(!is.null(vi)) vals[[i]] <- vi
@@ -88,7 +101,7 @@
 # NA or zero-length keys are allowed, for example: 
 # list(SADD=charToRaw("mykey"), myvalue)
 # NA or zero-length keys are simply skipped in the outgoing message.
-.sendCmdMulti <- function(keyvalues) {
+.sendCmdMulti <- function(keyvalues, ...) {
   numItems <- length(keyvalues)
   keys <- names(keyvalues)
   if(is.null(keys)) {
@@ -112,5 +125,5 @@
       .sendCmd('\r\n', checkResponse=FALSE)
      }
   }
-  .getResponse()
+  .getResponse(...)
 }

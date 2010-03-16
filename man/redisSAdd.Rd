@@ -24,7 +24,7 @@ does not exist a new set with the specified member as sole member is created.
 If the key exists but does not hold a set value an error is returned.
 }
 \value{
-1 if the element was successfully added, 0 otherwise (including cases in
+TRUE if the element was successfully added, FALSE otherwise (including cases in
 which the element already belonged to the set).
 }
 \references{

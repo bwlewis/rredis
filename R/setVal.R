@@ -61,7 +61,7 @@ redisSRandMember <- function(set)
 redisSAdd <- function(set, element)
 {
   cmd <- list(SADD=charToRaw(set),element)
-  .sendCmdMulti(cmd)
+  .sendCmdMulti(cmd) == 1
 }
 
 redisSPop <- function(set)
@@ -79,7 +79,7 @@ redisSMembers <- function(set)
 redisSRem <- function(set, element)
 {
   cmd <- list(SREM=charToRaw(set),element)
-  .sendCmdMulti(cmd)
+  .sendCmdMulti(cmd) == 1
 }
 
 redisSCard <- function(set)
@@ -91,6 +91,6 @@ redisSCard <- function(set)
 redisSMove <- function(setA, setB, element)
 {
   cmd <- list(SMOVE=charToRaw(setA),charToRaw(setB),element)
-  .sendCmdMulti(cmd)
+  .sendCmdMulti(cmd) == 1
 }
 

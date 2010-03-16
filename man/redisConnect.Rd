@@ -22,7 +22,7 @@ Redis connection will be returned. The list can be used to manage multiple
 Redis connections with the \code{\link{attachRedis}} function.
 }
 \references{
-\link{http://code.google.com/p/redis/} for details.
+See http://code.google.com/p/redis/ for details.
 }
 \author{
 B. W. Lewis

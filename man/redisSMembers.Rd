@@ -8,8 +8,7 @@ of the specified set.
 redisSMembers(set)
 }
 \arguments{
-  \item{set}{The set name (character).} }
-\details{ }
+  \item{set}{The set key name (character).} }
 \value{
 A list containing the set elements. An error is thrown if the set does
 not exist.

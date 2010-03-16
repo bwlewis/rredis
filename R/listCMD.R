@@ -2,12 +2,12 @@
 
 redisRPush <- function(key, value) {
   value <- .cerealize(value)
-  .sendCmd(.redismsg('RPUSH',key,length(value)), value)
+  .sendCmd(.redismsg('RPUSH',key,length(value)), value) == "OK"
 }
 
 redisLPush <- function(key, value) {
   value <- .cerealize(value)
-  .sendCmd(.redismsg('LPUSH',key,length(value)), value)
+  .sendCmd(.redismsg('LPUSH',key,length(value)), value) == "OK"
 }
 
 redisLLen <- function(key) {
@@ -22,7 +22,10 @@ redisLRange <- function(key, start, end) {
 }
 
 redisLTrim <- function(key,start,end) {
-  .sendCmd(.redismsg('LTRIM', key, start, end))
+  start <- charToRaw(as.character(start))
+  end <- charToRaw(as.character(end))
+  cmd <- list(LTRIM=charToRaw(key),start,end)
+  .sendCmdMulti(cmd) == "OK"
 }
 
 redisLIndex <- function(key, index) {
@@ -30,11 +33,14 @@ redisLIndex <- function(key, index) {
 }
 
 redisLSet <- function(key, index, value) {
-  .sendCmd(.redismsg('LSET', key, index, value))
+  key <- charToRaw(as.character(key))
+  index <- charToRaw(as.character(index))
+  cmd <- list(LSET=key,index,value)
+  .sendCmdMulti(cmd) == "OK"
 }
 
 redisLRem <- function(key, count, value) {
-  .sendCmd(.redismsg('LREM', key, count, value))
+  .sendCmd(.redismsg('LREM', key, count, value)) == "OK"
 }
 
 redisRPop <- function(key) {

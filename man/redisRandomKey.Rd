@@ -9,7 +9,9 @@ Return a randomly selected key from the currently selected database.
 \usage{
 redisRandomKey()
 }
-\details{}
+\details{
+Note that this function returns key names, not values.
+}
 \value{
 A character string corresponding to a randomly-selected key from the currently
 selected database, or a zero-length string if no keys are defined.
@@ -19,8 +21,6 @@ http://code.google.com/p/redis/wiki/RandomkeyCommand
 }
 \author{
 B. W. Lewis
-}
-\seealso{
 }
 \examples{
 \dontrun{

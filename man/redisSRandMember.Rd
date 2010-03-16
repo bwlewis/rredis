@@ -8,8 +8,7 @@ Select and return an element of a set at random.
 redisSRandMember(set)
 }
 \arguments{
-  \item{set}{The set name (character).} }
-\details{ }
+  \item{set}{The set key name (character).} }
 \value{
 An element from the set selected randomly. An error is thrown if the set does
 not exist.

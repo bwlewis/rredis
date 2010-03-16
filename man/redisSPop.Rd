@@ -1,8 +1,8 @@
 \name{redisSPop}
 \alias{redisSPop}
-\title{Remove an element from a set.}
+\title{Remove and return an element from a set.}
 \description{
-Remove an element, chosen at random, from the specified set.
+Remove and return an element, chosen at random, from the specified set.
 }
 \usage{
 redisSPop(set)
@@ -10,7 +10,6 @@ redisSPop(set)
 \arguments{
   \item{set}{The set name (character).}
 }
-\details{ }
 \value{A random element of the set, or NULL if the set is empty or does
 not exist.}
 \references{

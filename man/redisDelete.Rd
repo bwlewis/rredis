@@ -20,7 +20,7 @@ Nothing is returned if the key/value pair is successfully deleted.
 A warning is thrown if the they key could not be found.
 }
 \references{
-{\link{http://code.google.com/p/redis/}}
+http://code.google.com/p/redis/
 }
 \author{
 B. W. Lewis

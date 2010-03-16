@@ -8,6 +8,9 @@ redisMSet(keyvalues, NX = FALSE)
 \arguments{
   \item{keyvalues}{A list of values to set of the form 
 list(key1=value1, key2=value2, ...)}
+  \item{NX}{
+If NX = TRUE, existing values will not be replaced, otherwise they will be.
+}
 }
 \details{
 Set one or more key/value pairs in the Redis database. Existing

@@ -6,8 +6,6 @@ server.}
 \usage{
 redisClose()
 }
-\arguments{
-}
 \details{A running instance of a Redis server is required. See
 http://code.google.com/p/redis/ for details.}
 \value{Nothing is returned. Errors are displayed if the function fails to

@@ -16,7 +16,7 @@ value).}
 The set element matching the specified element will be removed from the set.
 }
 \value{
-1 upon successful removal, 0 otherwise.
+TRUE upon successful removal, FALSE otherwise.
 }
 \references{
 http://code.google.com/p/redis/wiki/SremCommand
