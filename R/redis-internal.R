@@ -3,26 +3,43 @@
 
 .redisEnv <- new.env()
 
-.redis <- function() {
+.redis <- function() 
+{
   tryCatch(get('con',envir=.redisEnv),error=function(e) stop('Not connected, try using redisConnect()'))
 }
 
-.redisPP <- function() {
+# .redisError may be called by any function when a serious error occurs.
+# It will print an indicated error message, attempt to reset the current
+# Redis server connection, and signal the error.
+.redisError <- function(msg)
+{
+  con <- .redis()
+  close(con)
+  con <- socketConnection(.redisEnv$host, .redisEnv$port,open='a+b')
+  assign('con',con,envir=.redisEnv)
+  stop(msg)
+}
+
+.redisPP <- function() 
+{
   # Ping-pong
   .sendCmd('PING\r\n')
 }
 
-.cerealize <- function(value) {
+.cerealize <- function(value) 
+{
   if(!is.raw(value)) serialize(value,ascii=FALSE,connection=NULL)
   else value
 }
 
-.redismsg <- function(...) {
+.redismsg <- function(...) 
+{
   dat <- list(...)
   paste(paste(dat,collapse=' '), '\r\n', sep='')
 }
 
-.getResponse <- function(names=NULL) {
+.getResponse <- function(names=NULL) 
+{
   con <- .redis()
   socketSelect(list(con))
   l <- readLines(con=con, n=1)
@@ -32,7 +49,7 @@
       # '+' is a valid retrun message on at least one cmd (RANDOMKEY)
       return('')
     }
-    stop('Message garbled')
+    .redisError('Message garbled')
   }
   switch(s,
          '-' = stop(substr(l,2,nchar(l))),
@@ -45,20 +62,16 @@
              }
              socketSelect(list(con))
              dat <- tryCatch(readBin(con, 'raw', n=n),
-                             error=function(e) {
-                               stop("error reading from socket: ",e$message)
-                             })
+                             error=function(e) .redisError(e$message))
              m <- length(dat)
              while(m<n) {
 # Short read; we need to retrieve the rest of this message.
                socketSelect(list(con))
                dat <- c(dat, tryCatch(readBin(con, 'raw', n=(n-m)),
-                               error=function(e) {
-                                 stop("error reading from socket: ",e$message)
-                             }))
+                               error=function (e) .redisError(e$message)))
                m <- length(dat)
              }
-             l <- readLines(con,n=1)
+             l <- readLines(con,n=1)  # Trailing \r\n
              # Try retrieving an R object, otherwise default to character:
              tryCatch(unserialize(dat),
                       error=function(e) rawToChar(dat))
@@ -82,7 +95,8 @@
          stop('Unknown message type'))
 }
 
-.sendCmd <- function(cmd, bin=NULL, checkResponse=TRUE, ...) {
+.sendCmd <- function(cmd, bin=NULL, checkResponse=TRUE, ...) 
+{
   con <- .redis()
   socketSelect(list(con), write=TRUE)
   cat(cmd, file=con)
@@ -101,7 +115,8 @@
 # NA or zero-length keys are allowed, for example: 
 # list(SADD=charToRaw("mykey"), myvalue)
 # NA or zero-length keys are simply skipped in the outgoing message.
-.sendCmdMulti <- function(keyvalues, ...) {
+.sendCmdMulti <- function(keyvalues, ...) 
+{
   numItems <- length(keyvalues)
   keys <- names(keyvalues)
   if(is.null(keys)) {
