@@ -64,17 +64,34 @@
              dat <- tryCatch(readBin(con, 'raw', n=n),
                              error=function(e) .redisError(e$message))
              m <- length(dat)
+             if(m>=n) return(tryCatch(unserialize(dat),
+                         error=function(e) rawToChar(dat)))
+# The message was not fully recieved in one pass.
+# We allocate a list to hold incremental messages and then concatenate it.
+# This perfromance enhancement was adapted from the Rbig server package, 
+# written by Steve Weston and Pat Shields.
+             rlen <- 50
+             j <- 1
+             r <- vector('list',rlen)
+             r[j] <- list(dat)
              while(m<n) {
 # Short read; we need to retrieve the rest of this message.
                socketSelect(list(con))
-               dat <- c(dat, tryCatch(readBin(con, 'raw', n=(n-m)),
-                               error=function (e) .redisError(e$message)))
-               m <- length(dat)
+               dat <- tryCatch(readBin(con, 'raw', n=(n-m)),
+                            error=function (e) .redisError(e$message))
+               j <- j + 1
+               if(j>rlen) {
+                 rlen <- 2*rlen
+                 length(r) <- rlen
+               }
+               r[j] <- list(dat)
+               m <- m + length(dat)
              }
              l <- readLines(con,n=1)  # Trailing \r\n
+             length(r) <- j
              # Try retrieving an R object, otherwise default to character:
-             tryCatch(unserialize(dat),
-                      error=function(e) rawToChar(dat))
+             tryCatch(unserialize(do.call(c,r)),
+                      error=function(e) rawToChar(do.call(c,r)))
            },
          '*' = {
            vals <- NULL
