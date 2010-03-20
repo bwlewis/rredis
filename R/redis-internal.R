@@ -64,8 +64,11 @@
              dat <- tryCatch(readBin(con, 'raw', n=n),
                              error=function(e) .redisError(e$message))
              m <- length(dat)
-             if(m>=n) return(tryCatch(unserialize(dat),
+             if(m>=n) {
+               l <- readLines(con,n=1)  # Trailing \r\n
+               return(tryCatch(unserialize(dat),
                          error=function(e) rawToChar(dat)))
+             }
 # The message was not fully recieved in one pass.
 # We allocate a list to hold incremental messages and then concatenate it.
 # This perfromance enhancement was adapted from the Rbig server package, 
