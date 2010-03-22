@@ -64,7 +64,8 @@
              dat <- tryCatch(readBin(con, 'raw', n=n),
                              error=function(e) .redisError(e$message))
              m <- length(dat)
-             if(m>=n) {
+             if(m==n) {
+               socketSelect(list(con))
                l <- readLines(con,n=1)  # Trailing \r\n
                return(tryCatch(unserialize(dat),
                          error=function(e) rawToChar(dat)))
@@ -90,6 +91,7 @@
                r[j] <- list(dat)
                m <- m + length(dat)
              }
+             socketSelect(list(con))
              l <- readLines(con,n=1)  # Trailing \r\n
              length(r) <- j
              # Try retrieving an R object, otherwise default to character:
