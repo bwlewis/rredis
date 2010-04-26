@@ -1,0 +1,6 @@
+Significant changes in version 1.2:
+
+1. We completely revamped communication with the Redis server, eliminating
+   in-line messaging in anticipation of it's demise in future Redis versions.
+   We also make a better effort to minimize copying by R prior to sending
+   a message.

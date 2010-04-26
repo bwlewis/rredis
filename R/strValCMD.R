@@ -1,59 +1,56 @@
 # This file contains functions that operate on Redis 'string' values.
 
 redisGet <- function(key) {
-  .sendCmd(.redismsg('GET',key))
+  .redisCmd(.raw('GET'), .raw(key))
 }
 
-# This is only useful right now because it is faster than mset.
-# We could probably roll them together, but I'm not sure if that
-# will be a pain later. -PS
 redisSet <- function(key, value, NX=FALSE) {
   value <- .cerealize(value)
-  if (NX) cmd <- 'SETNX ' else cmd <- 'SET '
-  msg <- paste(cmd,key,' ',length(value),'\r\n',sep='')
-  retval <- .sendCmd(msg,value)
+  cmd <- 'SET'
+  if(NX) cmd <- 'SETNX'
+  retval <- .redisCmd(.raw(cmd), .raw(key), value)
   if(NX) 1 == retval
-  else "OK" == retval
+  else 'OK' == retval
 }
 
 redisGetSet <- function(key, value) {
-  value <- .cerealize(value)
-  msg <- paste('GETSET ',key,' ',length(value),'\r\n',sep='')
-  .sendCmd(msg,value)
+  .redisCmd(.raw('GETSET'),.raw(key),value)
 }
 
 redisMGet <- function(keys) {
-#  keylist <- as.list(keys)
-#  cmd <- list(charToRaw('MGET'))
-#  cmd <- c(cmd, lapply(keylist,charToRaw))
-#  .sendCmdMulti(cmd, names=keys)
-  .sendCmd(.redismsg('MGET',paste(keys,collapse=' ')),names=keys)
+  keylist <- as.list(keys)
+  x <- do.call('.redisCmd',lapply(c(list('MGET'),keylist),charToRaw))
+  names(x) <- keylist
+  x
 }
 
 redisMSet <- function(keyvalues, NX=FALSE) {
   if (NX) cmd <- 'MSETNX' else cmd <- 'MSET'
-  cmd <- c(list(charToRaw(cmd)),keyvalues)
-  retval <- .sendCmdMulti(cmd)
+  a <- c(alist(),list(.raw(cmd)))
+  rawnames <- lapply(as.list(names(keyvalues)),charToRaw)
+  for(j in 1:length(keyvalues)) 
+    a <- c(a,list(rawnames[[j]],keyvalues[[j]]))
+  retval <- do.call('.redisCmd', a)
   if(NX) 1 == retval
-  else "OK" == retval
+  else 'OK' == retval
 }
 
 redisIncr <- function(key)
 {
-  .sendCmd(.redismsg('INCR',key))
+  .redisCmd(.raw('INCR'),.raw(key))
 }
 
 redisIncrBy <- function(key, value)
 {
-  .sendCmd(.redismsg('INCRBY',key,value))
+  .redisCmd(.raw('INCRBY'),.raw(key),.raw(as.character(value)))
 }
 
 redisDecrBy <- function(key, value)
 {
-  .sendCmd(.redismsg('DECRBY',key,value))
+  .redisCmd(.raw('DECRBY'),.raw(key),.raw(as.character(value)))
 }
 
 redisDecr <- function(key)
 {
-  .sendCmd(.redismsg('DECR',key))
+  .redisCmd(.raw('DECR'),.raw(key))
 }

@@ -1,96 +1,77 @@
 redisSInter <- function(keys, ...)
 {
   sets <- c(as.list(keys),list(...))
-  cmd <- list(charToRaw('SINTER'))
-  cmd <- c(cmd, lapply(sets,charToRaw))
-  .sendCmdMulti(cmd)
+  do.call('.redisCmd',lapply(c(list('SINTER'),sets),charToRaw))
 }
 
 redisSUnion <- function(keys, ...)
 {
   sets <- c(as.list(keys),list(...))
-  cmd <- list(charToRaw('SUNION'))
-  cmd <- c(cmd, lapply(sets,charToRaw))
-  .sendCmdMulti(cmd)
+  do.call('.redisCmd',lapply(c(list('SUNION'),sets),charToRaw))
 }
 
 redisSUnionStore <- function(dest, keys, ...)
 {
   sets <- c(as.list(dest),as.list(keys),list(...))
-  cmd <- list(charToRaw('SUNIONSTORE'))
-  cmd <- c(cmd, lapply(sets,charToRaw))
-  .sendCmdMulti(cmd)
+  do.call('.redisCmd',lapply(c(list('SUNIONSTORE'),sets),charToRaw))
 }
 
 redisSInterStore <- function(dest, keys, ...)
 {
   sets <- c(as.list(dest),as.list(keys),list(...))
-  cmd <- list(charToRaw('SINTERSTORE'))
-  cmd <- c(cmd, lapply(sets,charToRaw))
-  .sendCmdMulti(cmd)
+  do.call('.redisCmd',lapply(c(list('SINTERSTORE'),sets),charToRaw))
 }
 
 redisSDiff <- function(keys, ...)
 {
   sets <- c(as.list(keys),list(...))
-  cmd <- list(charToRaw('SDIFF'))
-  cmd <- c(cmd, lapply(sets,charToRaw))
-  .sendCmdMulti(cmd)
+  do.call('.redisCmd',lapply(c(list('SDIFF'),sets),charToRaw))
 }
 
 redisSDiffStore <- function(dest, keys, ...)
 {
   sets <- c(as.list(dest),as.list(keys),list(...))
-  cmd <- list(charToRaw('SDIFFSTORE'))
-  cmd <- c(cmd, lapply(sets,charToRaw))
-  .sendCmdMulti(cmd)
+  do.call('.redisCmd',lapply(c(list('SDIFFSTORE'),sets),charToRaw))
 }
 
 redisSIsMember <- function(set, element)
 {
-  cmd <- list(SISMEMBER=charToRaw(set),element)
-  1 == .sendCmdMulti(cmd)
+  set <- as.character(set)
+  element <- as.character(element)
+  1 == .redisCmd(.raw('SISMEMBER'),.raw(set),.raw(element))
 }
 
 redisSRandMember <- function(set)
 {
-  cmd <- list(SRANDMEMBER=charToRaw(set))
-  .sendCmdMulti(cmd)
+  .redisCmd(.raw('SRANDMEMBER'),.raw(set))
 }
 
 redisSAdd <- function(set, element)
 {
-  cmd <- list(SADD=charToRaw(set),element)
-  .sendCmdMulti(cmd) == 1
+  .redisCmd(.raw('SADD'),.raw(set),element)
 }
 
 redisSPop <- function(set)
 {
-  msg <- paste('SPOP ',set,'\r\n',sep='')
-  .sendCmd(msg)
+  .redisCmd(.raw('SPOP'),.raw(set))
 }
 
 redisSMembers <- function(set)
 {
-  msg <- paste('SMEMBERS ',set,'\r\n',sep='')
-  .sendCmd(msg)
+  .redisCmd(.raw('SMEMBERS'),.raw(set))
 }
 
 redisSRem <- function(set, element)
 {
-  cmd <- list(SREM=charToRaw(set),element)
-  .sendCmdMulti(cmd) == 1
+  .redisCmd(.raw('SREM'),.raw(set),element)
 }
 
 redisSCard <- function(set)
 {
-  msg <- paste('SCARD ',set,'\r\n',sep='')
-  .sendCmd(msg)
+  .redisCmd(.raw('SCARD'),.raw(set))
 }
 
 redisSMove <- function(setA, setB, element)
 {
-  cmd <- list(SMOVE=charToRaw(setA),charToRaw(setB),element)
-  .sendCmdMulti(cmd) == 1
+  .redisCmd(.raw('SMOVE'),.raw(setA),.raw(setB),element)
 }
-

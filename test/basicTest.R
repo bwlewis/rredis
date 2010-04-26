@@ -4,22 +4,25 @@ test01 <- function() {
 
 test02 <- function() {
   # legacy exists test
+  redisFlushAll()
   checkEquals(FALSE, redisExists('foo'))
 }
 
 test03 <- function() {
   # delete test
+  redisFlushAll()
   checkEquals(FALSE, suppressWarnings(redisDelete('foo')))
 }
 
 test04 <- function() {
   # empty get test
+  redisFlushAll()
   checkTrue(is.null(redisGet('foo')))
 }
 
 test05 <- function() {
   # simple set test
-  checkEquals('OK', redisSet('foo', 'bar'))
+  checkEquals(TRUE, redisSet('foo', 'bar'))
 }
 
 test06 <- function() {
@@ -48,12 +51,12 @@ test10 <- function() {
   # mget test
   redisSet('foo', 'bar')
   redisSet('bar', 'foo')
-  checkEquals(list('bar', 'foo'), redisMGet(c('foo', 'bar')))
+  checkEquals(list(foo='bar', bar='foo'), redisMGet(c('foo', 'bar')))
 }
 
 test11 <- function() {
   # simple mset test
-  checkEquals('OK', redisMSet(c('foo'), c('foo')))
+  checkEquals(TRUE, redisMSet(list(foo='foo',bar='bar')))
 }
 
 test12 <- function() {
@@ -64,8 +67,8 @@ test12 <- function() {
 test13 <- function() {
   # real mset test
   redisDelete(c('foo', 'bar'))
-  redisMSet(c('foo', 'bar'), c('foo','bar'))
-  checkEquals(list('foo', 'bar'), redisMGet(c('foo', 'bar')))
+  redisMSet(list(foo='bar',bar='foo'))
+  checkEquals(list(foo='bar',bar='foo'), redisMGet(c('foo', 'bar')))
   redisDelete(c('foo', 'bar'))
 }
 
@@ -79,9 +82,10 @@ test14 <- function() {
 
 test15 <- function() {
   # keys test
-  checkEquals('', redisKeys('*'))
+  redisFlushAll()
+  checkEquals(NULL, redisKeys('*'))
   redisSet('foo', 1)
-  checkEquals('foo', redisKeys('*'))
+  checkEquals(list('foo'), redisKeys('*'))
   redisDelete('foo')
 }
 
@@ -118,11 +122,12 @@ test18 <- function() {
 
 test19 <- function() {
   # set/mset nx mode test
+  redisFlushAll()
   checkTrue(redisSet('foo', 1, NX=TRUE))
   checkEquals(FALSE, redisSet('foo', 1, NX=TRUE))
-  checkEquals(FALSE, redisMSet('foo', 1, NX=TRUE))
-  redisDelete(c('foo','bar'))
-  checkTrue(redisMSet(c('foo','bar'), c(1,2), NX=TRUE))
+  checkEquals(FALSE, redisMSet(list(foo=1), NX=TRUE))
+  redisDelete('foo')
+  checkTrue(redisMSet(list(foo=1,bar=2), NX=TRUE))
   redisDelete(c('foo','bar'))
 }  
 

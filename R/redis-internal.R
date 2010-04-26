@@ -23,7 +23,7 @@
 .redisPP <- function() 
 {
   # Ping-pong
-  .sendCmd('PING\r\n')
+  .redisCmd(.raw('PING'))
 }
 
 .cerealize <- function(value) 
@@ -32,13 +32,8 @@
   else value
 }
 
-.redismsg <- function(...) 
-{
-  dat <- list(...)
-  paste(paste(dat,collapse=' '), '\r\n', sep='')
-}
 
-.getResponse <- function(names=NULL) 
+.getResponse <- function()
 {
   con <- .redis()
   socketSelect(list(con))
@@ -103,7 +98,6 @@
            numVars <- as.numeric(substr(l,2,nchar(l)))
            if(numVars > 0) {
              vals <- vector('list',numVars)
-             if(!is.null(names)) names(vals) <- names
              for (i in 1:numVars) {
 # XXX This extra copy is unfortunate, but so is the default R behavior:
 # assigning a list entry to NULL removes it from the list!
@@ -117,50 +111,47 @@
          stop('Unknown message type'))
 }
 
-.sendCmd <- function(cmd, bin=NULL, checkResponse=TRUE, ...) 
+#
+# .raw is just a shorthand wrapper for charToRaw:
+#
+.raw <- function(word) 
+{
+  charToRaw(word)
+}
+
+# .redisCmd corresponds to the Redis "multi bulk" protocol. It 
+# expects an argument list of command elements. Arguments that 
+# are not of type raw are serialized.
+# Examples:
+# .redisCmd(.raw('INFO'))
+# .redisCmd(.raw('SET'),.raw('X'), runif(5))
+#
+# We use match.call here instead of, for example, as.list() to try to 
+# avoid making unnecessary copies of (potentially large) function arguments.
+#
+# We can further improve this by writing a shadow serialization routine that
+# quickly computes the length of a serialized object without serializing it.
+# Then, we could serialize directly to the connection, avoiding the temporary
+# copy (which, unfortunately, is limited to 2GB due to R indexing).
+.redisCmd <- function(...)
 {
   con <- .redis()
+  f <- match.call()
+  n <- length(f) - 1
+  hdr <- paste('*', as.character(n), '\r\n',sep='')
   socketSelect(list(con), write=TRUE)
-  cat(cmd, file=con)
-  if (!is.null(bin)) {
+  cat(hdr, file=con)
+  for(j in 1:n) {
+    v <- eval(f[[j+1]],envir=sys.frame(-1))
+    if(!is.raw(v)) v <- .cerealize(v)
+    l <- length(v)
+    hdr <- paste('$', as.character(l), '\r\n', sep='')
     socketSelect(list(con), write=TRUE)
-    writeBin(bin, con)
+    cat(hdr, file=con)
+    socketSelect(list(con), write=TRUE)
+    writeBin(v, con)
     socketSelect(list(con), write=TRUE)
     cat('\r\n', file=con)
   }
-  if (checkResponse) .getResponse(...)
-}
-
-# Requires a list of key1=value1, key2=value2, ...
-# This represents the multi-bulk send protocol. Keys are sent as plain
-# text (not as R objects), values as serialized objects.
-# NA or zero-length keys are allowed, for example: 
-# list(SADD=charToRaw("mykey"), myvalue)
-# NA or zero-length keys are simply skipped in the outgoing message.
-.sendCmdMulti <- function(keyvalues, ...) 
-{
-  numItems <- length(keyvalues)
-  keys <- names(keyvalues)
-  if(is.null(keys)) {
-    names(keyvalues) <- NA
-    keys <- names(keyvalues)
-  }
-  n <- numItems + length(keys[(nchar(keys)!=0) & !is.na(keys)])
-  foo <- paste('*', as.character(n), '\r\n',sep='')
-  .sendCmd(foo,checkResponse=FALSE)
-  for (i in 1:numItems) {
-    if((nchar(keys[[i]])>0) & (!is.na(keys[[i]]))) {
-      foo <- paste('$', as.character(nchar(keys[[i]])), '\r\n',
-                keys[[i]], '\r\n', sep='')
-      .sendCmd(foo, checkResponse=FALSE)
-    }
-    keyvalues[[i]] <- .cerealize(keyvalues[[i]])
-    l <- length(keyvalues[[i]])
-    if(l>0) {
-      bar <- paste('$', as.character(l), '\r\n', sep='')
-      .sendCmd(bar, bin = keyvalues[[i]], checkResponse=FALSE)
-      .sendCmd('\r\n', checkResponse=FALSE)
-     }
-  }
-  .getResponse(...)
+  .getResponse()
 }
