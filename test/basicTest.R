@@ -80,22 +80,22 @@ test14 <- function() {
   redisDelete('foo')
 }
 
-test15 <- function() {
-  # keys test
-  redisFlushAll()
-  checkEquals(NULL, redisKeys('*'))
-  redisSet('foo', 1)
-  checkEquals(list('foo'), redisKeys('*'))
-  redisDelete('foo')
-}
+###test15 <- function() {
+###  # keys test
+###  redisFlushAll()
+###  checkEquals(NULL, redisKeys('*'))
+###  redisSet('foo', 1)
+###  checkEquals(list('foo'), redisKeys('*'))
+###  redisDelete('foo')
+###}
 
-test16 <- function() {
-  # randomkey test
-  checkEquals('', redisRandomKey())
-  redisSet('foo', 1)
-  checkEquals('foo', redisRandomKey())
-  redisDelete('foo')
-}
+###test16 <- function() {
+###  # randomkey test
+###  checkEquals('', redisRandomKey())
+###  redisSet('foo', 1)
+###  checkEquals('foo', redisRandomKey())
+###  redisDelete('foo')
+###}
 
 test17 <- function() {
   # expire test
