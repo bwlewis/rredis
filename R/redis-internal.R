@@ -32,7 +32,6 @@
   else value
 }
 
-
 .getResponse <- function()
 {
   con <- .redis()
