@@ -30,7 +30,7 @@ B. W. Lewis
 }
 \examples{
 \dontrun{
-redisStore('x',runif(5))
+redisSet('x',5)
 redisDecrBy('x',3)
 }
 }

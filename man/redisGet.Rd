@@ -31,7 +31,7 @@ B. W. Lewis
 }
 \examples{
 \dontrun{
-redisStore('x',runif(5))
+redisSet('x',runif(5))
 redisGet('x')
 }
 }

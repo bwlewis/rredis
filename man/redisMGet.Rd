@@ -27,8 +27,8 @@ B. W. Lewis
 }
 \examples{
 \dontrun{
-redisStore('x',runif(5))
-redisStore('y',runif(5))
+redisSet('x',runif(5))
+redisSet('y',runif(5))
 redisMGet(c('x','y'))
 }
 }
