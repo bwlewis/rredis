@@ -57,8 +57,11 @@ redisHVals <- function(key)
 
 redisHGetAll <- function(key)
 {
+  retval <- NULL
   all <- .redisCmd(.raw('HGETALL'), .raw(key))
-  retval <- all[seq(2,length(all),by=2)]
-  names(retval) <- all[seq(1,length(all),by=2)]
+  if(!is.null(all)) {
+    retval <- all[seq(2,length(all),by=2)]
+    names(retval) <- all[seq(1,length(all),by=2)]
+  }
   retval
 }
