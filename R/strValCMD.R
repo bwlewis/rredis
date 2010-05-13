@@ -4,6 +4,10 @@ redisGet <- function(key) {
   .redisCmd(.raw('GET'), .raw(key))
 }
 
+redisGetRaw <- function(key) {
+  .redisRawCmd(.raw('GET'), .raw(key))
+}
+
 redisSet <- function(key, value, NX=FALSE) {
   value <- .cerealize(value)
   cmd <- 'SET'
