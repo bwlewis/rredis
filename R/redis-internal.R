@@ -32,7 +32,7 @@
   else value
 }
 
-.getResponse <- function()
+.getResponse <- function(raw=FALSE)
 {
   con <- .redis()
   socketSelect(list(con))
@@ -61,7 +61,10 @@
              if(m==n) {
                socketSelect(list(con))
                l <- readLines(con,n=1)  # Trailing \r\n
-               return(tryCatch(unserialize(dat),
+               if(raw)
+                 return(dat)
+               else
+                 return(tryCatch(unserialize(dat),
                          error=function(e) rawToChar(dat)))
              }
 # The message was not fully recieved in one pass.
@@ -88,8 +91,10 @@
              socketSelect(list(con))
              l <- readLines(con,n=1)  # Trailing \r\n
              length(r) <- j
-             # Try retrieving an R object, otherwise default to character:
-             tryCatch(unserialize(do.call(c,r)),
+             if(raw)
+               do.call(c,r)
+             else
+               tryCatch(unserialize(do.call(c,r)),
                       error=function(e) rawToChar(do.call(c,r)))
            },
          '*' = {
@@ -115,7 +120,7 @@
 #
 .raw <- function(word) 
 {
-  charToRaw(word)
+  tryCatch(charToRaw(word),warning=function(w) stop(w), error=function(e) stop(e))
 }
 
 # .redisCmd corresponds to the Redis "multi bulk" protocol. It 
@@ -141,7 +146,10 @@
   socketSelect(list(con), write=TRUE)
   cat(hdr, file=con)
   for(j in 1:n) {
-    v <- eval(f[[j+1]],envir=sys.frame(-1))
+    tryCatch(
+      v <- eval(f[[j+1]],envir=sys.frame(-1)),
+      error=function(e) {.redisError("Invalid agrument");invisible()}
+    )
     if(!is.raw(v)) v <- .cerealize(v)
     l <- length(v)
     hdr <- paste('$', as.character(l), '\r\n', sep='')
@@ -153,4 +161,27 @@
     cat('\r\n', file=con)
   }
   .getResponse()
+}
+
+.redisRawCmd <- function(...)
+{
+  con <- .redis()
+  f <- match.call()
+  n <- length(f) - 1
+  hdr <- paste('*', as.character(n), '\r\n',sep='')
+  socketSelect(list(con), write=TRUE)
+  cat(hdr, file=con)
+  for(j in 1:n) {
+    v <- eval(f[[j+1]],envir=sys.frame(-1))
+    if(!is.raw(v)) v <- .cerealize(v)
+    l <- length(v)
+    hdr <- paste('$', as.character(l), '\r\n', sep='')
+    socketSelect(list(con), write=TRUE)
+    cat(hdr, file=con)
+    socketSelect(list(con), write=TRUE)
+    writeBin(v, con)
+    socketSelect(list(con), write=TRUE)
+    cat('\r\n', file=con)
+  }
+  .getResponse(raw=TRUE)
 }
