@@ -21,7 +21,7 @@ function(host='localhost', port=6379, returnRef=FALSE)
             })
    }
   if(returnRef) return(list(con=.redisEnv$con, host=.redisEnv$host,
-                            port=redisEnv$port))
+                            port=.redisEnv$port))
   invisible()
 }
 
