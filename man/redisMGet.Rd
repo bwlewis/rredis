@@ -4,17 +4,20 @@
 \description{Retrieve values corresponding to the specified list of keys. 
 }
 \usage{
-redisMGet(keys)
+redisMGet(keys, raw = FALSE)
 }
 \arguments{
   \item{keys}{A vector or list of character strings  corresponding to 
 keys to retrieve.}
+  \item{raw}{Set \code{raw=TRUE} to skip de-serialization of the returned
+values. }
 }
 \value{
 A list of retrieved key/value pairs. Missing values return NULL.
 }
 \details{
-Values are returned in a list with names corresponding to keys.
+Values are returned in a list with names corresponding to keys. The \code{raw}
+argument is used to retrieve binary data from other languages.
 }
 \references{
 http://code.google.com/p/redis/wiki/MGetCommand

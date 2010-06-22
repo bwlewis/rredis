@@ -106,7 +106,7 @@
 # XXX This extra copy is unfortunate, but so is the default R behavior:
 # assigning a list entry to NULL removes it from the list!
 # Does anyone have a better idea here?
-               vi <- .getResponse()
+               vi <- .getResponse(raw=raw)
                if(!is.null(vi)) vals[[i]] <- vi
              }
            }

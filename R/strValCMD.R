@@ -1,12 +1,10 @@
 # This file contains functions that operate on Redis 'string' values.
 
-redisGet <- function(key) {
+redisGet <- function(key, raw=FALSE) {
+  if(raw) return(.redisRawCmd(.raw('GET'), .raw(key)))
   .redisCmd(.raw('GET'), .raw(key))
 }
 
-redisGetRaw <- function(key) {
-  .redisRawCmd(.raw('GET'), .raw(key))
-}
 
 redisSet <- function(key, value, NX=FALSE) {
   value <- .cerealize(value)
@@ -21,9 +19,12 @@ redisGetSet <- function(key, value) {
   .redisCmd(.raw('GETSET'),.raw(key),value)
 }
 
-redisMGet <- function(keys) {
+redisMGet <- function(keys,raw=FALSE) {
   keylist <- as.list(keys)
-  x <- do.call('.redisCmd',lapply(c(list('MGET'),keylist),charToRaw))
+  if(raw)
+    x <- do.call('.redisRawCmd',lapply(c(list('MGET'),keylist),charToRaw))
+  else
+    x <- do.call('.redisCmd',lapply(c(list('MGET'),keylist),charToRaw))
   names(x) <- keylist
   x
 }
