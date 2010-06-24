@@ -2,7 +2,7 @@
 
 redisZAdd <- function(key, score, member)
 {
-  .redisCmd(.raw('ZADD'),.raw(set), .raw(score), member)
+  .redisCmd(.raw('ZADD'),.raw(key), .raw(as.character(score)), member)
 }
 
 redisZRem <- function(key, member)
@@ -12,7 +12,7 @@ redisZRem <- function(key, member)
 
 redisZIncrBy <- function(key, member, increment)
 {
-  .redisCmd(.raw('ZREM'),.raw(key), .raw(increment), member)
+  .redisCmd(.raw('ZINCRBY'),.raw(key), .raw(as.character(increment)), member)
 }
 
 redisZRank <- function(key, member)
@@ -27,6 +27,8 @@ redisZRevRank <- function(key, member)
 
 redisZRange <- function(key, start, end, withscores=FALSE)
 {
+  start <- as.character(start)
+  end <- as.character(end)
   if(withscores)
     .redisCmd(.raw('ZRANGE'),.raw(key),.raw(start),.raw(end),.raw('WITHSCORES'))
   else
@@ -35,6 +37,8 @@ redisZRange <- function(key, start, end, withscores=FALSE)
 
 redisZRevRange <- function(key, start, end, withscores=FALSE)
 {
+  start <- as.character(start)
+  end <- as.character(end)
   if(withscores)
     .redisCmd(.raw('ZREVRANGE'),.raw(key),.raw(start),.raw(end),.raw('WITHSCORES'))
   else
@@ -43,6 +47,8 @@ redisZRevRange <- function(key, start, end, withscores=FALSE)
 
 redisZRangeByScore <- function(key, min, max, offset=NULL, count=NULL, withscores=FALSE)
 {
+  min <- as.character(min)
+  max <- as.character(min)
   a <- c(alist(), list(.raw('ZRANGEBYSCORE'), .raw(key), .raw(min), .raw(max)))
   if(!is.null(offset) && !is.null(count)) {
     a <- c(a, list(.raw('LIMIT'), .raw(offset), .raw(count)))
@@ -54,11 +60,15 @@ redisZRangeByScore <- function(key, min, max, offset=NULL, count=NULL, withscore
 
 redisZRemRangeByRank <- function(key, start, end)
 {
+  start <- as.character(start)
+  end <- as.character(end)
   .redisCmd(.raw('ZREMRANGEBYRANK'), .raw(key), .raw(start), .raw(end))
 }
 
 redisZRemRangeByScore <- function(key, min, max)
 {
+  min <- as.character(min)
+  max <- as.character(min)
   .redisCmd(.raw('ZREMRANGEBYRANK'), .raw(key), .raw(min), .raw(max))
 }
 
