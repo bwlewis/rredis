@@ -48,13 +48,13 @@ redisZRevRange <- function(key, start, end, withscores=FALSE)
 redisZRangeByScore <- function(key, min, max, offset=NULL, count=NULL, withscores=FALSE)
 {
   min <- as.character(min)
-  max <- as.character(min)
+  max <- as.character(max)
   a <- c(alist(), list(.raw('ZRANGEBYSCORE'), .raw(key), .raw(min), .raw(max)))
   if(!is.null(offset) && !is.null(count)) {
     a <- c(a, list(.raw('LIMIT'), .raw(offset), .raw(count)))
   }
   if(withscores)
-    a <- c(a, as.list(.raw('WITHSCORES')))
+    a <- c(a, list(.raw('WITHSCORES')))
   do.call('.redisCmd', a)
 }
 
@@ -68,7 +68,7 @@ redisZRemRangeByRank <- function(key, start, end)
 redisZRemRangeByScore <- function(key, min, max)
 {
   min <- as.character(min)
-  max <- as.character(min)
+  max <- as.character(max)
   .redisCmd(.raw('ZREMRANGEBYRANK'), .raw(key), .raw(min), .raw(max))
 }
 
@@ -111,20 +111,20 @@ redisZUnion <- function(dstkey, keys, weights=c(), aggregate=NULL)
 redisSort <- function(key, decreasing=FALSE, alpha=FALSE,  by=NULL, start=NULL, 
                       count=NULL, get=NULL, store=NULL)
 {
-  a <- c(alist(), list(.raw(key)))
+  a <- c(alist(), list(.raw('SORT')), list(.raw(key)))
   if(!is.null(by))
-    a <- c(a, as.list(.raw('BY'), .raw(by)))
+    a <- c(a, list(.raw('BY'), .raw(by)))
   if(!is.null(start) && !is.null(count))
-    a <- c(a, as.list(.raw('LIMIT'), .raw(start), .raw(count)))
+    a <- c(a, list(.raw('LIMIT'), .raw(start), .raw(count)))
   if(!is.null(get))
-    a <- c(a, as.list(.raw('GET'), .raw(get)))
+    a <- c(a, list(.raw('GET'), .raw(get)))
   if(decreasing)
-    a <- c(a, as.list(.raw('DESC')))
+    a <- c(a, list(.raw('DESC')))
   else
-    a <- c(a, as.list(.raw('ASC')))
+    a <- c(a, list(.raw('ASC')))
   if(alpha)
-    a <- c(a, as.list(.raw('ALPHA')))
-  if(store)
-    a <- c(a, as.list(.raw('STORE'), .raw(store)))
+    a <- c(a, list(.raw('ALPHA')))
+  if(!is.null(store))
+    a <- c(a, list(.raw('STORE'), .raw(store)))
   do.call('.redisCmd', a)
 }
