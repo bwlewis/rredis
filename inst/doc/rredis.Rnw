@@ -109,8 +109,8 @@ Importantly, redis lists support atomic blocking and asynchronous operation.
 \item Redis {\it sets} are unordered
 collections of unique Redis {\it strings} equipped with typical set operations
 like unions and intersections. Uniqueness is enforced by Redis at 
-insertion-time.  Redis also supports ordered sets, but the rredis
-package does not yet include them (the next version will!).
+insertion-time.  Redis also supports operations on ordered sets, 
+with set commands prefixed by ``Z.''
 \end{itemize}
 
 Expiration intervals or absolute expiration times may be set on any Redis

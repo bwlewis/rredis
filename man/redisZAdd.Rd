@@ -4,20 +4,21 @@
 redisZAdd
 }
 \description{
-redisZAdd
+Add an element to a Redis sorted set. Sorted sets order their elements
+by numeric weights.
 }
 \usage{
 redisZAdd(key, score, member)
 }
 \arguments{
   \item{key}{
-%%     ~~Describe \code{key} here~~
+The set name.
 }
   \item{score}{
-%%     ~~Describe \code{score} here~~
+The numeric score associated with the new element (member).
 }
   \item{member}{
-%%     ~~Describe \code{member} here~~
+The new object to add to the set.
 }
 }
 \references{

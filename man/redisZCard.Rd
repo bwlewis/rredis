@@ -4,26 +4,22 @@
 redisZCard.Rd
 }
 \description{
-redisZCard.Rd
+Report the number of elements in a sorted set.
 }
 \usage{
 redisZCard(key)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{key}{
-%%     ~~Describe \code{key} here~~
+The name of the set.
 }
 }
 \details{
 See the Redis documentation for details.
 }
 \value{
-See the Redis documentation for more information.
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+The number of elements in the set or zero if the set does not exist.
+An error is thrown if the key name exists but is not a set.
 }
 \references{
 http://code.google.com/p/redis/

@@ -1,33 +1,27 @@
 \name{redisZRem}
 \alias{redisZRem}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-redisZRem.Rd
+redisZRem
 }
 \description{
-redisZRem.Rd
+Delete an element from an ordered set.
 }
 \usage{
 redisZRem(key, member)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{key}{
-%%     ~~Describe \code{key} here~~
+The set name.
 }
   \item{member}{
-%%     ~~Describe \code{member} here~~
+The element to delete.
 }
 }
 \details{
 See the Redis documentation for details.
 }
 \value{
-See the Redis documentation for more information.
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+0 or 1: 0 indicates that the element could not be removed, 1 that it was removed.
 }
 \references{
 http://code.google.com/p/redis/

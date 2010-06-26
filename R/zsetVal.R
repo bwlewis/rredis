@@ -12,37 +12,34 @@ redisZRem <- function(key, member)
 
 redisZIncrBy <- function(key, member, increment)
 {
-  .redisCmd(.raw('ZINCRBY'),.raw(key), .raw(as.character(increment)), member)
+  z <- NULL
+  z <- .redisCmd(.raw('ZINCRBY'),.raw(key), .raw(as.character(increment)), member)
+  if(!is.null(z)) z <- as.numeric(z)
+  z
 }
 
-redisZRank <- function(key, member)
+redisZRank <- function(key, member, decreasing=FALSE)
 {
-  .redisCmd(.raw('ZRANK'),.raw(key), member)
+  cmd <- .raw('ZRANK')
+  if(decreasing) cmd <- .raw('ZREVRANK')
+  .redisCmd(cmd,.raw(key), member)
 }
 
-redisZRevRank <- function(key, member)
+redisZRange <- function(key, start=0, end=-1, decreasing=FALSE, withscores=FALSE)
 {
-  .redisCmd(.raw('ZREVRANK'),.raw(key), member)
-}
-
-redisZRange <- function(key, start, end, withscores=FALSE)
-{
+  cmd <- .raw('ZRANGE')
+  if(decreasing) cmd <- .raw('ZREVRANGE')
   start <- as.character(start)
   end <- as.character(end)
-  if(withscores)
-    .redisCmd(.raw('ZRANGE'),.raw(key),.raw(start),.raw(end),.raw('WITHSCORES'))
+  if(withscores) {
+    z <- .redisCmd(cmd,.raw(key),.raw(start),.raw(end),.raw('WITHSCORES'))
+    if(!is.null(z)) {
+      return(list(elements=z[seq(1,length(z),by=2)],
+                  scores=as.list(as.numeric(z[seq(2,length(z),by=2)]))))
+    }
+   }
   else
-    .redisCmd(.raw('ZRANGE'),.raw(key),.raw(start),.raw(end))
-}
-
-redisZRevRange <- function(key, start, end, withscores=FALSE)
-{
-  start <- as.character(start)
-  end <- as.character(end)
-  if(withscores)
-    .redisCmd(.raw('ZREVRANGE'),.raw(key),.raw(start),.raw(end),.raw('WITHSCORES'))
-  else
-    .redisCmd(.raw('ZREVRANGE'),.raw(key),.raw(start),.raw(end))
+    .redisCmd(cmd,.raw(key),.raw(start),.raw(end))
 }
 
 redisZRangeByScore <- function(key, min, max, offset=NULL, count=NULL, withscores=FALSE)
@@ -69,7 +66,7 @@ redisZRemRangeByScore <- function(key, min, max)
 {
   min <- as.character(min)
   max <- as.character(max)
-  .redisCmd(.raw('ZREMRANGEBYRANK'), .raw(key), .raw(min), .raw(max))
+  .redisCmd(.raw('ZREMRANGEBYSCORE'), .raw(key), .raw(min), .raw(max))
 }
 
 redisZCard <- function(key)
@@ -79,14 +76,15 @@ redisZCard <- function(key)
 
 redisZScore <- function(key, element)
 {
-  ret <- .redisCmd(.raw('ZSCORE'), .raw(key), .raw(element))
+  ret <- .redisCmd(.raw('ZSCORE'), .raw(key), element)
   if(!is.null(ret)) ret <- as.numeric(ret)
   ret
 }
 
 .zinu <- function(type, dstkey, keys, weights=c(), aggregate=NULL)
 {
-  a <- c(alist(), list(.raw(type), .raw(dstkey)))
+  N <- length(keys)
+  a <- c(alist(), list(.raw(type), .raw(dstkey), .raw(as.character(N))))
   sets <- lapply(as.list(keys),charToRaw)
   a <- c(a, sets)
   if(!is.null(weights)) {
@@ -98,14 +96,14 @@ redisZScore <- function(key, element)
   do.call('.redisCmd', a)
 }
 
-redisZInter <- function(dstkey, keys, weights=c(), aggregate=NULL)
+redisZInterStore <- function(dstkey, keys, weights=c(), aggregate=NULL)
 {
-  .zinu('ZINTER', dstkey, keys, weights, aggregate)
+  .zinu('ZINTERSTORE', dstkey, keys, weights, aggregate)
 }
 
-redisZUnion <- function(dstkey, keys, weights=c(), aggregate=NULL)
+redisZUnionStore <- function(dstkey, keys, weights=c(), aggregate=NULL)
 {
-  .zinu('ZUNION', dstkey, keys, weights, aggregate)
+  .zinu('ZUNIONSTORE', dstkey, keys, weights, aggregate)
 }
 
 redisSort <- function(key, decreasing=FALSE, alpha=FALSE,  by=NULL, start=NULL, 

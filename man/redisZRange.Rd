@@ -1,39 +1,51 @@
 \name{redisZRange}
 \alias{redisZRange}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-redisZRange.Rd
+redisZRange
 }
 \description{
-redisZRange.Rd
+Return a subset of an ordered set.
 }
 \usage{
-redisZRange(key, start, end, withscores = FALSE)
+redisZRange(key, start = 0, end = -1, decreasing = FALSE, withscores = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{key}{
-%%     ~~Describe \code{key} here~~
+The set name.
 }
   \item{start}{
-%%     ~~Describe \code{start} here~~
+Starting index value.
 }
   \item{end}{
-%%     ~~Describe \code{end} here~~
+Ending index value.
+}
+  \item{decreasing}{
+Set TRUE to sort in decreasing order of scores.
 }
   \item{withscores}{
-%%     ~~Describe \code{withscores} here~~
+If TRUE, also return set element scores.
 }
 }
 \details{
-See the Redis documentation for details.
+Return the specified elements of the sorted set at the specified key. The
+elements are considered sorted from the lowerest to the highest score
+if decreasing = FALSE, and from highest to lowest score 
+if decreasing = TRUE. Start and end are
+zero-based indexes. 0 is the first element of the sorted set (the one with the
+lowerest score), 1 the next element by score and so on.
+start and end can also be negative numbers indicating offsets from the end of
+the sorted set. For example -1 is the last element of the sorted set, -2 the
+penultimate element and so on.  
+
+Indexes out of range will not produce an error:
+if start is over the end of the sorted set, or start is greater than end, 
+an empty list is
+returned. If end is over the end of the sorted set Redis will threat it just
+like the last element of the sorted set.
 }
 \value{
-See the Redis documentation for more information.
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A list of returned set elements. If withscores = TRUE, two lists called
+'elements' and 'scores' are returned.
 }
 \references{
 http://code.google.com/p/redis/

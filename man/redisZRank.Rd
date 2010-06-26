@@ -1,33 +1,32 @@
 \name{redisZRank}
 \alias{redisZRank}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-redisZRank.Rd
+redisZRank
 }
 \description{
-redisZRank.Rd
+Return the rank of an element of an ordered set.
 }
 \usage{
-redisZRank(key, member)
+redisZRank(key, member, decreasing = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{key}{
-%%     ~~Describe \code{key} here~~
+The set name.
 }
   \item{member}{
-%%     ~~Describe \code{member} here~~
+The set element.
+}
+  \item{decreasing}{
+Set to TRUE to rank in reverse order of score.
 }
 }
 \details{
-See the Redis documentation for details.
+Returns the rank of the member in the sorted set, with scores ordered from 
+low to high by default, or from high to low if decreasing = TRUE. 
+The returned rank (or index) of the member is 0-based.
 }
 \value{
-See the Redis documentation for more information.
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+The numeric rank of the set element.
 }
 \references{
 http://code.google.com/p/redis/

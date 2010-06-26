@@ -1,3 +1,5 @@
 require(rredis)
 require(RUnit)
 runTestFile('basicTest.R')
+runTestFile('zsetTest.R')
+runTestFile('endTest.R')
