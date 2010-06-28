@@ -50,8 +50,14 @@ redisZRangeByScore <- function(key, min, max, offset=NULL, count=NULL, withscore
   if(!is.null(offset) && !is.null(count)) {
     a <- c(a, list(.raw('LIMIT'), .raw(offset), .raw(count)))
   }
-  if(withscores)
-    a <- c(a, list(.raw('WITHSCORES')))
+  if(withscores) {
+    a <- c(a,list(.raw('WITHSCORES')))
+    z <- do.call('.redisCmd',a)
+    if(!is.null(z)) {
+      return(list(elements=z[seq(1,length(z),by=2)],
+                  scores=as.list(as.numeric(z[seq(2,length(z),by=2)]))))
+    }
+   }
   do.call('.redisCmd', a)
 }
 
@@ -88,10 +94,10 @@ redisZScore <- function(key, element)
   sets <- lapply(as.list(keys),charToRaw)
   a <- c(a, sets)
   if(!is.null(weights)) {
-    a <- c(a, .raw('WEIGHTS'), lapply(as.list(weights), charToRaw))
+    a <- c(a, list(.raw('WEIGHTS')), lapply(as.list(as.character(weights)), charToRaw))
   }
   if(!is.null(aggregate)) {
-    a <- c(a, .raw('AGGREGATE'), .raw(aggregate))
+    a <- c(a, list(.raw('AGGREGATE'), .raw(aggregate)))
   }
   do.call('.redisCmd', a)
 }
