@@ -8,7 +8,13 @@ function(host='localhost', port=6379, returnRef=FALSE)
   else if(!isOpen(.redisEnv$con)) connect <- TRUE
   if(connect)
    {
-    con <- socketConnection(host, port, open='a+b')
+# XXX R Windows suffers from a serious problem affecting non-blocking
+# connections and readBin with raw data. The unfortunate hack solution
+# is to force blocking connections on Windows systems.
+    if(Sys.info()[[1]] == "Windows")
+      con <- socketConnection(host, port, open='a+b', blocking=TRUE)
+    else
+      con <- socketConnection(host, port, open='a+b')
 # Stash state in the redis enivronment describing this connection:
     assign('con',con,envir=.redisEnv)
     assign('host',host,envir=.redisEnv)
