@@ -1,8 +1,8 @@
 Package: rredis
 Type: Package
 Title: Redis client for R
-Version: 1.4
-Date: 2010-07-11
+Version: 1.5
+Date: 2011-03-09
 Author: B. W. Lewis
 Maintainer: B. W. Lewis <blewis@illposed.net>
 Description: The 'redis' package provides a simple R client for the Redis persistent key-value database available from http://code.google.com/p/redis/.
