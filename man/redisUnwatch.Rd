@@ -1,0 +1,20 @@
+\name{redisUnwatch}
+\alias{redisUnwatch}
+\title{redisUnwatch}
+\description{Stop watching the specified keys for changes.}
+\usage{
+redisUnwatch(keys)
+}
+\arguments{
+  \item{keys}{A character vector or list of key names to stop watching.}
+}
+\details{
+Stop watching the specified keys. See \code{redisWatch} for details.
+}
+\value{"OK"}
+\references{
+http://code.google.com/p/redis/
+}
+\author{
+B. W. Lewis
+}

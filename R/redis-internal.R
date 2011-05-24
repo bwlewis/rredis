@@ -103,9 +103,6 @@
            if(numVars > 0) {
              vals <- vector('list',numVars)
              for (i in 1:numVars) {
-# XXX This extra copy is unfortunate, but so is the default R behavior:
-# assigning a list entry to NULL removes it from the list!
-# Does anyone have a better idea here?
                vi <- .getResponse(raw=raw)
                if(!is.null(vi)) vals[[i]] <- vi
              }

@@ -17,8 +17,7 @@ Set one or more key/value pairs in the Redis database. Existing
 values will be replaced.
 }
 \value{
-TRUE upon success. If NX = TRUE, FALSE is returned and no values will be
-set if any of the specified keys already have values.
+``OK'' upon success. 
 }
 \references{
 http://code.google.com/p/redis/wiki/MSetCommand

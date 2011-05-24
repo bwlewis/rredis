@@ -72,12 +72,11 @@ blewis@illposed.net}
 \section{Introduction}
 
 The {\tt rredis} package provides a native R interface to Redis.  Redis is an
-in-memory key/value database 
-with many innovative features
-written by Salvatore Sanfilippo.
-It supports data persistence, networked client/server
-operation, structured value types, server replication, data expiration, and
-it's very fast.
+in memory key/value database with many innovative features written by Salvatore
+Sanfilippo.  It supports data persistence, networked client/server operation,
+command pipelining,
+structured value types, server replication, data expiration, clustering,
+multicast-like publish/subscribe, and it's very fast.
 
 The following simple example illustrates a typical use of the rredis package:
 \lstset{columns=flexible, basicstyle={\ttfamily\slshape}}
@@ -91,7 +90,7 @@ The following simple example illustrates a typical use of the rredis package:
 \end{lstlisting}
 The key name ``x'' is associated with the R vector produced by \verb+rnorm(5)+
 and stored in Redis. Note that the R object associated with ``x'' is available 
-to other rredis clients, and indeed to any Redis client that can de-serialize R
+to other rredis clients, and indeed to any Redis client that can deserialize R
 objects.  Neither the Redis server nor the rredis clients need reside on the
 machine on which the result was generated.  Depending on the Redis server
 settings, ``x'' can be persistent--that is the value and its association with
@@ -111,14 +110,16 @@ collections of unique Redis {\it strings} equipped with typical set operations
 like unions and intersections. Uniqueness is enforced by Redis at 
 insertion-time.  Redis also supports operations on ordered sets, 
 with set commands prefixed by ``Z.''
+\item Redis {\it hashes} are collections of Redis {\it strings} indexed
+by a hashed set of secondary keys.
 \end{itemize}
 
 Expiration intervals or absolute expiration times may be set on any Redis
-value, even when the database is persistent. The Redis server can handle lots
+value. The Redis server can handle lots
 of small transactions with aplomb, easily exceeding 50,000 transactions/second
 even on very limited hardware\footnote{Redis easily exceeds 100,000 transactions/second on typical high-end workstations}. 
-Although Redis is an in-memory database, it uses
-a custom virtual memory system to support large objects and databases larger
+Although Redis is primarily an in-memory database, it uses
+a virtual memory scheme to support large objects and databases larger
 than available RAM.
 
 \section{Supported Platforms}
@@ -139,19 +140,9 @@ Scala, and more...
 Redis is an open-source project available from 
 \htmladdnormallink{http://code.google.com/p/redis}{http://code.google.com/p/redis}, with source code available from Github at
 \htmladdnormallink{http://github.com/antirez/redis}{http://github.com/antirez/redis}.
+Redis is also available as an installable package for most modern GNU/Linux
+operating systems.
 
-It is not necessary to ``install'' Redis to use it. One may download the code,
-compile it, and run it in place. We include an example command-line
-procedure applicable to most POSIX operating systems for completeness.
-\lstset{columns=flexible, basicstyle={\ttfamily\slshape}}
-\begin{lstlisting}
-wget http://redis.googlecode.com/files/redis-1.2.5.tar.gz
-tar xf redis-1.2.5.tar.gz
-cd redis-1.2.5
-make
-# <<Some output from your C compiler>>
-\end{lstlisting}
-At this point, unless an error occurred, you have a working copy of Redis.
 The Redis server is completely configured by the file
 \verb+redis.conf+. In order to run the Redis server as a background process,
 edit this file and change the line:
@@ -167,8 +158,10 @@ experiment with the other server settings as well. Finally, start up the
 Redis server with
 \lstset{columns=flexible, basicstyle={\ttfamily\slshape}}
 \begin{lstlisting}
-./redis-server ./redis.conf
+redis-server ./redis.conf
 \end{lstlisting}
+Note that some packaged versions of Redis on GNU/Linux set the Redis
+server to start on boot as a service.
 
 \section{The rredis Package by Example}
 
@@ -222,7 +215,6 @@ NULL
 \end{lstlisting}
 Note that one must explicitly specify a key name (``x'' in the above example)
 and that Redis key names need not correspond to R variable names. 
-Unlike R variable names, Redis key names may not contain spaces.
 
 The SET/GET operations are atomic--that is, multiple SET and or GET operations
 are guaranteed not to simultaneously occur. 
@@ -295,12 +287,10 @@ diverse applications. We illustrate cross-application communication with
 simple examples using R and the \texttt{redis-cli} command-line program
 that is included with the Redis server. 
 
-Open a terminal window and navigate to the directory in which the
-Redis server was compiled (see Section \ref{install}). You will find a
-command-line application named \texttt{redis-cli}. Store a sample
-value in the Redis database with:
+Store a sample value in the Redis database with the {\texttt{redis-cli}}
+program from the command line as follows:
 \begin{lstlisting}
-./redis-cli set shell "Greetings, R client!"
+redis-cli set shell "Greetings, R client!"
 OK
 \end{lstlisting}
 Now, leaving the terminal window open, from an R session, try:
@@ -335,6 +325,12 @@ Greetings, shell client!
 It can be tricky to share arbitrary R objects with other languages, but
 raw character strings usually provide a reasonable, if sometimes 
 inefficient, common tongue.
+
+The {\tt RAW=TRUE} option may be set on most package functions that
+receive data, for example {\tt redisGet}. Use the {\tt{RAW}} option
+to leave the message data as is (otherwise the functions try to deserialize
+it to a standard R object). The {\tt{RAW}} format is useful for binary
+exchange of data with programs other than R.
 
 \subsection{Redis Lists}
 Redis list value types provide us with a remarkably powerful and rich set of
@@ -508,30 +504,109 @@ expected set operations, as illustrated in the following example.
 \end{lstlisting}
 Redis sets do not include blocking operations.
 
-\section{A Few Remarks}
-Redis is a simple to use, powerful key/value database. Remember that Redis
-key names may not contain spaces.
+\section{Transactions}
+Redis supports batch submission of multiple Redis operations.
+Aggregating operations with transactions can in many cases significantly
+increase performance. The following
+description is adapted from the Redis documentation at 
+\htmladdnormallink{http://redis.io}{http://redis.io}:
 
-The Redis server is not yet supported on Windows operating systems. The rredis
-R client package will work on Windows (as well as most other) 
-systems and communicate with a Redis server running, for example, on Linux.
+The {\tt redisMulti}, {\tt redisExec}, {\tt redisDiscard} and {\tt redisWatch}
+form the foundation of transactions in Redis.  They allow the execution of a
+group of commands in a single step, with two important guarantees:
 
-Redis does many things exceedingly well, but does not do everything well.
-Redis is not optimized for slicing list and set data, for example in OLAP-style
-queries or to extract subsets of long column-oriented data. 
-Use an appropriate database for those types of operations.
+\begin{enumerate}
+\item
+All the commands in a transaction are serialized and executed sequentially. It
+can never happen that a request issued by another client is served in the
+middle of the execution of a Redis transaction. This guarantees that the
+commands are executed as a single atomic operation.
+\item
+Either all of the commands or none are processed. The {\tt redisExec} command
+triggers the execution of all the commands in the transaction, so if a client
+loses the connection to the server in the context of a transaction before
+calling the {\tt redisMulti} command none of the operations are performed,
+instead if the {\tt redisExec} command is called, all the operations are
+performed. When using the append-only file Redis makes sure to use a single
+write(2) syscall to write the transaction on disk. However if the Redis server
+crashes or is killed by the system administrator in some hard way it is
+possible that only a partial number of operations are registered. Redis will
+detect this condition at restart, and will exit with an error. Using the
+redis-check-aof tool it is possible to fix the append only file that will
+remove the partial transaction so that the server can start again.
+\end{enumerate}
 
-Although Redis includes a basic authentication mechanism, 
-{\bf don't use it}. If
-you require secure access to the server, or encrypted communication with the
-server, we recommend this alternative: 
-Set up Redis on a (perhaps virtual) machine that only 
-authenticated users may access. Then block all but local access to the Redis
-server port (by default, 6379). Finally, tunnel access to the port through
-an authenticated SSH session or other secure port forwarding mechanism.
+Queued Redis commands may be discarded with the {\tt redisDiscard} function.
+Upon successful execution of a transaction, the results from all of the
+queued commands are returned as a list. 
+
+The {\tt redisWatch} function  function provides a check and set style
+conditional transaction. Use {\tt redisWatch} to monitor any number of Redis
+keys. If any watched key values change prior to calling {\tt redisExec} the
+entire queued sequence will be discarded. Conditioning transactions with
+{\tt redisWatch} is quite useful in multi-client asynchronous settings.
+
+The following extremely basic example illustrates transactions conditional
+on no change in value corresponding to the ``z'' key:
+\begin{lstlisting}
+> redisWatch('z')
+[1] "OK"
+> redisMulti()
+[1] "OK"
+> redisSet('x',runif(3))
+[1] "QUEUED"
+> redisSet('y',pi)
+[1] "QUEUED"
+> redisGet('x')
+[1] "QUEUED"
+> redisExec()
+[[1]]
+[1] "OK"
+
+[[2]]
+[1] "OK"
+
+[[3]]
+[1] 0.7620601 0.5982853 0.8274721
+\end{lstlisting}
 
 
+\section{Publish/Subscribe}
 
+The publish/subscribe functions let Redis clients reliably multicast (publish)
+messages over ``channels'' that any client may subscribe to. Channels are
+identified by name (character string). Use the {\tt redisSubscribe} function to
+subscribe to one or more channels.  Use the {\tt redisPublish} function to
+transmit messages over a channel.  Once subscribed, channels must be monitored
+for incoming messages using the {\tt redisGetResponse} function, usually in an
+event loop. Beware that the {\tt redisGetResponse} function indefinitely blocks
+for an incoming message on subscribed channels.
+
+Here is a simple example:
+
+\begin{lstlisting}
+> redisSubscribe('channel1')
+
+# The loop will receive three messages from 'channel1':
+> for(j in 1:3) print(redisGetResponse())
+# A typical message might look like:
+[1]]
+[1] "message"
+
+[[2]]
+[1] "channel1"
+
+[[3]]
+[1] "message3"
+
+# Finally, unsubscribe to the channel:
+> redisUnsubscribe('channel1')
+\end{lstlisting}
+
+Note that the only Redis functions that may be used in between the
+{\tt redisSubscribe} and {\tt redisUnsubscribe} functions are 
+{\tt redisGetResponse}, {\tt redisSubscribe}, and {\tt redisMonitorChannels}
+functions.
 
 
 \end{document}

@@ -1,5 +1,35 @@
 # This file contains functions that operate on all kinds of Redis values.
-#  msg <- .redismsg(
+
+redisMulti <- function()
+{
+  .redisCmd(.raw('MULTI'))
+}
+
+redisExec <- function()
+{
+  .redisCmd(.raw('EXEC'))
+}
+
+redisDiscard <- function()
+{
+  .redisCmd(.raw('DISCARD'))
+}
+
+redisWatch <- function(keys)
+{
+  cmd <- 'WATCH'
+  keys <- as.list(keys)
+  keys <- lapply(keys, charToRaw)
+  do.call('.redisCmd', c(list(.raw(cmd)),keys))
+}
+
+redisUnwatch <- function(keys)
+{
+  cmd <- 'UNWATCH'
+  keys <- as.list(keys)
+  keys <- lapply(keys, charToRaw)
+  do.call('.redisCmd', c(list(.raw(cmd)),keys))
+}
 
 redisExists <- function(key) 
 {

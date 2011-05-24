@@ -20,14 +20,10 @@ If NX = TRUE, existing values will not be replaced.
 }
 }
 \details{
-The key must not contain spaces or newline characters (otherwise an error will be thrown).
-
-The value is copied to the Redis server.
-The value to be stored can be any
-serializable R object up to the Redis maximum object size 
-(excluding, for example, external pointer references).
-References to other R objects or environments inside the value are not
-guaranteed to be preserved.
+The value is copied to the Redis server.  The value to be stored can be any
+serializable R object up to the Redis maximum object size (excluding, for
+example, external pointer references).  References to other R objects or
+environments inside the value are not guaranteed to be preserved.
 
 In order to store strings that can easily be read by other clients, first
 convert the character object using the 
@@ -35,9 +31,8 @@ convert the character object using the
 examples.
 }
 \value{
-TRUE is returned on success. 
-If NX = FALSE and a value already exists, the value will not be replaced
-and FALSE will be returned.
+The value ``OK'' is returned upon success (conforming to the usual
+Redis behavior).
 }
 \references{
 http://code.google.com/p/redis/wiki/SetCommand
