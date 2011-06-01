@@ -29,11 +29,19 @@ redisMGet <- function(keys,raw=FALSE) {
 }
 
 redisMSet <- function(keyvalues, NX=FALSE) {
+# Includes a significant performance improvement contributed
+# by William Pleasant.
   if (NX) cmd <- 'MSETNX' else cmd <- 'MSET'
   a <- c(alist(),list(.raw(cmd)))
+  l <- length(keyvalues)
+  length(a) <- l*2 + 1
   rawnames <- lapply(as.list(names(keyvalues)),charToRaw)
-  for(j in 1:length(keyvalues)) 
-    a <- c(a,list(rawnames[[j]],keyvalues[[j]]))
+  idx <- seq.int(from=2,to=l*2+1,by=2)
+  for(i in 1:l) {
+    j <- idx[i]
+    a[j] <- rawnames[i]
+    a[j+1] <- keyvalues[i]
+  }
   do.call('.redisCmd', a)
 }
 
