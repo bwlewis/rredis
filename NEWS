@@ -1,10 +1,13 @@
-Significant changes in version 1.4:
+Significant changes in version 1.6:
+- Transactions are supported.
+- Pub/sub is supported.
+- Better support for raw value types across the board.
 
+Significant changes in version 1.4:
 - Many bugs were fixed in the sorted sets (redisZ*) functions.
 - New unit tests for sorted set functions were added.
 
 Significant changes in version 1.2:
-
 1. We completely revamped communication with the Redis server, eliminating
    in-line messaging in anticipation of it's demise in future Redis versions.
    We also make a better effort to minimize copying by R prior to sending
