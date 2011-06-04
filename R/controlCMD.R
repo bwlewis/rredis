@@ -21,7 +21,7 @@ function(host='localhost', port=6379, returnRef=FALSE)
 {
   connect <- FALSE
   if(!exists("con",envir=.redisEnv)) connect <- TRUE
-  else if(!isOpen(.redisEnv$con)) connect <- TRUE
+  else connect <-  tryCatch(!isOpen(.redisEnv$con), error=function(e) TRUE) 
   if(connect)
    {
 # R Windows appears to suffer from a serious problem affecting non-blocking
