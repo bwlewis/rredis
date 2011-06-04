@@ -37,6 +37,10 @@
   con <- .redis()
   socketSelect(list(con))
   l <- readLines(con=con, n=1)
+  tryCatch(
+    .redisEnv$count <- max(.redisEnv$count - 1,0),
+    error = function(e) assign('count', 0, envir=.redisEnv)
+  )
   s <- substr(l, 1, 1)
   if (nchar(l) < 2) {
     if(s == '+') {
@@ -157,7 +161,15 @@
     socketSelect(list(con), write=TRUE)
     cat('\r\n', file=con)
   }
-  .getResponse()
+  block <- TRUE
+  if(exists('block',envir=.redisEnv)) block <- get('block',envir=.redisEnv)
+  if(block)
+    return(.getResponse())
+  tryCatch(
+    .redisEnv$count <- .redisEnv$count + 1,
+    error = function(e) assign('count', 1, envir=.redisEnv)
+  )
+  invisible()
 }
 
 .redisRawCmd <- function(...)

@@ -36,12 +36,6 @@
   do.call('.redisCmd', list(.raw('PUBLISH'),.raw(channel),message))
 }
 
-# Basic response handler
-`redisGetResponse` <- function()
-{
-  .getResponse()
-}
-
 # Callback handler
 `redisMonitorChannels` <- function()
 {

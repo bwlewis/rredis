@@ -1,5 +1,21 @@
 # This file contains various control functions.
 
+# Basic response handler, only really useful in nonblocking cases
+`redisGetResponse` <- function(all=FALSE)
+{
+  if(!exists('count',where=.redisEnv)) return(.getResponse())
+  if(.redisEnv$count < 1) return(NULL)
+  l <- as.list(seq(1,.redisEnv$count))
+  lapply(l, function(x) .getResponse())
+}
+
+`redisSetBlocking` <- function(value=TRUE)
+{
+  value <- as.logical(value)
+  if(is.na(value)) stop("logical value required")
+  assign('block',value,envir=.redisEnv)
+}
+
 `redisConnect` <-
 function(host='localhost', port=6379, returnRef=FALSE)
 {
@@ -20,6 +36,9 @@ function(host='localhost', port=6379, returnRef=FALSE)
     assign('con',con,envir=.redisEnv)
     assign('host',host,envir=.redisEnv)
     assign('port',port,envir=.redisEnv)
+# Count is for nonblocking communication, it keeps track of the number of
+# getResponse calls that are pending.
+    assign('count',0,envir=.redisEnv)
     tryCatch(.redisPP(), 
       error=function(e) {
         cat(paste('Error: ',e,'\n'))
