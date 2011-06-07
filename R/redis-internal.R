@@ -102,16 +102,10 @@
                       error=function(e) rawToChar(do.call(c,r)))
            },
          '*' = {
-           vals <- NULL
-           numVars <- as.numeric(substr(l,2,nchar(l)))
-           if(numVars > 0) {
-             vals <- vector('list',numVars)
-             for (i in 1:numVars) {
-               vi <- .getResponse(raw=raw)
-               if(!is.null(vi)) vals[[i]] <- vi
-             }
-           }
-           vals
+           numVars <- as.integer(substr(l,2,nchar(l)))
+           if(numVars > 0L) {
+             replicate(numVars, .getResponse(raw=raw), simplify=FALSE)
+           } else NULL
          },
          stop('Unknown message type'))
 }
@@ -146,7 +140,7 @@
   hdr <- paste('*', as.character(n), '\r\n',sep='')
   socketSelect(list(con), write=TRUE)
   cat(hdr, file=con)
-  for(j in 1:n) {
+  for(j in seq_len(n)) {
     tryCatch(
       v <- eval(f[[j+1]],envir=sys.frame(-1)),
       error=function(e) {.redisError("Invalid agrument");invisible()}
@@ -180,7 +174,7 @@
   hdr <- paste('*', as.character(n), '\r\n',sep='')
   socketSelect(list(con), write=TRUE)
   cat(hdr, file=con)
-  for(j in 1:n) {
+  for(j in seq_len(n)) {
     v <- eval(f[[j+1]],envir=sys.frame(-1))
     if(!is.raw(v)) v <- .cerealize(v)
     l <- length(v)

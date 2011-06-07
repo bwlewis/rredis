@@ -58,7 +58,8 @@ redisType <- function(key)
 
 redisKeys <- function(pattern="*") 
 {
-  .redisCmd(.raw('KEYS'), .raw(pattern))
+  res <- .redisCmd(.raw('KEYS'), .raw(pattern))
+  unlist(res)
 }
 
 redisRandomKey <- function() 

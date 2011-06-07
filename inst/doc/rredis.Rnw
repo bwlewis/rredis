@@ -540,7 +540,7 @@ Queued Redis commands may be discarded with the {\tt redisDiscard} function.
 Upon successful execution of a transaction, the results from all of the
 queued commands are returned as a list. 
 
-The {\tt redisWatch} function  function provides a check and set style
+The {\tt redisWatch} function provides a check and set style
 conditional transaction. Use {\tt redisWatch} to monitor any number of Redis
 keys. If any watched key values change prior to calling {\tt redisExec} the
 entire queued sequence will be discarded. Conditioning transactions with

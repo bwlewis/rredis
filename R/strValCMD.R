@@ -31,17 +31,13 @@ redisMGet <- function(keys,raw=FALSE) {
 redisMSet <- function(keyvalues, NX=FALSE) {
 # Includes a significant performance improvement contributed
 # by William Pleasant.
+  if (0L == length(keyvalues))
+      return(NULL)
   if (NX) cmd <- 'MSETNX' else cmd <- 'MSET'
-  a <- c(alist(),list(.raw(cmd)))
-  l <- length(keyvalues)
-  length(a) <- l*2 + 1
-  rawnames <- lapply(as.list(names(keyvalues)),charToRaw)
-  idx <- seq.int(from=2,to=l*2+1,by=2)
-  for(i in 1:l) {
-    j <- idx[i]
-    a[j] <- rawnames[i]
-    a[j+1] <- keyvalues[i]
-  }
+  a <- list(.raw(cmd))
+  j <- 2L * seq_along(keyvalues)
+  a[j + 1L] <- keyvalues                # extends a
+  a[j] <- lapply(names(keyvalues), charToRaw)
   do.call('.redisCmd', a)
 }
 

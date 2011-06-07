@@ -17,9 +17,8 @@ redisHSet <- function(key, field, value, NX=FALSE) {
 
 redisHMSet <- function(key, values) {
   a <- c(alist(),list(.raw('HMSET')))
-  fieldnames <- lapply(as.list(names(values)),charToRaw)
-  for(j in 1:length(values)) 
-    a <- c(a,list(fieldnames[[j]],values[[j]]))
+  fieldnames <- lapply(names(values), charToRaw)
+  a <- c(a, Map(list, fieldnames, values, USE.NAMES=FALSE))
   retval <- do.call('.redisCmd', a)
   'OK' == retval
 }

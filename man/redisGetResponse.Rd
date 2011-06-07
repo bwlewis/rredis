@@ -14,8 +14,8 @@ channels, without knowledge of what (if any) subscribers there may be.
 Subscribers express interest in one or more channels, and only receive messages
 that are of interest, without knowledge of what (if any) publishers there are.
 
-The \code{redisGetResponse} function may be called repeatedly in an
-event loop to service messages on all subscribed channels. When a message
+The \code{redisGetResponse} function may be called 
+to service messages on all subscribed channels. When a message
 is received the a list of three elements is returned containing:
 the character string 'message', the name of receiving channel, and
 the message content.
@@ -35,7 +35,6 @@ B. W. Lewis
 \code{\link{redisSubscribe}}
 \code{\link{redisPublish}}
 \code{\link{redisUnsubscribe}}
-\code{\link{redisGetResponse}}
 \code{\link{redisMonitorChannels}}
 }
 \examples{
@@ -50,7 +49,8 @@ channel2 <- function(x) {
   cat("Message received from channel 2: ",x,"\n")
 }
 redisSubscribe(c('channel1','channel2'))
-# Monitor channels for at least one minute:
+# Monitor channels for at least one minute (and indefinitely until
+# a message is received):
 t1 <- proc.time()[[3]]
 while(proc.time()[[3]] - t1 < 60)
 {
@@ -59,4 +59,3 @@ while(proc.time()[[3]] - t1 < 60)
 redisUnsubscribe(c('channel1','channel2'))
 }
 }
-

@@ -1,12 +1,11 @@
 # This file contains various control functions.
 
 # Basic response handler, only really useful in nonblocking cases
-`redisGetResponse` <- function(all=FALSE)
+`redisGetResponse` <- function()
 {
   if(!exists('count',where=.redisEnv)) return(.getResponse())
   if(.redisEnv$count < 1) return(NULL)
-  l <- as.list(seq(1,.redisEnv$count))
-  lapply(l, function(x) .getResponse())
+  replicate(.redisEnv$count, .getResponse(), simplify=FALSE)
 }
 
 `redisSetBlocking` <- function(value=TRUE)
@@ -46,8 +45,7 @@ function(host='localhost', port=6379, returnRef=FALSE)
               rm(list='con',envir=.redisEnv)
             })
    }
-  if(returnRef) return(list(con=.redisEnv$con, host=.redisEnv$host,
-                            port=.redisEnv$port))
+  if(returnRef) return(.redisEnv)
   invisible()
 }
 
@@ -127,3 +125,15 @@ redisDBSize <- function() {
   .redisCmd(.raw('DBSIZE'))
 }
 
+redisGetContext <- function() {
+  .redisEnv
+}
+
+redisSetContext <- function(e=new.env())
+{
+  p <- environment(redisSetContext)
+  unlockBinding('.redisEnv',p)
+  assign('.redisEnv',e,p)
+  lockBinding('.redisEnv',p)
+  invisible()
+}
