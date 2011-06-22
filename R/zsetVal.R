@@ -82,7 +82,7 @@ redisZCard <- function(key)
 
 redisZScore <- function(key, element)
 {
-  ret <- .redisCmd(.raw('ZSCORE'), .raw(key), element)
+  ret <- .redisCmd(.raw('ZSCORE'), .raw(key), .raw(element))
   if(!is.null(ret)) ret <- as.numeric(ret)
   ret
 }
