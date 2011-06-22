@@ -30,7 +30,7 @@ B. W. Lewis
 }
 \examples{
 \dontrun{
-redisSet('x',5)
-redisDecrBy('x',3)
+redisSet('x','5')
+redisDecrBy('x','3')
 }
 }

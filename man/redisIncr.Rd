@@ -31,7 +31,7 @@ B. W. Lewis
 }
 \examples{
 \dontrun{
-redisSet('x',5)
+redisSet('x','5')
 redisIncr('x')
 }
 }
