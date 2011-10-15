@@ -30,7 +30,7 @@ B. W. Lewis, with substantial assistance from Pat Sheilds
 Maintainer: B. W. Lewis <blewis@illposed.net>
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \keyword{ package }
 \examples{

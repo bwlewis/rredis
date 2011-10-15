@@ -15,7 +15,7 @@ among the available  Redis databases.
 The number of keys in the current database.
 }
 \references{
-http://code.google.com/p/redis/wiki/DbsizeCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

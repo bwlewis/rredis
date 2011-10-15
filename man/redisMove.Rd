@@ -24,7 +24,7 @@ a locking primitive.
 Returns TRUE if the key/value pair was moved, or FALSE otherwise.
 }
 \references{
-http://code.google.com/p/redis/wiki/MoveCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

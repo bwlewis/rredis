@@ -24,7 +24,7 @@ See the Redis documentation for details.
 0 or 1: 0 indicates that the element could not be removed, 1 that it was removed.
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

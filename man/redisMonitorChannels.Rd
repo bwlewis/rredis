@@ -31,7 +31,7 @@ for messages without evaluating function callbacks.
 \value{The result of an evaluated function callback message, or if
 no matching callback exists, the message.}
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

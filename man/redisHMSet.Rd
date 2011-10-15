@@ -24,7 +24,7 @@ key at once. Values already occupying any specified field slots are replaced.
 TRUE is returned on success. 
 }
 \references{
-http://code.google.com/p/redis/wiki/HmsetCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

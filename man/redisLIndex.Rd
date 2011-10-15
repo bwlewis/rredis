@@ -23,7 +23,7 @@ If the index is out of range an empty string is returned.
 The corresponding value or an empty string if the index is out of bounds.
 }
 \references{
-http://code.google.com/p/redis/wiki/LindexCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

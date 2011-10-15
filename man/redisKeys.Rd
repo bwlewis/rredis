@@ -18,7 +18,7 @@ any single character and '*' to match zero or more characters.
 the patern in the active Redis database.
 }
 \references{
-http://code.google.com/p/redis/wiki/KeysCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

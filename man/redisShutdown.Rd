@@ -15,7 +15,7 @@ This will terminate the connected Redis server process in an orderly way.
 Nothing is returned. An error is thrown if no server is connected.
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

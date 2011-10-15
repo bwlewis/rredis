@@ -23,7 +23,7 @@ The new value of key after the increment, returned as a character
 string.
 }
 \references{
-http://code.google.com/p/redis/wiki/HincrbyCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

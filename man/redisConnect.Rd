@@ -10,8 +10,8 @@ redisConnect(host = "localhost", port = 6379, returnRef = FALSE)
   \item{port}{The Redis port number (optional, numeric or integer)}
   \item{returnRef}{Set returnRef=TRUE to return a list describing the Redis connection (not presently useful).}
 }
-\details{A running instance of a Redis server is required. See
-http://code.google.com/p/redis/ for details.}
+\details{A running instance of a Redis server is required.}
+
 \value{Nothing is returned by default. 
 Errors are displayed if the function fails to
 connect to the specified Redis server. Disconnect from a connected server
@@ -23,7 +23,7 @@ use this feature to support multiple Redis connections with
 the \code{attachRedis} function.
 }
 \references{
-See http://code.google.com/p/redis/ for details.
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

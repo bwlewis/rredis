@@ -22,7 +22,7 @@ test04_empty_get <- function() {
 
 test05_set <- function() {
   # simple set test
-  checkEquals(TRUE, redisSet('foo', 'bar'))
+  checkEquals('OK', redisSet('foo', 'bar'))
 }
 
 test06_getset <- function() {
@@ -56,7 +56,7 @@ test10_mget <- function() {
 
 test11_mset_simple <- function() {
   # simple mset test
-  checkEquals(TRUE, redisMSet(list(foo='foo',bar='bar')))
+  checkEquals("OK", redisMSet(list(foo='foo',bar='bar')))
 }
 
 test12_get <- function() {
@@ -114,7 +114,7 @@ test18_rename <- function() {
   redisRename('foo', 'bar')
   checkEquals(1, redisGet('bar'))
   redisSet('foo', 2)
-  checkEquals(FALSE, redisRename('foo', 'bar', NX=TRUE))
+  checkEquals(0, redisRename('foo', 'bar', NX=TRUE))
   redisDelete('bar')
   redisRename('foo', 'bar', NX=TRUE)
   checkEquals(2, redisGet('bar'))
@@ -123,11 +123,11 @@ test18_rename <- function() {
 test19_setmsetnx <- function() {
   # set/mset nx mode test
   redisFlushAll()
-  checkTrue(redisSet('foo', 1, NX=TRUE))
-  checkEquals(FALSE, redisSet('foo', 1, NX=TRUE))
-  checkEquals(FALSE, redisMSet(list(foo=1), NX=TRUE))
+  checkEquals(1, redisSet('foo', 1, NX=TRUE))
+  checkEquals(0, redisSet('foo', 1, NX=TRUE))
+  checkEquals(0, redisMSet(list(foo=1), NX=TRUE))
   redisDelete('foo')
-  checkTrue(redisMSet(list(foo=1,bar=2), NX=TRUE))
+  checkEquals(1, redisMSet(list(foo=1,bar=2), NX=TRUE))
   redisDelete(c('foo','bar'))
 }
 

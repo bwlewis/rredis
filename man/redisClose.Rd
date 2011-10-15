@@ -6,13 +6,12 @@ server.}
 \usage{
 redisClose()
 }
-\details{A running instance of a Redis server is required. See
-http://code.google.com/p/redis/ for details.}
+\details{A running instance of a Redis server is required.  }
 \value{Nothing is returned. Errors are displayed if the function fails to
 close the connection to the Redis server, or if the connection is invalid.
 }
 \references{
-http://code.google.com/p/redis/ for details.
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

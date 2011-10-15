@@ -43,7 +43,7 @@ If NX = FALSE and a value already exists, the value will not be replaced
 and FALSE will be returned.
 }
 \references{
-http://code.google.com/p/redis/wiki/HsetCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

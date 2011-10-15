@@ -70,8 +70,7 @@ redisRandomKey <- function()
 redisRename <- function(old, new, NX=FALSE) 
 {
   if (NX) cmd <- 'RENAMENX' else cmd <- 'RENAME'
-  ret <- .redisCmd(.raw(cmd),.raw(old),.raw(new))
-  if (NX) 1==ret else ret
+  .redisCmd(.raw(cmd),.raw(old),.raw(new))
 }
 
 redisExpire <- function(key, seconds) 

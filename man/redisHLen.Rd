@@ -15,7 +15,7 @@ key is associated with a value of type other than 'hash,' an error is
 thrown.
 }
 \value{The number of fields defined for the given key.  }
-\references{ http://code.google.com/p/redis/wiki/HlenCommand }
+\references{ http://redis.io/commands}
 \author{ B. W. Lewis }
 \seealso{ \code{\link{redisHSet}} }
 \examples{

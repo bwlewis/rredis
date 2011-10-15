@@ -21,7 +21,7 @@ append operation. If the key exists but is not a list an error is returned.
 The length of the list after the push operation.
 }
 \references{
-http://code.google.com/p/redis/wiki/RpushCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

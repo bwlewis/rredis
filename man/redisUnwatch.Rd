@@ -13,7 +13,7 @@ Stop watching the specified keys. See \code{redisWatch} for details.
 }
 \value{"OK"}
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

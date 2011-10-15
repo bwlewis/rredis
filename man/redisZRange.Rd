@@ -48,7 +48,7 @@ A list of returned set elements. If withscores = TRUE, two lists called
 'elements' and 'scores' are returned.
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

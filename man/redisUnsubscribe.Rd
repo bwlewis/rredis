@@ -31,7 +31,7 @@ Each subscribed channel corresponds to three list elements, the header
 element 'unsubscribe' followed by the channel name and a count indicating
 the total number of subscriptions.}
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

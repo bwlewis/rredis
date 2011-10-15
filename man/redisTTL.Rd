@@ -16,7 +16,7 @@ shows the time left before exipraton in seconds for such a key.
 not found.
 }
 \references{
-http://code.google.com/p/redis/wiki/TtlCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

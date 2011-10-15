@@ -28,7 +28,7 @@ TRUE if the element was successfully added, FALSE otherwise (including cases in
 which the element already belonged to the set).
 }
 \references{
-http://code.google.com/p/redis/wiki/SaddCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

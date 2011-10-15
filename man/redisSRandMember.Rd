@@ -14,7 +14,7 @@ An element from the set selected randomly. An error is thrown if the set does
 not exist.
 }
 \references{
-http://code.google.com/p/redis/wiki/SrandmemberCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

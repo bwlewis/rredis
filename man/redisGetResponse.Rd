@@ -1,9 +1,13 @@
 \name{redisGetResponse}
 \alias{redisGetResponse}
 \title{redisGetResponse}
-\description{Subscribe to one or more Redis message channels.}
+\description{Service messages from all subscribed Redis message channels.}
 \usage{
-redisGetResponse()
+redisGetResponse(all=TRUE)
+}
+\arguments{
+  \item{all}{The all argument is ignored. It's left there for backwards
+compatibility with code based on older package versions.}
 }
 \details{(From the Redis.io documentation):
 \code{redisSubscribe}, \code{redisUnsubscribe} and \code{redisPublish}
@@ -26,7 +30,7 @@ message is received.
 \value{A list containing the string 'message', the channel name from which
 the message was received, and the message data.}
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

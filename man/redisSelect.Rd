@@ -16,7 +16,7 @@ configuration file. New connections are assigned to database 0 by default.
 \value{A character string status code. An error is thrown if the index
 value is invalid.}
 \references{
-http://code.google.com/p/redis/wiki/SelectCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

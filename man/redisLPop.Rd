@@ -18,7 +18,7 @@ redisLPop(key)
 or NULL if the list is empty.
 }
 \references{
-http://code.google.com/p/redis/wiki/LpopCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

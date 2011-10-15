@@ -24,7 +24,7 @@ The value corresponding to the specified key,
 or NULL if the matching key contained no value or if no matching key was found.
 }
 \references{
-http://code.google.com/p/redis/wiki/GetCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

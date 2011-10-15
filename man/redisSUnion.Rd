@@ -28,7 +28,7 @@ A list of elements in the union of the specified sets, or
 NULL if the intersection is the empty set.
 }
 \references{
-http://code.google.com/p/redis/wiki/SunionCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

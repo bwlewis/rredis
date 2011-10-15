@@ -18,7 +18,7 @@ element object (aka set member), not as an index value.
 \value{TRUE if successful, FALSE otherwise.
 }
 \references{
-http://code.google.com/p/redis/wiki/SmoveCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

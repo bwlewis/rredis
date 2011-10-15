@@ -20,7 +20,7 @@ Returns FALSE if no matching key, TRUE if matching key exists, and NULL
 if an error occured.
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

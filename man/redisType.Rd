@@ -32,7 +32,7 @@ A descriptive character string  that may be one of
 "none" is returned if the key does not exist.
 }
 \references{
-http://code.google.com/p/redis/wiki/TypeCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

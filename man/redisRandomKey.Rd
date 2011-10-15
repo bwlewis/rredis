@@ -17,7 +17,7 @@ A character string corresponding to a randomly-selected key from the currently
 selected database, or a zero-length string if no keys are defined.
 }
 \references{
-http://code.google.com/p/redis/wiki/RandomkeyCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

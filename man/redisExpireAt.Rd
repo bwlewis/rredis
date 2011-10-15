@@ -21,7 +21,7 @@ has been set on a key.
 Boolean TRUE if the timeout command was successful, FALSE otherwise.
 }
 \references{
-http://code.google.com/p/redis/wiki/ExpireAtCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

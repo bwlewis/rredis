@@ -26,7 +26,7 @@ TRUE if successful. An error is thrown if the key does not exist or
 correspond to a list value.
 }
 \references{
-http://code.google.com/p/redis/wiki/LtrimCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

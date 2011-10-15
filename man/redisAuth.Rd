@@ -19,7 +19,7 @@ database, it's best not to use Redis for now.
 TRUE if sueccessful, FALSE otherwise.
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

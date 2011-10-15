@@ -13,7 +13,7 @@ redisSPop(set)
 \value{A random element of the set, or NULL if the set is empty or does
 not exist.}
 \references{
-http://code.google.com/p/redis/wiki/SpopCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

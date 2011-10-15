@@ -21,10 +21,11 @@ If the source and destination name are the same an error is returned. If newkey 
 operation fails.
 }
 \value{
-TRUE if successful, FALSE otherwise.
+Returns the Redis status "OK" unless \code{NX = TRUE}. When
+\code{NX = TRUE}, returns 1 if successful, 0 otherwise.
 }
 \references{
-http://code.google.com/p/redis/wiki/RenameCommand
+http://redis.io
 }
 \author{
 B. W. Lewis

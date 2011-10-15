@@ -22,7 +22,7 @@ The new object to add to the set.
 }
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

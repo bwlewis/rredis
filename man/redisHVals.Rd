@@ -15,7 +15,7 @@ key is associated with a value of type other than 'hash,' an error is
 thrown.
 }
 \value{A list of values defined for the given key.  }
-\references{ http://code.google.com/p/redis/wiki/HfieldsCommand }
+\references{ http://redis.io/commands}
 \author{ B. W. Lewis }
 \seealso{ \code{\link{redisHSet}} }
 \examples{

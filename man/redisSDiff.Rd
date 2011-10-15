@@ -28,7 +28,7 @@ A list of elements in the difference of the specified sets, or
 NULL if the intersection is the empty set.
 }
 \references{
-http://code.google.com/p/redis/wiki/SdiffCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

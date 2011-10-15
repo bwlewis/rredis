@@ -20,7 +20,7 @@ The new value of key after the decrement, returned as a character
 string.
 }
 \references{
-http://code.google.com/p/redis/wiki/IncrCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

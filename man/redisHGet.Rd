@@ -28,7 +28,7 @@ or NULL if the matching key/field hash contained no value
 or if no matching key or field was found.
 }
 \references{
-http://code.google.com/p/redis/wiki/HgetCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

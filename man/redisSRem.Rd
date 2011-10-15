@@ -19,7 +19,7 @@ The set element matching the specified element will be removed from the set.
 TRUE upon successful removal, FALSE otherwise.
 }
 \references{
-http://code.google.com/p/redis/wiki/SremCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

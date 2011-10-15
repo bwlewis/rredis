@@ -49,7 +49,7 @@ A list of sorted values, unless \code{store} is specified in which case
 the results are stored in the specified key and TRUE is returned.
 }
 \references{
-http://code.google.com/p/redis/SortCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

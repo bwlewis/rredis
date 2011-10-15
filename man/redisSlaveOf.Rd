@@ -37,7 +37,7 @@ it can be configured in order to work as slave.
 A Redis status message is returned.
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

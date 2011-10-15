@@ -31,7 +31,7 @@ non-existing keys are considered as empty lists.
 The number of occurrences removed.
 }
 \references{
-http://code.google.com/p/redis/wiki/LremCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

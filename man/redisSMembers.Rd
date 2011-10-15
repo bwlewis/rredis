@@ -14,7 +14,7 @@ A list containing the set elements. An error is thrown if the set does
 not exist.
 }
 \references{
-http://code.google.com/p/redis/wiki/SmembersCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

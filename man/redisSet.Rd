@@ -35,7 +35,7 @@ The value ``OK'' is returned upon success (conforming to the usual
 Redis behavior).
 }
 \references{
-http://code.google.com/p/redis/wiki/SetCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

@@ -11,7 +11,7 @@ server en masse once the \code{redisExec} function is issued.
 }
 \value{"OK" indicates the transaction has begun.}
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

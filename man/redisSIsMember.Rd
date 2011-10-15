@@ -19,7 +19,7 @@ The element whose membership is to be tested.
 TRUE if the element is a member of the set, FALSE otherwise.
 }
 \references{
-http://code.google.com/p/redis/wiki/SIsmemberCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

@@ -28,7 +28,7 @@ A list of elements in the intersection of the specified sets, or
 NULL if the intersection is the empty set.
 }
 \references{
-http://code.google.com/p/redis/wiki/SinterCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

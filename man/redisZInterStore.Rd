@@ -34,7 +34,7 @@ The number of elements stored in the destination set.
 %% ...
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

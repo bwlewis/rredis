@@ -17,7 +17,7 @@ The function returns an integer corresponding to the number of elements
 in the set. Zero is returned if the set is empty or if the set does not exist.
 }
 \references{
-http://code.google.com/p/redis/wiki/ScardCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

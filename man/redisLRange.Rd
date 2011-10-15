@@ -24,7 +24,7 @@ thrown if the specified key does not correspond to a list or if the key
 can't be found.
 }
 \references{
-http://code.google.com/p/redis/wiki/LrangeCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

@@ -25,7 +25,7 @@ redisBLPop returns NULL after the timeout period, or a list containing:
   \item{value}{The corresponding value.}
 }
 \references{
-http://code.google.com/p/redis/wiki/BlpopCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

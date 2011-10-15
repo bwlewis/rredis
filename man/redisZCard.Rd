@@ -22,7 +22,7 @@ The number of elements in the set or zero if the set does not exist.
 An error is thrown if the key name exists but is not a set.
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

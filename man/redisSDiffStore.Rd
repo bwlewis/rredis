@@ -30,7 +30,7 @@ more sets as additional function arguments as shown in the examples.
 A redis status code.
 }
 \references{
-http://code.google.com/p/redis/wiki/SdiffstoreCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

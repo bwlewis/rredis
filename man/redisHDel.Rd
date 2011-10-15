@@ -16,7 +16,7 @@ Nothing is returned if the key/value pair is successfully deleted.
 A warning is thrown if the they key could not be found.
 }
 \references{
-http://code.google.com/p/redis/HdelCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

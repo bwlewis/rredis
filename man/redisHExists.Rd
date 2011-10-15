@@ -16,7 +16,7 @@ Returns FALSE if no matching key/field combination,
 TRUE if matching entry exists, and NULL if an error occured.
 }
 \references{
-http://code.google.com/p/redis/HexistsCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

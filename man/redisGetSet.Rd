@@ -36,7 +36,7 @@ The previous value associated with key or NULL if no previous
 association exists.
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

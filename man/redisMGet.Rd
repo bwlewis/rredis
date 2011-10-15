@@ -20,7 +20,7 @@ Values are returned in a list with names corresponding to keys. The \code{raw}
 argument is used to retrieve binary data from other languages.
 }
 \references{
-http://code.google.com/p/redis/wiki/MGetCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

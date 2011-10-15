@@ -20,7 +20,7 @@ values will be replaced.
 ``OK'' upon success. 
 }
 \references{
-http://code.google.com/p/redis/wiki/MSetCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

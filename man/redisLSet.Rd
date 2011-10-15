@@ -22,7 +22,7 @@ Indices begin at zero. Out of range indices throw an error.
 TRUE if successful, FALSE otherwise.
 }
 \references{
-http://code.google.com/p/redis/wiki/LSetCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

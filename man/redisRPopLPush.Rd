@@ -34,7 +34,7 @@ not exist or corresponds to an empty list. An error is thrown if either
 of the keys does not correspond to a value of 'list' type.
 }
 \references{
-http://code.google.com/p/redis/wiki/RpoplpushCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

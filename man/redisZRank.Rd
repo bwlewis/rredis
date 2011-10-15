@@ -29,7 +29,7 @@ The returned rank (or index) of the member is 0-based.
 The numeric rank of the set element.
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

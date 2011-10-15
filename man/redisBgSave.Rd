@@ -12,7 +12,7 @@ redisBgSave()
 save operation with the redisLastsave function.
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

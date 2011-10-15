@@ -17,7 +17,7 @@ thrown.
 \value{The length if the list.
 }
 \references{
-http://code.google.com/p/redis/wiki/LlenCommand
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

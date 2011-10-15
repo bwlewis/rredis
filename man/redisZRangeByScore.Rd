@@ -46,7 +46,7 @@ See the Redis documentation for more information.
 %% ...
 }
 \references{
-http://code.google.com/p/redis/
+http://redis.io/commands
 }
 \author{
 B. W. Lewis

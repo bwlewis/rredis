@@ -2,6 +2,10 @@ Significant changes in version 1.6:
 - Transactions are supported.
 - Pub/sub is supported.
 - Better support for raw value types across the board.
+1.6.3:
+- Support for new redisInfo format
+- Improved interrupt handling during communication
+- Minor man page fixes
 
 Significant changes in version 1.4:
 - Many bugs were fixed in the sorted sets (redisZ*) functions.
