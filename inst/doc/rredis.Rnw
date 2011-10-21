@@ -137,14 +137,16 @@ Scala, and more...
 
 \subsection{Obtaining and Installing the Redis server}\label{install}
 
-Redis is an open-source project available from 
-\htmladdnormallink{http://code.google.com/p/redis}{http://code.google.com/p/redis}, with source code available from Github at
+Redis is an open-source project available from
+\htmladdnormallink{http://redis.io}{http://redis.io}, with source code
+available from Github at
 \htmladdnormallink{http://github.com/antirez/redis}{http://github.com/antirez/redis}.
 Redis is also available as an installable package for most modern GNU/Linux
 operating systems.
 
 The Redis server is completely configured by the file
-\verb+redis.conf+. In order to run the Redis server as a background process,
+\verb+redis.conf+.
+In order to run the Redis server as a background process,
 edit this file and change the line:
 
 \noindent \verb+daemonize no+
@@ -152,6 +154,12 @@ edit this file and change the line:
 \noindent to:
 
 \noindent \verb+daemonize yes+
+
+Most default Redis configuration files are set to disconnect connected
+clients after an inactivity time out interval. It's possible to disable
+that behavior in the \verb_redis.conf_ file with:
+
+\noindent \verb+timeout 0+
 
 \noindent You may wish to peruse the rest of the configuration file and 
 experiment with the other server settings as well. Finally, start up the 

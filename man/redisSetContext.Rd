@@ -1,17 +1,21 @@
 \name{redisSetContext}
 \alias{redisSetContext}
+\alias{redisGetContext}
 \title{redisSetContext}
-\description{Set the current active Redis connection environment.}
+\description{Get or set the current active Redis connection environment.}
 \usage{
-redisSetContext( e = new.env())
+redisSetContext( e = NULL)
+redisGetContext()
 }
 \arguments{
   \item{e}{
-    An environment representing the new context, defaults to a new context environment.
+    An environment representing the new Redis server connection context
+returned by \code{rediscConnect(returnRef=TRUE)}. The default value of NULL
+sets the context to the most recently established connection.
   }
 }
 \details{
-The rredis package stores everything associated with a connection to
+The rredis package stores information associated with a connection to
 a Redis server in an environment. The \code{redisSetContext} and
 \code{redisSetContext} functions help manage simultaneous
 connection to multiple Redis servers.
@@ -21,10 +25,9 @@ the current active Redis connection. If there is no current active Redis
 connection, an environment is still returned, but without connection
 information.
 
-The \code{redisSetContext} function can initialize a new Redis connection
-environment or replace the current active environment with one previously
-referenced by \code{redisSetContext}. Any number of simultaneous connections
-to multiple Redis servers may be managed in this manner.
+The \code{redisSetContext} function replaces the current active environment.
+Any number of simultaneous connections to multiple Redis servers may be managed
+in this manner.
 }
 \value{
 NULL is invisibly returned.
@@ -34,25 +37,26 @@ B. W. Lewis
 }
 \seealso{
 \code{\link{redisGetContext}}
+\code{\link{redisConnect}}
 }
 \examples{
 \dontrun{
-# Open a connection to a Redis server on HOST_1 and store its context:
-redisConnect(host='HOST_1')
-HOST_1 <- redisGetContext()
+# Open a connection to a Redis server on HOST1 and store its context:
+HOST1 <- redisConnect(host='HOST1', returnRef=TRUE)
+print(redisInfo())
 
 # Initiate a new Redis context:
-redisSetContext()
-redisConnect(host='HOST_2')
-HOST_2 <- redisGetContext()
+HOST2 <- redisConnect(host='HOST2', returnRef=TRUE)
+# The connection to HOST2 is now active:
+print(redisInfo())
 
 # We may now switch back and forth between the two active connections:
-redisSetContext(HOST_1)
-redisKeys()
-redisSetContext(HOST_2)
-redisKeys()
+redisSetContext(HOST1)
+print(redisInfo())
+redisSetContext(HOST2)
+print(redisInfo())
 redisClose()
-redisSetContext(HOST_1)
+redisSetContext(HOST1)
 redisClose()
 }
 }
