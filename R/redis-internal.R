@@ -158,7 +158,8 @@ tryCatch({
   n <- length(f) - 1
   hdr <- paste('*', as.character(n), '\r\n',sep='')
   socketSelect(list(con), write=TRUE)
-  cat(hdr, file=con)
+#  cat(hdr, file=con)
+  writeBin(.raw(hdr), con)
 tryCatch({
   for(j in seq_len(n)) {
     v <- eval(f[[j+1]],envir=sys.frame(-1))
@@ -166,11 +167,13 @@ tryCatch({
     l <- length(v)
     hdr <- paste('$', as.character(l), '\r\n', sep='')
     socketSelect(list(con), write=TRUE)
-    cat(hdr, file=con)
+#    cat(hdr, file=con)
+    writeBin(.raw(hdr), con)
     socketSelect(list(con), write=TRUE)
     writeBin(v, con)
     socketSelect(list(con), write=TRUE)
-    cat('\r\n', file=con)
+#    cat('\r\n', file=con)
+    writeBin(.raw('\r\n'), con)
   }
 },
 error=function(e) {.redisError("Invalid agrument");invisible()},
