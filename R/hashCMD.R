@@ -40,7 +40,7 @@ redisHDel <- function(key, field)
 
 redisHLen <- function(key)
 {
-  .redisCmd(.raw('HDEL'), .raw(key))
+  .redisCmd(.raw('HLEN'), .raw(key))
 }
 
 redisHFields <- function(key)
