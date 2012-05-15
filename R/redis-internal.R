@@ -136,6 +136,18 @@ tryCatch({
   tryCatch(charToRaw(word),warning=function(w) stop(w), error=function(e) stop(e))
 }
 
+# Expose the basic Redis interface to the user
+redisCmd <- function(CMD, ..., raw=FALSE)
+{
+  a <- c(alist(),list(.raw(CMD)),
+         lapply(list(...), function(x) 
+           if(is.character(x)) charToRaw(x)
+           else(.cerealize(x))
+       ))
+  if(raw) return(do.call('.redisRawCmd',a))
+  do.call('.redisCmd', a)
+}
+
 # .redisCmd corresponds to the Redis "multi bulk" protocol. It 
 # expects an argument list of command elements. Arguments that 
 # are not of type raw are serialized.
@@ -149,7 +161,7 @@ tryCatch({
 # We can further improve this by writing a shadow serialization routine that
 # quickly computes the length of a serialized object without serializing it.
 # Then, we could serialize directly to the connection, avoiding the temporary
-# copy (which, unfortunately, is limited to 2GB due to R indexing).
+# copy (which is limited to 2GB due to R indexing).
 .redisCmd <- function(...)
 {
   env <- .redisEnv$current

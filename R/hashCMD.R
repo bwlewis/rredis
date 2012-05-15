@@ -19,8 +19,7 @@ redisHMSet <- function(key, values) {
   a <- c(alist(),list(.raw('HMSET')))
   fieldnames <- lapply(names(values), charToRaw)
   a <- c(a, Map(list, fieldnames, values, USE.NAMES=FALSE))
-  retval <- do.call('.redisCmd', a)
-  'OK' == retval
+  do.call('.redisCmd', a)
 }
 
 redisHIncrBy <- function(key, field, value)
@@ -66,5 +65,13 @@ redisHGetAll <- function(key)
     retval <- all[seq(2,length(all),by=2)]
     names(retval) <- all[seq(1,length(all),by=2)]
   }
+  retval
+}
+
+redisHMGet <- function(key, fields) {
+  a <- c(alist(),list(.raw('HMGET')))
+  a <- c(a, lapply(c(key,fields), charToRaw))
+  retval <- do.call('.redisCmd', a)
+  if(length(retval) == length(fields)) names(retval) <- fields
   retval
 }
