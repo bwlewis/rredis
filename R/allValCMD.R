@@ -48,7 +48,7 @@ redisDelete <- function(key)
     warning(paste(as.character(ans), ' keys ',w1,' deleted, but ',
                   as.character(nkeys - ans), w2, ' not!', sep=''))
   }
-  ans==nkeys
+  ans
 }
 
 redisType <- function(key) 
@@ -75,12 +75,12 @@ redisRename <- function(old, new, NX=FALSE)
 
 redisExpire <- function(key, seconds) 
 {
-  1 == .redisCmd(.raw('EXPIRE'),.raw(key),.raw(as.character(seconds)))
+  .redisCmd(.raw('EXPIRE'),.raw(key),.raw(as.character(seconds)))
 }
 
 redisExpireAt <- function(key, time) 
 {
-  1 == .redisCmd(.raw('EXPIREAT'),.raw(key),.raw(as.character(time)))
+  .redisCmd(.raw('EXPIREAT'),.raw(key),.raw(as.character(time)))
 }
 
 redisTTL <- function(key) 
@@ -90,5 +90,5 @@ redisTTL <- function(key)
 
 redisMove <- function(key, dbindex) 
 {
-  1 == .redisCmd(.raw('MOVE'),.raw(key),.raw(as.character(dbindex)))
+  .redisCmd(.raw('MOVE'),.raw(key),.raw(as.character(dbindex)))
 }

@@ -39,7 +39,7 @@ redisLIndex <- function(key, index) {
 redisLSet <- function(key, index, value) {
   key <- charToRaw(as.character(key))
   index <- charToRaw(as.character(index))
-  .redisCmd(.raw('LSET'), key, index, value) == 'OK'
+  .redisCmd(.raw('LSET'), key, index, value)
 }
 
 redisLRem <- function(key, count, value) {

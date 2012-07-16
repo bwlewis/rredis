@@ -12,7 +12,7 @@ redisHSet <- function(key, field, value, NX=FALSE) {
   value <- .cerealize(value)
   cmd <- 'HSET'
   if(NX) cmd <- 'HSETNX'
-  1 == .redisCmd(.raw(cmd), .raw(key), .raw(field), value)
+  .redisCmd(.raw(cmd), .raw(key), .raw(field), value)
 }
 
 redisHIncrBy <- function(key, field, value)
