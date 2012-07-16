@@ -73,3 +73,8 @@ redisBLPop <- function(keys, timeout=0) {
   }
   x
 }
+
+redisBRPopLPush <- function(src, dest, timeout=0) {
+  tout <- as.character(timeout)
+  .redisCmd(.raw('BRPOPLPUSH'), .raw(src), .raw(dest), .raw(tout))
+}

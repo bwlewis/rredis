@@ -18,22 +18,20 @@
 }
 
 `redisConnect` <-
-function(host='localhost', port=6379, returnRef=FALSE)
+function(host='localhost', port=6379, returnRef=FALSE, timeout=2147483647L)
 {
   .redisEnv$current <- new.env()
-# R Windows appears to suffer from a serious problem affecting non-blocking
-# connections and readBin with raw data, see:
+# R nonblocking connections are flaky, especially on Windows, see
+# for example:
 # http://www.mail-archive.com/r-devel@r-project.org/msg16420.html.
-# We force blocking connections on Windows systems to work around this.
-  if(Sys.info()[[1]] == "Windows")
-   con <- socketConnection(host, port, open='a+b', blocking=TRUE)
-  else
-    con <- socketConnection(host, port, open='a+b')
+# So, we use blocking connections now.
+  con <- socketConnection(host, port, open='a+b', blocking=TRUE, timeout=timeout)
 # Stash state in the redis enivronment describing this connection:
   assign('con',con,envir=.redisEnv$current)
   assign('host',host,envir=.redisEnv$current)
   assign('port',port,envir=.redisEnv$current)
   assign('block',TRUE,envir=.redisEnv$current)
+  assign('timeout',timeout,envir=.redisEnv$current)
 # Count is for nonblocking communication, it keeps track of the number of
 # getResponse calls that are pending.
   assign('count',0,envir=.redisEnv$current)

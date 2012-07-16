@@ -14,14 +14,15 @@
 # .redisError may be called by any function when a serious error occurs.
 # It will print an indicated error message, attempt to reset the current
 # Redis server connection, and signal the error.
-.redisError <- function(msg)
+.redisError <- function(msg, e=NULL)
 {
   env <- .redisEnv$current
   con <- .redis()
   close(con)
 # May stop with an error here on connect fail
-  con <- socketConnection(env$host, env$port,open='a+b')
+  con <- socketConnection(env$host, env$port,open='a+b', blocking=TRUE, timeout=env$timeout)
   assign('con',con,envir=env)
+  if(!is.null(e)) print(as.character(e))
   stop(msg)
 }
 
@@ -38,12 +39,12 @@
 }
 
 # Burn data in the RX buffer, used after interrupt conditions
-.burn <- function()
+.burn <- function(e)
 {
   con <- .redis()
   while(socketSelect(list(con),timeout=1L))
     readBin(con, raw(), 1000000L)
-  .redisError("Interrupted communincation with Redis")
+  .redisError("Interrupted communincation with Redis",e)
 }
 
 .getResponse <- function(raw=FALSE)
@@ -51,8 +52,9 @@
   env <- .redisEnv$current
 tryCatch({
   con <- .redis()
-  socketSelect(list(con))
+#  socketSelect(list(con), timeout=10L)
   l <- readLines(con=con, n=1)
+  if(length(l)==0) .burn("Empty")
   tryCatch(
     env$count <- max(env$count - 1,0),
     error = function(e) assign('count', 0, envir=env)
@@ -63,7 +65,7 @@ tryCatch({
       # '+' is a valid retrun message on at least one cmd (RANDOMKEY)
       return('')
     }
-    .redisError('Message garbled')
+    .burn("Invalid")
   }
   switch(s,
          '-' = stop(substr(l,2,nchar(l))),
@@ -74,12 +76,12 @@ tryCatch({
              if (n < 0) {
                return(NULL)
              }
-             socketSelect(list(con))
+#             socketSelect(list(con),timeout=10L)
              dat <- tryCatch(readBin(con, 'raw', n=n),
                              error=function(e) .redisError(e$message))
              m <- length(dat)
              if(m==n) {
-               socketSelect(list(con))
+#               socketSelect(list(con),timeout=10L)
                l <- readLines(con,n=1)  # Trailing \r\n
                if(raw)
                  return(dat)
@@ -97,7 +99,7 @@ tryCatch({
              r[j] <- list(dat)
              while(m<n) {
 # Short read; we need to retrieve the rest of this message.
-               socketSelect(list(con))
+#               socketSelect(list(con),timeout=10L)
                dat <- tryCatch(readBin(con, 'raw', n=(n-m)),
                             error=function (e) .redisError(e$message))
                j <- j + 1
@@ -108,7 +110,7 @@ tryCatch({
                r[j] <- list(dat)
                m <- m + length(dat)
              }
-             socketSelect(list(con))
+#             socketSelect(list(con),timeout=10L)
              l <- readLines(con,n=1)  # Trailing \r\n
              length(r) <- j
              if(raw)
@@ -124,7 +126,7 @@ tryCatch({
            } else NULL
          },
          stop('Unknown message type'))
-}, interrupt=function(e) .burn()
+}, interrupt=function(e) .burn(e)
 )
 }
 
@@ -169,7 +171,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
   f <- match.call()
   n <- length(f) - 1
   hdr <- paste('*', as.character(n), '\r\n',sep='')
-  socketSelect(list(con), write=TRUE)
+#  socketSelect(list(con),timeout=10L, write=TRUE)
 #  cat(hdr, file=con)
   writeBin(.raw(hdr), con)
 tryCatch({
@@ -178,18 +180,18 @@ tryCatch({
     if(!is.raw(v)) v <- .cerealize(v)
     l <- length(v)
     hdr <- paste('$', as.character(l), '\r\n', sep='')
-    socketSelect(list(con), write=TRUE)
+#    socketSelect(list(con),timeout=10L, write=TRUE)
 #    cat(hdr, file=con)
     writeBin(.raw(hdr), con)
-    socketSelect(list(con), write=TRUE)
+#    socketSelect(list(con),timeout=10L, write=TRUE)
     writeBin(v, con)
-    socketSelect(list(con), write=TRUE)
+#    socketSelect(list(con),timeout=10L, write=TRUE)
 #    cat('\r\n', file=con)
     writeBin(.raw('\r\n'), con)
   }
 },
 error=function(e) {.redisError("Invalid agrument");invisible()},
-interrupt=function(e) .burn()
+interrupt=function(e) .burn(e)
 )
 
   block <- TRUE
@@ -209,7 +211,7 @@ interrupt=function(e) .burn()
   f <- match.call()
   n <- length(f) - 1
   hdr <- paste('*', as.character(n), '\r\n',sep='')
-  socketSelect(list(con), write=TRUE)
+#  socketSelect(list(con),timeout=10L, write=TRUE)
   cat(hdr, file=con)
 tryCatch({
   for(j in seq_len(n)) {
@@ -217,16 +219,16 @@ tryCatch({
     if(!is.raw(v)) v <- .cerealize(v)
     l <- length(v)
     hdr <- paste('$', as.character(l), '\r\n', sep='')
-    socketSelect(list(con), write=TRUE)
+#    socketSelect(list(con),timeout=10L, write=TRUE)
     cat(hdr, file=con)
-    socketSelect(list(con), write=TRUE)
+#    socketSelect(list(con),timeout=10L, write=TRUE)
     writeBin(v, con)
-    socketSelect(list(con), write=TRUE)
+#    socketSelect(list(con),timeout=10L, write=TRUE)
     cat('\r\n', file=con)
   }
 },
 error=function(e) {.redisError("Invalid agrument");invisible()},
-interrupt=function(e) .burn()
+interrupt=function(e) .burn(e)
 )
   .getResponse(raw=TRUE)
 }

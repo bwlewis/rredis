@@ -3,12 +3,13 @@
 \title{Connect to a Redis server.}
 \description{Connect to an available Redis server on the specified port.}
 \usage{
-redisConnect(host = "localhost", port = 6379, returnRef = FALSE)
+redisConnect(host = "localhost", port = 6379, returnRef = FALSE, timeout = 2147483647L)
 }
 \arguments{
   \item{host}{The Redis server host name or inet address (optional, character)}
   \item{port}{The Redis port number (optional, numeric or integer)}
   \item{returnRef}{Set returnRef=TRUE to return a list describing the Redis connection (not presently useful).}
+  \item{timeout}{Optional TCP connection timeout value in seconds (integer).}
 }
 \details{A running instance of a Redis server is required.}
 
