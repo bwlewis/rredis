@@ -18,7 +18,7 @@
 }
 
 `redisConnect` <-
-function(host='localhost', port=6379, returnRef=FALSE, timeout=2147483647L)
+function(host='localhost', port=6379, returnRef=FALSE, timeout=2678399L)
 {
   .redisEnv$current <- new.env()
 # R nonblocking connections are flaky, especially on Windows, see
