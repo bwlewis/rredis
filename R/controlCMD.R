@@ -18,7 +18,7 @@
 }
 
 `redisConnect` <-
-function(host='localhost', port=6379, returnRef=FALSE, timeout=2678399L)
+function(host='localhost', port=6379, returnRef=FALSE, timeout=2678399L, password=NULL)
 {
   .redisEnv$current <- new.env()
 # R nonblocking connections are flaky, especially on Windows, see
@@ -35,6 +35,12 @@ function(host='localhost', port=6379, returnRef=FALSE, timeout=2678399L)
 # Count is for nonblocking communication, it keeps track of the number of
 # getResponse calls that are pending.
   assign('count',0,envir=.redisEnv$current)
+  if (!is.null(password)) tryCatch(redisAuth(password), 
+    error=function(e) {
+      cat(paste('Error: ',e,'\n'))
+            close(con);
+            rm(list='con',envir=.redisEnv$current)
+          })
   tryCatch(.redisPP(), 
     error=function(e) {
       cat(paste('Error: ',e,'\n'))
