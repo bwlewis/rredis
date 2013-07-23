@@ -168,31 +168,33 @@ redisCmd <- function(CMD, ..., raw=FALSE)
 {
   env <- .redisEnv$current
   con <- .redis()
+# Check to see if a rename list exists and use it if it does...we also
+# define a little helper function to handle replacing the command.
+# The rename list must have the form:
+# list(OLDCOMMAND="NEWCOMMAND", SOME_OTHER_CMD="SOME_OTHER_NEW_CMD",...)
+  rep = c()
+  if(exists("rename",envir=.redisEnv)) rep = get("rename",envir=.redisEnv)
   f <- match.call()
   n <- length(f) - 1
   hdr <- paste('*', as.character(n), '\r\n',sep='')
-#  socketSelect(list(con),timeout=10L, write=TRUE)
-#  cat(hdr, file=con)
   writeBin(.raw(hdr), con)
-tryCatch({
-  for(j in seq_len(n)) {
-    v <- eval(f[[j+1]],envir=sys.frame(-1))
-    if(!is.raw(v)) v <- .cerealize(v)
-    l <- length(v)
-    hdr <- paste('$', as.character(l), '\r\n', sep='')
-#    socketSelect(list(con),timeout=10L, write=TRUE)
-#    cat(hdr, file=con)
-    writeBin(.raw(hdr), con)
-#    socketSelect(list(con),timeout=10L, write=TRUE)
-    writeBin(v, con)
-#    socketSelect(list(con),timeout=10L, write=TRUE)
-#    cat('\r\n', file=con)
-    writeBin(.raw('\r\n'), con)
-  }
-},
-error=function(e) {.redisError("Invalid agrument");invisible()},
-interrupt=function(e) .burn(e)
-)
+  tryCatch({
+    for(j in seq_len(n)) {
+      if(j==1)
+        v <- .renameCommand(eval(f[[j+1]],envir=sys.frame(-1)), rep)
+      else
+        v <- eval(f[[j+1]],envir=sys.frame(-1))
+      if(!is.raw(v)) v <- .cerealize(v)
+      l <- length(v)
+      hdr <- paste('$', as.character(l), '\r\n', sep='')
+      writeBin(.raw(hdr), con)
+      writeBin(v, con)
+      writeBin(.raw('\r\n'), con)
+    }
+  },
+    error=function(e) {.redisError("Invalid agrument");invisible()},
+    interrupt=function(e) .burn(e)
+  )
 
   block <- TRUE
   if(exists('block',envir=env)) block <- get('block',envir=env)
@@ -211,19 +213,21 @@ interrupt=function(e) .burn(e)
   f <- match.call()
   n <- length(f) - 1
   hdr <- paste('*', as.character(n), '\r\n',sep='')
-#  socketSelect(list(con),timeout=10L, write=TRUE)
+# Check to see if a rename list exists and use it if it does...we also
+  rep = c()
+  if(exists("rename",envir=.redisEnv)) rep = get("rename",envir=.redisEnv)
   cat(hdr, file=con)
 tryCatch({
   for(j in seq_len(n)) {
-    v <- eval(f[[j+1]],envir=sys.frame(-1))
+      if(j==1)
+        v <- .renameCommand(eval(f[[j+1]],envir=sys.frame(-1)), rep)
+      else
+        v <- eval(f[[j+1]],envir=sys.frame(-1))
     if(!is.raw(v)) v <- .cerealize(v)
     l <- length(v)
     hdr <- paste('$', as.character(l), '\r\n', sep='')
-#    socketSelect(list(con),timeout=10L, write=TRUE)
     cat(hdr, file=con)
-#    socketSelect(list(con),timeout=10L, write=TRUE)
     writeBin(v, con)
-#    socketSelect(list(con),timeout=10L, write=TRUE)
     cat('\r\n', file=con)
   }
 },
@@ -231,4 +235,12 @@ error=function(e) {.redisError("Invalid agrument");invisible()},
 interrupt=function(e) .burn(e)
 )
   .getResponse(raw=TRUE)
+}
+
+.renameCommand <- function(x, rep)
+{
+  if(is.null(rep)) return(x)
+  v = rawToChar(x)
+  if(v %in% names(rep)) return(charToRaw(rep[[v]]))
+  x
 }
