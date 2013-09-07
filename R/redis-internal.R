@@ -196,6 +196,7 @@ interrupt=function(e) .burn(e)
   env <- .redisEnv$current
 tryCatch({
   con <- .redis()
+browser()
 #  l <- readLines(con=con, n=1)
   l <- .SOCK_GETLINE(con)
   if(length(l)==0) .burn("Empty")

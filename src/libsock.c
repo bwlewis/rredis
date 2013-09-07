@@ -347,7 +347,8 @@ SEXP SOCK_GETLINE(SEXP S)
   pfds.fd = s;
   pfds.events = POLLIN;
   h = poll(&pfds, 1, 50);
-  while(h>0) {
+  while(h>0)
+  {
     j = recv(s, &c, 1, 0);
     if(j<1) break;
     buf[k] = c;
@@ -358,7 +359,8 @@ SEXP SOCK_GETLINE(SEXP S)
       buf[k-1]=0;
       break;
     }
-    if(k+1 > bufsize) {
+    if(k+1 > bufsize)
+    {
       bufsize = bufsize + MBUF;
       buf = (char *)realloc(buf, bufsize);  
     }
