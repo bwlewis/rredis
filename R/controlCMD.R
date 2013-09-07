@@ -28,20 +28,11 @@ function(host='localhost', port=6379, password=NULL,
          returnRef=FALSE, timeout=2678399L)
 {
   .redisEnv$current <- new.env()
-# WARNING R nonblocking connections are flaky, especially on Windows, see
-# for example:
-# http://www.mail-archive.com/r-devel@r-project.org/msg16420.html.
-# So, we use only blocking connections.
-#
-# We track the file descriptor of the new connection in a sneaky way
-  fds <- rownames(showConnections(all=TRUE))
-  con <- socketConnection(host,port,open='a+b',blocking=TRUE,timeout=timeout)
-  fd <- rownames(showConnections(all=TRUE))
-  fd <- as.integer(setdiff(fd,fds))
+#  con <- socketConnection(host,port,open='a+b',blocking=TRUE,timeout=timeout)
+  con <- .openConnection(host=host, port=port)
   
 # Stash state in the redis enivronment describing this connection:
   assign('con',con,envir=.redisEnv$current)
-  assign('fd',fd,envir=.redisEnv$current)
   assign('host',host,envir=.redisEnv$current)
   assign('port',port,envir=.redisEnv$current)
   assign('pipeline',FALSE,envir=.redisEnv$current)
@@ -52,13 +43,13 @@ function(host='localhost', port=6379, password=NULL,
   if (!is.null(password)) tryCatch(redisAuth(password), 
     error=function(e) {
       cat(paste('Error: ',e,'\n'))
-            close(con);
+            .closeConnection(con);
             rm(list='con',envir=.redisEnv$current)
           })
   tryCatch(.redisPP(), 
     error=function(e) {
       cat(paste('Error: ',e,'\n'))
-            close(con);
+            .closeConnection(con);
             rm(list='con',envir=.redisEnv$current)
           })
   if(returnRef) return(.redisEnv$current)
@@ -70,7 +61,7 @@ function(e)
 {
   if(missing(e)) e = .redisEnv$current
   con <- .redis(e)
-  close(con)
+  .closeConnection(con)
   remove(list='con',envir=e)
 }
 

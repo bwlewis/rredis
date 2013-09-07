@@ -12,6 +12,20 @@
   e$con
 }
 
+.openConnection <- function(host, port, mode="a+b", timeout=0)
+{
+#  socketConnection(env$host, env$port,open=mode,
+#                   blocking=FALSE, timeout=timeout)
+# mode, timeout no longer used
+  .SOCK_CONNECT(host, port)
+}
+
+.closeConnection <- function(s)
+{
+# close(s)
+  .SOCK_CLOSE(s)
+}
+
 # .redisError may be called by any function when a serious error occurs.
 # It will print an indicated error message, attempt to reset the current
 # Redis server connection, and signal the error.
@@ -19,10 +33,11 @@
 {
   env <- .redisEnv$current
   con <- .redis()
-  close(con)
+  .closeConnection(con)
 # May stop with an error here on connect fail
-  con <- socketConnection(env$host, env$port,open='a+b',
-                          blocking=FALSE, timeout=env$timeout)
+#  con <- socketConnection(env$host, env$port,open='a+b',
+#                          blocking=FALSE, timeout=env$timeout)
+  con <- .openConnection(env$host, env$port)
   assign('con',con,envir=env)
   if(!is.null(e)) print(as.character(e))
   stop(msg)
@@ -44,8 +59,9 @@
 .burn <- function(e)
 {
   con <- .redis()
-  while(socketSelect(list(con),timeout=1L))
-    readBin(con, raw(), 1000000L)
+#  while(socketSelect(list(con),timeout=1L))
+#    readBin(con, raw(), 1000000L)
+  .SOCK_RECV(con)
   .redisError("Interrupted communincation with Redis",e)
 }
 
@@ -54,7 +70,9 @@
 #
 .raw <- function(word) 
 {
-  tryCatch(charToRaw(word),warning=function(w) stop(w), error=function(e) stop(e))
+  tryCatch(charToRaw(word),
+           warning=function(w) stop(w),
+           error=function(e) stop(e))
 }
 
 # Expose the basic Redis interface to the user
@@ -96,7 +114,8 @@ redisCmd <- function(CMD, ..., raw=FALSE)
   f <- match.call()
   n <- length(f) - 1
   hdr <- paste('*', as.character(n), '\r\n',sep='')
-  writeBin(.raw(hdr), con)
+#  writeBin(.raw(hdr), con)
+  .SOCK_SEND(con, .raw(hdr))
   tryCatch({
     for(j in seq_len(n)) {
       if(j==1)
@@ -106,9 +125,12 @@ redisCmd <- function(CMD, ..., raw=FALSE)
       if(!is.raw(v)) v <- .cerealize(v)
       l <- length(v)
       hdr <- paste('$', as.character(l), '\r\n', sep='')
-      writeBin(.raw(hdr), con)
-      writeBin(v, con)
-      writeBin(.raw('\r\n'), con)
+#      writeBin(.raw(hdr), con)
+#      writeBin(v, con)
+#      writeBin(.raw('\r\n'), con)
+      .SOCK_SEND(con, .raw(hdr))
+      .SOCK_SEND(con, v)
+      .SOCK_SEND(con, .raw("\r\n"))
     }
   },
     error=function(e) {.redisError("Invalid agrument");invisible()},
@@ -135,7 +157,8 @@ redisCmd <- function(CMD, ..., raw=FALSE)
 # Check to see if a rename list exists and use it if it does...we also
   rep = c()
   if(exists("rename",envir=.redisEnv)) rep = get("rename",envir=.redisEnv)
-  cat(hdr, file=con)
+#  cat(hdr, file=con)
+    .SOCK_SEND(con, hdr)
 tryCatch({
   for(j in seq_len(n)) {
       if(j==1)
@@ -145,9 +168,12 @@ tryCatch({
     if(!is.raw(v)) v <- .cerealize(v)
     l <- length(v)
     hdr <- paste('$', as.character(l), '\r\n', sep='')
-    cat(hdr, file=con)
-    writeBin(v, con)
-    cat('\r\n', file=con)
+#    cat(hdr, file=con)
+#    writeBin(v, con)
+#    cat('\r\n', file=con)
+    .SOCK_SEND(con, hdr)
+    .SOCK_SEND(con, v)
+    .SOCK_SEND(con, "\r\n")
   }
 },
 error=function(e) {.redisError("Invalid agrument");invisible()},
@@ -159,7 +185,7 @@ interrupt=function(e) .burn(e)
 .renameCommand <- function(x, rep)
 {
   if(is.null(rep)) return(x)
-  v = rawToChar(x)
+  v <- rawToChar(x)
   if(v %in% names(rep)) return(charToRaw(rep[[v]]))
   x
 }
@@ -170,7 +196,8 @@ interrupt=function(e) .burn(e)
   env <- .redisEnv$current
 tryCatch({
   con <- .redis()
-  l <- readLines(con=con, n=1)
+#  l <- readLines(con=con, n=1)
+  l <- .SOCK_GETLINE(con)
   if(length(l)==0) .burn("Empty")
   l = l[[1]]
   tryCatch(
@@ -194,44 +221,21 @@ tryCatch({
              if (n < 0) {
                return(NULL)
              }
-             dat <- tryCatch(readBin(con, 'raw', n=n),
+#             dat <- tryCatch(readBin(con, 'raw', n=n),
+#                             error=function(e) .redisError(e$message))
+             dat <- tryCatch(.SOCK_RECV_N(con, N=n),
                              error=function(e) .redisError(e$message))
              m <- length(dat)
              if(m==n) {
-               l <- readLines(con,n=1)  # Trailing \r\n
+#               l <- readLines(con,n=1)  # Trailing \r\n
+               l <- .SOCK_GETLINE(con)  # Trailing \r\n
                if(raw)
                  return(dat)
                else
                  return(tryCatch(unserialize(dat),
                          error=function(e) rawToChar(dat)))
              }
-# The message was not fully recieved in one pass.
-# We allocate a list to hold incremental messages and then concatenate it.
-# This perfromance enhancement was adapted from the Rbig server package, 
-# written by Steve Weston and Pat Shields.
-             rlen <- 50
-             j <- 1
-             r <- vector('list',rlen)
-             r[j] <- list(dat)
-             while(m<n) {
-# Short read; we need to retrieve the rest of this message.
-               dat <- tryCatch(readBin(con, 'raw', n=(n-m)),
-                            error=function (e) .redisError(e$message))
-               j <- j + 1
-               if(j>rlen) {
-                 rlen <- 2*rlen
-                 length(r) <- rlen
-               }
-               r[j] <- list(dat)
-               m <- m + length(dat)
-             }
-             l <- readLines(con,n=1)  # Trailing \r\n
-             length(r) <- j
-             if(raw)
-               do.call(c,r)
-             else
-               tryCatch(unserialize(do.call(c,r)),
-                      error=function(e) rawToChar(do.call(c,r)))
+             .burn("Truncated response")
            },
          '*' = {
            numVars <- as.integer(substr(l,2,nchar(l)))

@@ -29,7 +29,7 @@
 
 .SOCK_RECV_N = function(socket, N)
 {
-  .Call('SOCK_RECV_HTTP_HEAD', as.integer(socket), as.integer(N), PACKAGE='rredis')
+  .Call('SOCK_RECV_N', as.integer(socket), as.integer(N), PACKAGE='rredis')
 }
 
 # We trap the possibility of a SIGPIPE signal error during SOCK_SEND.
