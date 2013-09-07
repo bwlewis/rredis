@@ -1,6 +1,6 @@
 # This file contains various control functions.
 
-# Basic response handler, only really useful in nonblocking cases
+# Basic response handler, only really useful in pipelined cases
 # all function argument is left in for backward compatibility,
 # it is not used.
 `redisGetResponse` <- function(all=TRUE)
@@ -10,29 +10,43 @@
   replicate(.redisEnv$current$count, .getResponse(), simplify=FALSE)
 }
 
+# Maintained for compatability.
 `redisSetBlocking` <- function(value=TRUE)
+{
+  warning("redisSetBlocking is deprecated. Use redisSetPipeline instead.")
+  redisSetPipeline(!value)
+}
+`redisSetPipeline` <- function(value=FALSE)
 {
   value <- as.logical(value)
   if(is.na(value)) stop("logical value required")
-  assign('block',value,envir=.redisEnv$current)
+  assign('pipeline',value,envir=.redisEnv$current)
 }
 
 `redisConnect` <-
-function(host='localhost', port=6379, returnRef=FALSE, timeout=2678399L, password=NULL)
+function(host='localhost', port=6379, password=NULL,
+         returnRef=FALSE, timeout=2678399L)
 {
   .redisEnv$current <- new.env()
-# R nonblocking connections are flaky, especially on Windows, see
+# WARNING R nonblocking connections are flaky, especially on Windows, see
 # for example:
 # http://www.mail-archive.com/r-devel@r-project.org/msg16420.html.
-# So, we use blocking connections now.
-  con <- socketConnection(host, port, open='a+b', blocking=TRUE, timeout=timeout)
+# So, we use only blocking connections.
+#
+# We track the file descriptor of the new connection in a sneaky way
+  fds <- rownames(showConnections(all=TRUE))
+  con <- socketConnection(host,port,open='a+b',blocking=TRUE,timeout=timeout)
+  fd <- rownames(showConnections(all=TRUE))
+  fd <- as.integer(setdiff(fd,fds))
+  
 # Stash state in the redis enivronment describing this connection:
   assign('con',con,envir=.redisEnv$current)
+  assign('fd',fd,envir=.redisEnv$current)
   assign('host',host,envir=.redisEnv$current)
   assign('port',port,envir=.redisEnv$current)
-  assign('block',TRUE,envir=.redisEnv$current)
+  assign('pipeline',FALSE,envir=.redisEnv$current)
   assign('timeout',timeout,envir=.redisEnv$current)
-# Count is for nonblocking communication, it keeps track of the number of
+# Count is for pipelined communication, it keeps track of the number of
 # getResponse calls that are pending.
   assign('count',0,envir=.redisEnv$current)
   if (!is.null(password)) tryCatch(redisAuth(password), 
@@ -52,11 +66,12 @@ function(host='localhost', port=6379, returnRef=FALSE, timeout=2678399L, passwor
 }
 
 `redisClose` <- 
-function()
+function(e)
 {
-  con <- .redis()
+  if(missing(e)) e = .redisEnv$current
+  con <- .redis(e)
   close(con)
-  remove(list='con',envir=.redisEnv$current)
+  remove(list='con',envir=e)
 }
 
 `redisAuth` <- 

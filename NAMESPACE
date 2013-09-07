@@ -1,1 +1,2 @@
+useDynLib(rredis)
 exportPattern("^[[:alpha:]]+")
