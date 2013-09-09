@@ -2,14 +2,14 @@
 #define RXBUF 16384             /* TCP receive buffer */
 #define MBUF 1048576            /* Message buffer base size */
 
-int tcpconnect (char *, int);
+int tcpconnect (char *, int, int);
 SEXP SOCK_CLOSE (SEXP);
-SEXP SOCK_CONNECT (SEXP, SEXP);
+SEXP SOCK_CONNECT (SEXP, SEXP, SEXP);
 SEXP SOCK_GETLINE(SEXP);
 SEXP SOCK_NAME (SEXP);
 SEXP SOCK_POLL (SEXP, SEXP, SEXP);
 SEXP SOCK_RECV (SEXP, SEXP, SEXP, SEXP);
-SEXP_SOCK_RECV_N(SEXP, SEXP);
+SEXP SOCK_RECV_N(SEXP, SEXP);
 SEXP SOCK_SEND (SEXP, SEXP);
 
 #ifdef WIN32

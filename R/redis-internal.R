@@ -12,17 +12,16 @@
   e$con
 }
 
-.openConnection <- function(host, port, mode="a+b", timeout=0)
+.openConnection <- function(host, port, nodelay=FALSE)
 {
-#  socketConnection(env$host, env$port,open=mode,
-#                   blocking=FALSE, timeout=timeout)
-# mode, timeout no longer used
-  .SOCK_CONNECT(host, port)
+  stopifnot(typeof(host)=="character")
+  stopifnot(class(port)=="numeric")
+  stopifnot(typeof(nodelay)=="logical")
+  .SOCK_CONNECT(host, port, as.integer(nodelay))
 }
 
 .closeConnection <- function(s)
 {
-# close(s)
   .SOCK_CLOSE(s)
 }
 
@@ -35,9 +34,7 @@
   con <- .redis()
   .closeConnection(con)
 # May stop with an error here on connect fail
-#  con <- socketConnection(env$host, env$port,open='a+b',
-#                          blocking=FALSE, timeout=env$timeout)
-  con <- .openConnection(env$host, env$port)
+  con <- .openConnection(env$host, env$port, env$nodelay)
   assign('con',con,envir=env)
   if(!is.null(e)) print(as.character(e))
   stop(msg)
@@ -59,8 +56,6 @@
 .burn <- function(e)
 {
   con <- .redis()
-#  while(socketSelect(list(con),timeout=1L))
-#    readBin(con, raw(), 1000000L)
   .SOCK_RECV(con)
   .redisError("Interrupted communincation with Redis",e)
 }
@@ -114,7 +109,6 @@ redisCmd <- function(CMD, ..., raw=FALSE)
   f <- match.call()
   n <- length(f) - 1
   hdr <- paste('*', as.character(n), '\r\n',sep='')
-#  writeBin(.raw(hdr), con)
   .SOCK_SEND(con, .raw(hdr))
   tryCatch({
     for(j in seq_len(n)) {
@@ -125,9 +119,6 @@ redisCmd <- function(CMD, ..., raw=FALSE)
       if(!is.raw(v)) v <- .cerealize(v)
       l <- length(v)
       hdr <- paste('$', as.character(l), '\r\n', sep='')
-#      writeBin(.raw(hdr), con)
-#      writeBin(v, con)
-#      writeBin(.raw('\r\n'), con)
       .SOCK_SEND(con, .raw(hdr))
       .SOCK_SEND(con, v)
       .SOCK_SEND(con, .raw("\r\n"))
@@ -157,28 +148,24 @@ redisCmd <- function(CMD, ..., raw=FALSE)
 # Check to see if a rename list exists and use it if it does...we also
   rep = c()
   if(exists("rename",envir=.redisEnv)) rep = get("rename",envir=.redisEnv)
-#  cat(hdr, file=con)
     .SOCK_SEND(con, hdr)
-tryCatch({
-  for(j in seq_len(n)) {
+  tryCatch({
+    for(j in seq_len(n)) {
       if(j==1)
         v <- .renameCommand(eval(f[[j+1]],envir=sys.frame(-1)), rep)
       else
         v <- eval(f[[j+1]],envir=sys.frame(-1))
-    if(!is.raw(v)) v <- .cerealize(v)
-    l <- length(v)
-    hdr <- paste('$', as.character(l), '\r\n', sep='')
-#    cat(hdr, file=con)
-#    writeBin(v, con)
-#    cat('\r\n', file=con)
-    .SOCK_SEND(con, hdr)
-    .SOCK_SEND(con, v)
-    .SOCK_SEND(con, "\r\n")
-  }
-},
-error=function(e) {.redisError("Invalid agrument");invisible()},
-interrupt=function(e) .burn(e)
-)
+      if(!is.raw(v)) v <- .cerealize(v)
+      l <- length(v)
+      hdr <- paste('$', as.character(l), '\r\n', sep='')
+      .SOCK_SEND(con, hdr)
+      .SOCK_SEND(con, v)
+      .SOCK_SEND(con, "\r\n")
+    }
+  },
+    error=function(e) {.redisError("Invalid agrument");invisible()},
+    interrupt=function(e) .burn(e)
+  )
   .getResponse(raw=TRUE)
 }
 
@@ -190,30 +177,27 @@ interrupt=function(e) .burn(e)
   x
 }
 
-
 .getResponse <- function(raw=FALSE)
 {
   env <- .redisEnv$current
-tryCatch({
-  con <- .redis()
-browser()
-#  l <- readLines(con=con, n=1)
-  l <- .SOCK_GETLINE(con)
-  if(length(l)==0) .burn("Empty")
-  l = l[[1]]
-  tryCatch(
-    env$count <- max(env$count - 1,0),
-    error = function(e) assign('count', 0, envir=env)
-  )
-  s <- substr(l, 1, 1)
-  if (nchar(l) < 2) {
-    if(s == "+") {
-      # '+' is a valid retrun message for at least one cmd (RANDOMKEY)
-      return("")
+  tryCatch({
+    con <- .redis()
+    l <- .SOCK_GETLINE(con)
+
+    if(length(l)==0) .burn("Empty")
+    tryCatch(
+      env$count <- max(env$count - 1,0),
+      error = function(e) assign('count', 0, envir=env)
+    )
+    s <- substr(l, 1, 1)
+    if (nchar(l) < 2) {
+      if(s == "+") {
+        # '+' is a valid retrun message for at least one cmd (RANDOMKEY)
+        return("")
+      }
+      .burn("Invalid")
     }
-    .burn("Invalid")
-  }
-  switch(s,
+    switch(s,
          '-' = stop(substr(l,2,nchar(l))),
          '+' = substr(l,2,nchar(l)),
          ':' = as.numeric(substr(l,2,nchar(l))),
@@ -222,13 +206,10 @@ browser()
              if (n < 0) {
                return(NULL)
              }
-#             dat <- tryCatch(readBin(con, 'raw', n=n),
-#                             error=function(e) .redisError(e$message))
              dat <- tryCatch(.SOCK_RECV_N(con, N=n),
                              error=function(e) .redisError(e$message))
              m <- length(dat)
              if(m==n) {
-#               l <- readLines(con,n=1)  # Trailing \r\n
                l <- .SOCK_GETLINE(con)  # Trailing \r\n
                if(raw)
                  return(dat)
@@ -244,7 +225,8 @@ browser()
              replicate(numVars, .getResponse(raw=raw), simplify=FALSE)
            } else NULL
          },
-         stop('Unknown message type'))
-}, interrupt=function(e) .burn(e)
-)
+       stop('Unknown message type')
+    )
+    }, interrupt=function(e) .burn(e)
+  )
 }

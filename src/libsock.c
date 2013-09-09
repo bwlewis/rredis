@@ -6,8 +6,10 @@
 #else
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h> // TCP_NODELAY
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <unistd.h>
@@ -52,12 +54,14 @@ R_unload_rredis(DllInfo * info)
 
 /* tcpconnect
  * connect to the specified host and port, returning a socket
+ * If nodelay=1, then disable Nagle, otherwise keep it.
  */
 int
-tcpconnect (char *host, int port)
+tcpconnect (char *host, int port, int nodelay)
 {
   struct hostent *h;
   struct sockaddr_in sa;
+  int j;
 #ifdef WIN32
   SOCKET s;
 #else
@@ -96,6 +100,12 @@ tcpconnect (char *host, int port)
      }
     signal(SIGPIPE, SIG_IGN);
 #endif
+    if(nodelay==1)
+    {
+      j = 1;
+      setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &j, sizeof(j));
+      if(j!=1) warning("Unable to set TCP_NODELAY");
+    }
   return (int)s;
 }
 
@@ -129,11 +139,12 @@ SEXP SOCK_NAME(SEXP S)
   return ScalarInteger(ntohs(sin.sin_port));
 }
 
-SEXP SOCK_CONNECT(SEXP HOST, SEXP PORT)
+SEXP SOCK_CONNECT(SEXP HOST, SEXP PORT, SEXP NAGLE)
 {
   char *host =  (char *)CHAR(STRING_ELT(HOST, 0));
   int port = INTEGER(PORT)[0];
-  return ScalarInteger(tcpconnect(host, port));
+  int nagle = INTEGER(NAGLE)[0];
+  return ScalarInteger(tcpconnect(host, port, nagle));
 }
 
 SEXP SOCK_POLL (SEXP FDS, SEXP TIMEOUT, SEXP EVENTS)
@@ -340,20 +351,24 @@ SEXP SOCK_GETLINE(SEXP S)
 #else
   int s = INTEGER(S)[0];
 #endif
-  int bufsize = MBUF;
-  buf = (char *)malloc(MBUF);
+  int bufsize = 512;
+  buf = (char *)malloc(512);
   if(!buf) return ans;
   k = 0;
-  pfds.fd = s;
-  pfds.events = POLLIN;
-  h = poll(&pfds, 1, 50);
-  while(h>0)
+//  pfds.fd = s;
+//  pfds.events = POLLIN;
+//  h = poll(&pfds, 1, 50);
+  while(1)
   {
     j = recv(s, &c, 1, 0);
-    if(j<1) break;
+    if(j<1)
+    {
+      if(j<0 && errno != EAGAIN) error("Redis read error");
+      continue;
+    }
     buf[k] = c;
     k++;
-    if(k>2 && buf[k-1]==10 && buf[k-2]==13)
+    if(k>=2 && buf[k-1]==10 && buf[k-2]==13)
     {
       buf[k-2]=0;
       buf[k-1]=0;
@@ -364,7 +379,7 @@ SEXP SOCK_GETLINE(SEXP S)
       bufsize = bufsize + MBUF;
       buf = (char *)realloc(buf, bufsize);  
     }
-    h = poll(&pfds, 1, 50);
+//    h = poll(&pfds, 1, 50);
   }
   PROTECT(ans=allocVector(STRSXP,1));
   SET_STRING_ELT(ans, 0, mkChar(buf));
@@ -405,5 +420,16 @@ SEXP SOCK_RECV_N(SEXP S, SEXP N)
     h = poll(&pfds, 1, 50);
   }
   UNPROTECT(1);
+  return ans;
+}
+
+SEXP SOCK_NOOP(SEXP S)
+{
+  SEXP ans = R_NilValue;
+#ifdef WIN32
+  SOCKET s = (SOCKET)INTEGER(S)[0];
+#else
+  int s = INTEGER(S)[0];
+#endif
   return ans;
 }

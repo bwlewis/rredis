@@ -51,8 +51,8 @@
   .Call('SOCK_NAME', as.integer(socket), PACKAGE='rredis')
 }
 
-.SOCK_CONNECT = function(host, port)
+.SOCK_CONNECT = function(host, port, nodelay=0)
 {
   .Call('SOCK_CONNECT', as.character(host), as.integer(port),
-        PACKAGE='rredis')
+        as.integer(nodelay), PACKAGE='rredis')
 }
