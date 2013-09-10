@@ -11,7 +11,7 @@ test02_exists <- function() {
 test03_delete <- function() {
   # delete test
   redisFlushAll()
-  checkEquals(FALSE, suppressWarnings(redisDelete('foo')))
+  checkEquals(0, suppressWarnings(redisDelete('foo')))
 }
 
 test04_empty_get <- function() {

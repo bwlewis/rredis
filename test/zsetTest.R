@@ -24,7 +24,7 @@ test04_redisZRem <- function()
 
 test05_redisZIncrBy <- function()
 {
-  checkEquals(2, redisZIncrBy("A","x",1))
+  checkEquals(2, as.integer(redisZIncrBy("A","x",1)))
 }
 
 test06_redisZRank <- function()
