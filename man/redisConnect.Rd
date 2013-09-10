@@ -3,13 +3,17 @@
 \title{Connect to a Redis server.}
 \description{Connect to an available Redis server on the specified port.}
 \usage{
-redisConnect(host = "localhost", port = 6379, returnRef = FALSE, nodelay=FALSE)
+redisConnect(host = "localhost", port = 6379, returnRef = FALSE, nodelay=FALSE, timeout=2678399L)
 }
 \arguments{
   \item{host}{The Redis server host name or inet address (optional, character). The default value is "localhost".}
   \item{port}{The Redis port number (optional, numeric or integer). The default value is 6379L.}
   \item{returnRef}{Set returnRef=TRUE to return the environment that contains the Redis connection state (see details). The default value is FALSE.}
   \item{nodelay}{Set nodelay=TRUE to disbable the TCP Nagle algorithm (see details). The default value is FALSE.}
+  \item{timeout}{Set the R connection timeout (in seconds).
+          Beware that some OSes may treat very large
+          values as zero: however the POSIX standard requires values up
+          to 31 days to be supported.}
 }
 \details{
 A running instance of a Redis server is required.

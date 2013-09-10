@@ -25,20 +25,11 @@
 
 `redisConnect` <-
 function(host='localhost', port=6379, password=NULL,
-         returnRef=FALSE, nodelay=FALSE)
+         returnRef=FALSE, nodelay=FALSE, timeout=2678399L)
 {
   .redisEnv$current <- new.env()
-  con <- .openConnection(host=host, port=port, nodelay=nodelay)
-  
-# Stash state in the redis enivronment describing this connection:
-  assign('con',con,envir=.redisEnv$current)
-  assign('host',host,envir=.redisEnv$current)
-  assign('port',port,envir=.redisEnv$current)
   assign('pipeline',FALSE,envir=.redisEnv$current)
-  assign('nodelay',nodelay,envir=.redisEnv$current)
-# Count is for pipelined communication, it keeps track of the number of
-# getResponse calls that are pending.
-  assign('count',0,envir=.redisEnv$current)
+  con <- .openConnection(host=host, port=port, nodelay=nodelay, timeout=timeout, envir=.redisEnv$current)
   if (!is.null(password)) tryCatch(redisAuth(password), 
     error=function(e) {
       cat(paste('Error: ',e,'\n'))
