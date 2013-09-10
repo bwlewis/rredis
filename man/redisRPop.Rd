@@ -8,10 +8,11 @@ For example if the list contains the elements "a","b","c"
 \code{redisRPop} will return "c" and the list will become "a","b".
 }
 \usage{
-redisRPop(key)
+redisRPop(key, ...)
 }
 \arguments{
   \item{key}{The desired key associated with a list.}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \value{The first element of the list associated with the specified key,
 or NULL if the list is empty.

@@ -14,7 +14,7 @@ A key name.
   \item{field}{
 A field name.
 }
-  \item{raw}{
+  \item{...}{
 Optional additional agruments.
 Specify \code{raw=TRUE} to skip de-serialization of the data.
 }

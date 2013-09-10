@@ -5,12 +5,13 @@
 combination by the specified value.
 }
 \usage{
-redisHIncrBy(key, field, value)
+redisHIncrBy(key, field, value, ...)
 }
 \arguments{
   \item{key}{A key name.}
   \item{field}{A field name.}
   \item{value}{The value to increment by (integer, numeric, or character).}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 The value should be a character representation of an integer.

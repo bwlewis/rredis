@@ -3,10 +3,11 @@
 \title{Redis hash values.}
 \description{Return all the values associated with the given hash key.}
 \usage{
-redisHVals(key)
+redisHVals(key,...)
 }
 \arguments{
   \item{key}{The key to look up.}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{Returns the values in the Redis hash 
 associated with \code{key}.

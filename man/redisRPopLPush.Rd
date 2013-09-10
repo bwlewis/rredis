@@ -7,11 +7,12 @@ Atomically return and remove the last (tail) element of the src list, and
 push the element as the first (head) element of the dst list.
 }
 \usage{
-redisRPopLPush(src, dest)
+redisRPopLPush(src, dest, ...)
 }
 \arguments{
   \item{src}{A key corresponding to the source list.}
   \item{dest}{A key corresponding to the destination list.}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 Atomically return and remove the last (tail) element of the src list, and

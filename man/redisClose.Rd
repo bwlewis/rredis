@@ -4,7 +4,10 @@
 \description{The redisClose function closes any open connection to a Redis
 server.}
 \usage{
-redisClose()
+redisClose(e)
+}
+\arguments{
+  \item{e}{(Optional) Redis context. The current context is used if e is not supplied.}
 }
 \details{A running instance of a Redis server is required.  }
 \value{Nothing is returned. Errors are displayed if the function fails to
@@ -21,6 +24,7 @@ B. W. Lewis
 
 \seealso{
 \code{\link{redisConnect}}
+\code{\link{redisGetContext}}
 }
 \examples{
 \dontrun{

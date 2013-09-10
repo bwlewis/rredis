@@ -6,15 +6,14 @@ in the Redis database, returning the previously defined value or NULL if
 the key was not already associated with a value. 
 }
 \usage{
-redisGetSet(key, value)
+redisGetSet(key, value, ...)
 }
 \arguments{
   \item{key}{
 The (required) character identifier for the value to be stored. 
 }
-  \item{value}{
-The (required) object to associate with the key. 
-}
+  \item{value}{ The (required) object to associate with the key. }
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 The key must not contain spaces or newline characters (otherwise an error will be thrown).

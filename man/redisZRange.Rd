@@ -7,7 +7,7 @@ redisZRange
 Return a subset of an ordered set.
 }
 \usage{
-redisZRange(key, start = 0, end = -1, decreasing = FALSE, withscores = FALSE)
+redisZRange(key, start = 0, end = -1, decreasing = FALSE, withscores = FALSE, ...)
 }
 \arguments{
   \item{key}{
@@ -25,6 +25,7 @@ Set TRUE to sort in decreasing order of scores.
   \item{withscores}{
 If TRUE, also return set element scores.
 }
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 Return the specified elements of the sorted set at the specified key. The

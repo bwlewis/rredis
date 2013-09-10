@@ -5,15 +5,13 @@
 indices, inclusively.
 }
 \usage{
-redisLRange(key, start, end)
+redisLRange(key, start, end, ...)
 }
 \arguments{
-  \item{key}{A key corresponding to a list.
-}
-  \item{start}{The beginning index from which to read list elements.
-}
-  \item{end}{The ending index.
-}
+  \item{key}{A key corresponding to a list.  }
+  \item{start}{The beginning index from which to read list elements.  }
+  \item{end}{The ending index.}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 List indices begin with 0. If the start or end indices are beyond the bounds

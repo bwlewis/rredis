@@ -3,7 +3,7 @@
 \title{Retrieve a list of hash values.}
 \description{Retrieve a list of hash values from specified key/field pairs at once.}
 \usage{
-redisHMGet(key, fields)
+redisHMGet(key, fields, ...)
 }
 \arguments{
   \item{key}{
@@ -12,6 +12,7 @@ The (required) character identifier for the key name.
   \item{fields}{
 An R string vector of hash fields to retrieve.
 }
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 Redis hash values store values in one or more fields associated with a single

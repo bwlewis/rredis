@@ -10,7 +10,7 @@ Return the all the elements in the sorted set at key with a score between
 \code{min} or \code{max}).
 }
 \usage{
-redisZRangeByScore(key, min, max, offset = NULL, count = NULL, withscores = FALSE)
+redisZRangeByScore(key, min, max, offset = NULL, count = NULL, withscores = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,6 +34,7 @@ of \code{offset}.
   \item{withscores}{
 Also return the scores.
 }
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 The \code{offset} and \code{count} arguments must both be specified if used.

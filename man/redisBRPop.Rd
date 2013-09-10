@@ -4,7 +4,7 @@
 \description{Pop the first available value from a key or list of keys, 
 blocking until a value is available.}
 \usage{
-redisBRPop(keys, timeout = 0)
+redisBRPop(keys, timeout = 0, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -13,6 +13,7 @@ redisBRPop(keys, timeout = 0)
   A timeout in seconds after which, if no value is available, the function
 returns NULL. A value of zero indicates block indefinitely.
 }
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 redisBRPop blocks until at least one of the keys exists and contains a

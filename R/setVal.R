@@ -16,50 +16,44 @@
   list(List=List, raw=raw)
 }
 
-redisSInter <- function(keys, ...)
+# Generic set operation
+.redisSetOp <- function(cmd, keys, ...)
 {
   L <- .redisStripRawArg(list(...))
   sets <- c(as.list(keys),L$List)
-  do.call('.redisCmd',c(lapply(c(list('SINTER'),sets),charToRaw),raw=L$raw))
+  call <- lapply(c(list(cmd),sets),charToRaw)
+  if(!is.null(L$raw)) call <- c(call,raw=L$raw)
+  do.call(".redisCmd", call)
+}
+
+redisSInter <- function(keys, ...)
+{
+  .redisSetOp("SINTER", keys, ...)
 }
 
 redisSUnion <- function(keys, ...)
 {
-  L <- .redisStripRawArg(list(...))
-  sets <- c(as.list(keys),L$List)
-  do.call('.redisCmd',c(lapply(c(list('SUNION'),sets),charToRaw),raw=L$raw))
+  .redisSetOp("SUNION", keys, ...)
 }
 
 redisSUnionStore <- function(dest, keys, ...)
 {
-  L <- .redisStripRawArg(list(...))
-  sets <- c(as.list(dest),as.list(keys),L$List)
-  do.call('.redisCmd',c(lapply(c(list('SUNIONSTORE'),sets),charToRaw)
-                        ,raw=L$raw))
+  .redisSetOp("SUNIONSTORE", keys, ...)
 }
 
 redisSInterStore <- function(dest, keys, ...)
 {
-  L <- .redisStripRawArg(list(...))
-  sets <- c(as.list(dest),as.list(keys),L$List)
-  do.call('.redisCmd',c(lapply(c(list('SINTERSTORE'),sets),charToRaw),
-                        ,raw=L$raw))
+  .redisSetOp("SINTERSTORE", keys, ...)
 }
 
 redisSDiff <- function(keys, ...)
 {
-  L <- .redisStripRawArg(list(...))
-  sets <- c(as.list(keys),L$List)
-  do.call('.redisCmd',c(lapply(c(list('SDIFF'),sets),charToRaw),
-                        ,raw=L$raw))
+  .redisSetOp("SDIFF", keys, ...)
 }
 
 redisSDiffStore <- function(dest, keys, ...)
 {
-  L <- .redisStripRawArg(list(...))
-  sets <- c(as.list(dest),as.list(keys),L$List)
-  do.call('.redisCmd',c(lapply(c(list('SDIFFSTORE'),sets),charToRaw),
-                        ,raw=L$raw))
+  .redisSetOp("SDIFFSTORE", keys, ...)
 }
 
 redisSIsMember <- function(set, element)

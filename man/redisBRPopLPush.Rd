@@ -7,12 +7,13 @@ if the element does not exist, and
 push the element as the first (head) element of the dst list.
 }
 \usage{
-redisBRPopLPush(src, dest, timeout = 0)
+redisBRPopLPush(src, dest, timeout = 0, ...)
 }
 \arguments{
   \item{src}{A key corresponding to the source list.}
   \item{dest}{A key corresponding to the destination list.}
   \item{timeout}{Block for at most timeout seconds. Set to zero to block indefinitely.}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 Atomically return and remove the last (tail) element of the src list, blocking

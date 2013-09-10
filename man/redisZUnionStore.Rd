@@ -7,7 +7,7 @@ redisZUnionStore
 Store the union of two sorted sets into another sorted set.
 }
 \usage{
-redisZUnionStore(dstkey, keys, weights = c(), aggregate = NULL)
+redisZUnionStore(dstkey, keys, weights = c(), aggregate = NULL, ...)
 }
 \arguments{
   \item{dstkey}{
@@ -22,6 +22,7 @@ A set of weights equal in length to the \code{keys} argument, or NULL (default).
   \item{aggregate}{
 A character value of either "SUM" "MIN" or "MAX" indicating how the resulting weights should be aggregated.
 }
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 See the Redis documentation for details.

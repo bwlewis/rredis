@@ -7,7 +7,7 @@ redisSort
 Sort a list, set or sorted set (zset).
 }
 \usage{
-redisSort(key, decreasing = FALSE, alpha = FALSE, by = NULL, start = NULL, count = NULL, get = NULL, store = NULL)
+redisSort(key, decreasing = FALSE, alpha = FALSE, by = NULL, start = NULL, count = NULL, get = NULL, store = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -38,6 +38,7 @@ Retrieve external keys. See the Redis documentation.
   \item{store}{
 Store the results in the specified key.
 }
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 Sort the elements contained in the List, Set, or Sorted Set value at key. By

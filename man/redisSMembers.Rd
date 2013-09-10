@@ -5,10 +5,12 @@
 of the specified set.
 }
 \usage{
-redisSMembers(set)
+redisSMembers(set, ...)
 }
 \arguments{
-  \item{set}{The set key name (character).} }
+  \item{set}{The set key name (character).}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
+}
 \value{
 A list containing the set elements. An error is thrown if the set does
 not exist.

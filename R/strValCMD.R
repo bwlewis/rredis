@@ -5,12 +5,12 @@ redisGet <- function(key, ...)
   .redisCmd(.raw('GET'), .raw(key), ...)
 }
 
-redisSet <- function(key, value, NX=FALSE, ...)
+redisSet <- function(key, value, NX=FALSE)
 {
   value <- .cerealize(value)
   cmd <- 'SET'
   if(NX) cmd <- 'SETNX'
-  .redisCmd(.raw(cmd), .raw(key), value, ...)
+  .redisCmd(.raw(cmd), .raw(key), value)
 }
 
 redisGetSet <- function(key, value, ...)
@@ -42,22 +42,22 @@ redisMSet <- function(keyvalues, NX=FALSE, ...)
   do.call('.redisCmd', a)
 }
 
-redisIncr <- function(key,...)
+redisIncr <- function(key)
 {
-  .redisCmd(.raw('INCR'),.raw(key),...)
+  .redisCmd(.raw('INCR'),.raw(key))
 }
 
-redisIncrBy <- function(key, value, ...)
+redisIncrBy <- function(key, value)
 {
-  .redisCmd(.raw('INCRBY'),.raw(key),.raw(as.character(value)), ...)
+  .redisCmd(.raw('INCRBY'),.raw(key),.raw(as.character(value)))
 }
 
-redisDecrBy <- function(key, value, ...)
+redisDecrBy <- function(key, value)
 {
-  .redisCmd(.raw('DECRBY'),.raw(key),.raw(as.character(value)), ...)
+  .redisCmd(.raw('DECRBY'),.raw(key),.raw(as.character(value)))
 }
 
-redisDecr <- function(key, ...)
+redisDecr <- function(key)
 {
-  .redisCmd(.raw('DECR'),.raw(key), ...)
+  .redisCmd(.raw('DECR'),.raw(key))
 }

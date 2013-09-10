@@ -8,11 +8,12 @@ For example if the list contains the elements "a","b","c"
 }
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 \usage{
-redisLPop(key)
+redisLPop(key, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{key}{The desired key associated with a list.}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \value{The first element of the list associated with the specified key,
 or NULL if the list is empty.

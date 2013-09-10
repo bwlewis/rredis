@@ -6,11 +6,12 @@ Retrieve a value from a Redis 'list' at the specified index without
 removing it from the list.
 }
 \usage{
-redisLIndex(key, index)
+redisLIndex(key, index, ...)
 }
 \arguments{
   \item{key}{The key (whose value is of the type 'list').}
   \item{index}{The list index to retrieve.}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
 List indices begin at 0.

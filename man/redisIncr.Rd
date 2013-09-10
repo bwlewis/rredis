@@ -16,8 +16,7 @@ If the key does not exist or contains a value of a wrong type, set the
 key to the value of "0" before to perform the operation.
 }
 \value{
-The new value of key after the increment, returned as a character
-string.
+The new value of key after the increment, returned as an integer.
 }
 \references{
 http://redis.io/commands

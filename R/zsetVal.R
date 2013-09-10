@@ -10,18 +10,18 @@ redisZRem <- function(key, member)
   .redisCmd(.raw('ZREM'),.raw(key), member)
 }
 
-redisZIncrBy <- function(key, member, increment,...)
+redisZIncrBy <- function(key, member, increment)
 {
   z <- NULL
   .redisCmd(.raw('ZINCRBY'),.raw(key), .raw(as.character(increment)),
-                 member,...)
+                 member)
 }
 
-redisZRank <- function(key, member, decreasing=FALSE,...)
+redisZRank <- function(key, member, decreasing=FALSE)
 {
   cmd <- .raw('ZRANK')
   if(decreasing) cmd <- .raw('ZREVRANK')
-  .redisCmd(cmd,.raw(key), member,...)
+  .redisCmd(cmd,.raw(key), member)
 }
 
 redisZRange <- function(key, start=0, end=-1, decreasing=FALSE,
@@ -75,7 +75,7 @@ redisZRemRangeByScore <- function(key, min, max)
   .redisCmd(.raw('ZREMRANGEBYSCORE'), .raw(key), .raw(min), .raw(max))
 }
 
-redisZCard <- function(key,...)
+redisZCard <- function(key)
 {
   .redisCmd(.raw('ZCARD'), .raw(key))
 }

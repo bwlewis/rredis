@@ -3,10 +3,11 @@
 \title{Redis hash fields.}
 \description{Return the fields associated with the given key.}
 \usage{
-redisHFields(key)
+redisHFields(key, ...)
 }
 \arguments{
   \item{key}{The key to look up.}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{Returns the fields in the Redis hash 
 associated with \code{key}.

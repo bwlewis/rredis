@@ -5,10 +5,12 @@
 Select and return an element of a set at random.
 }
 \usage{
-redisSRandMember(set)
+redisSRandMember(set, ...)
 }
 \arguments{
-  \item{set}{The set key name (character).} }
+  \item{set}{The set key name (character).}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
+}
 \value{
 An element from the set selected randomly. An error is thrown if the set does
 not exist.

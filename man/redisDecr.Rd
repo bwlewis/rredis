@@ -7,8 +7,7 @@
 redisDecr(key)
 }
 \arguments{
-  \item{key}{A key corresponding to the value to decrement.
-}
+  \item{key}{A key corresponding to the value to decrement.}
 }
 \details{
 The value should be a character representation of an integer.
@@ -16,8 +15,7 @@ If the key does not exist or contains a value of a wrong type, set the
 key to the value of "0" before to perform the operation.
 }
 \value{
-The new value of key after the decrement, returned as a character
-string.
+The new value of key after the decrement, returned as an integer. 
 }
 \references{
 http://redis.io/commands

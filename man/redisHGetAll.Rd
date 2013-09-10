@@ -3,10 +3,11 @@
 \title{Redis hash fields and values.}
 \description{Return all fields and values associated with the given key.}
 \usage{
-redisHGetAll(key)
+redisHGetAll(key, ...)
 }
 \arguments{
   \item{key}{The key to look up.}
+  \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{Returns all the fields and their values in the Redis hash 
 associated with \code{key}.
