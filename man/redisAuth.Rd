@@ -12,8 +12,10 @@ redisAuth(pwd)
 The (required) password.
 }
 }
-\details{You should not use this function. If you need a secure key/value
-database, it's best not to use Redis for now.
+\details{
+If you use this function, it's probably a good idea to encrypt network
+traffic between Redis and its client with a program like stunnel.
+Otherwise, passwords are transmitted over the network in clear text.
 }
 \value{
 TRUE if sueccessful, FALSE otherwise.

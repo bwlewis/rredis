@@ -61,7 +61,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{The {\tt rredis} Package}
 \author{Bryan W. Lewis \\ 
-blewis@illposed.net}
+blewis@illposed.net\\
+{\it and contributions from many others}}
 
 \begin{document}
 
@@ -73,7 +74,8 @@ blewis@illposed.net}
 
 The {\tt rredis} package provides a native R interface to Redis.  Redis is an
 in memory key/value database with many innovative features written by Salvatore
-Sanfilippo.  It supports data persistence, networked client/server operation,
+Sanfilippo\footnote{https://github.com/antirez}.
+It supports data persistence, networked client/server operation,
 command pipelining, structured value types, server replication, data
 expiration, clustering, multicast-like publish/subscribe, and it's very fast.
 
@@ -511,6 +513,134 @@ expected set operations, as illustrated in the following example.
 \end{lstlisting}
 Redis sets do not include blocking operations.
 
+\subsection{Future Redis Commands}
+
+Redis changes and sometimes new Redis commands are introduced. Thanks to the
+elegant design of the underlying Redis protocol, the rredis package can
+support any Redis command, even those not yet explicitly wrapped by R functions
+in the package.
+
+Use the low-level \verb+redisCmd(CMD, ...)+ function
+to perform any Redis operation.  The \verb+CMD+ argument must be a character
+string that represents a valid Redis command, see for example
+\htmladdnormallink{http://redis.io/commands}{http://redis.io/commands}.
+
+Replace the \verb+...+ with any additional arguments specific to the Redis
+command. Arguments that are not already in raw format will be converted to raw
+byte format, and non-character values will be serialized as R objects
+(character strings will be left as unserialized ASCII by default).
+
+Here is a simple example that emulates the \verb+redisSet+ and \verb+redisGet+
+functions:
+\begin{lstlisting}
+redisCmd('set','x',runif(5))
+redisCmd('get','x')
+\end{lstlisting}
+
+
+\section{Performance Considerations and Limitations}
+Redis values are limited to $512\,$MB. R objects that exceed this size once
+serialized can't be stored in Redis.
+
+Redis is well-known as an exceptionally robust and high-performance key/value
+store. Although the rredis package uses the standard R connections
+interface (for maximum portability across all R platforms), it's performance as
+a Redis client is reasonable.  The ideas outlined in this section and the next
+will help you get the most performance out of the rredis package.
+
+A frequent cause for performance anxiety using the rredis package
+occurs when rapidly executing many smallish transactions. Consider the
+next example, run locally on a pretty wimpy Linux laptop:
+\begin{lstlisting}
+library("rredis")
+redisConnect()
+t1 <- proc.time()
+for(j in 1:100) redisSet("x", j)
+print(proc.time() - t1)
+
+   user  system elapsed 
+  0.990   0.060   4.066 
+
+\end{lstlisting}
+That performance seems terrible. After all, isn't Redis capable of tens of
+thousands of transactions per second?
+
+There are at least three approaches to improving the performance of the last
+example: Redis pipelining (the best way), disable TCP Nagle algorithm, or use
+Wush Wu's alternate hiredis-based support package for rredis.
+
+\subsection{Redis Pipelining}
+
+The rredis package supports Redis pipelining. Quoting from the Wiki
+page 
+\htmladdnormallink{http://redis.io/commands}{http://redis.io/commands}:
+\begin{quote}
+A Request/Response server can be implemented so that it is able to process new
+requests even if the client didn't already read the old responses. This way it
+is possible to send multiple commands to the server without waiting for the
+replies at all, and finally read the replies in a single step.
+\end{quote}
+
+Redis pipelining is enabled in the rredis package with the
+\verb+redisSetPipeline(TRUE)+ function. Once enabled, results are not
+immediately returned to the R client but instead cached at the Redis server
+until explicitly requested with the \verb+redisGetResponse+ function.
+
+Here is our example with pipelining enabled:
+\begin{lstlisting}
+library("rredis")
+redisConnect()
+redisSetPipeline(TRUE)
+t1 <- proc.time()
+for(j in 1:100) redisSet("x", j)
+resp <- redisGetResponse()
+print(proc.time() - t1)
+
+   user  system elapsed 
+  0.115   0.020   0.161 
+
+\end{lstlisting}
+Now that's much better!
+
+Pipelining should generally be used in cases similar to this example. You may
+not find it generally that useful because it's inconvenient to always have to
+call \verb+getResponse+ when you're done.
+
+\subsection{Disabling TCP Nagle and setting TCP\_NODELAY}
+
+This is the performance approach that hiredis (the official Redis C library
+client) takes: see
+\htmladdnormallink{https://github.com/redis/hiredis}{https://github.com/redis/hiredis}
+
+Note that we don't recommend this approach, especially if you're running Redis
+across a network shared with other TCP services. It can flood your network with
+lots of Redis traffic and cause heartburn for your system administrators. With
+that caveat, we recently added the ability to support this in the rredis
+package using standard R connections. Here is an example:
+\begin{lstlisting}
+library("rredis")
+redisConnect(nodelay=TRUE)
+t1 <- proc.time()
+for(j in 1:100) redisSet("x", j)
+print(proc.time() - t1)
+
+   user  system elapsed 
+  0.135   0.025   0.207 
+
+\end{lstlisting}
+We see that this option (at least on my wimpy laptop) gives similar performance
+to the pipelined approach without the added hassle of using \verb+getResponse+.
+
+\subsection{Alternate clients}
+Wush Wu and Dirk Eddelbuettel have an R client for Redis based on the hiredis
+C library that generally gives better performance than the rredis
+package a the expense of portability and disabling Nagle all the time. Wush
+is also working on a pluggable hiredis support package for the rredis
+package that should be available soon. Here are some links of interest:
+\htmladdnormallink{https://github.com/eddelbuettel/rhiredis}{https://github.com/eddelbuettel/rhiredis}
+\htmladdnormallink{https://github.com/wush978/rredis}{https://github.com/wush978/rredis}
+
+
 \section{Transactions}
 Redis supports batch submission of multiple Redis operations.
 Aggregating operations with transactions can in many cases significantly
@@ -615,5 +745,48 @@ Note that the only Redis functions that may be used in between the
 {\tt redisGetResponse}, {\tt redisSubscribe}, and {\tt redisMonitorChannels}
 functions.
 
+\section{Miscellaneous}
+We cover a few miscellaneous features of the package here.
+
+\subsection{Renaming Redis Commands}
+
+Redis may be configured with renamed commands.  This is one of the more obscure
+features of Redis.  For example, suppose that we desire to rename the Redis
+commands "SET" and "GET" as "NEWSET" and "NETGET," respectively.
+That can be achieved by adding the following two lines to your
+redis.conf file:
+
+\begin{lstlisting}
+rename-command SET NEWSET
+rename-command GET NEWGET
+\end{lstlisting}
+
+Note that after restarting Redis with this configuration, the
+\verb+redisSet+ and \verb+redisGet+ won't work anymore since those
+commands have been renamed.
+
+In order to use the new names in the rredis package, create an R list
+with the replacement names as follows and place that list in a special
+environment used by the redis package used to store state associated with
+open Redis connections:
+
+\begin{lstlisting}
+assign("rename", list(SET="NEWSET", GET="NEWGET"), envir=rredis:::.redisEnv)
+\end{lstlisting}
+
+And then the normal \verb+redisSet+ and \verb+redisGet+ functions work again!
+Similarly rename any other renamed Redis commands. Note that this renaming
+strategy applies to the current running R session (althoug it applies to
+{\it all} open Redis connections in that session). 
+
+\subsection{Authentication}
+Redis supports a really basic password authentication scheme. If you use
+this, it's probably a good idea to use stunnel or an SSH tunnel or something
+similar to encrypt all network traffic between Redis clients and Redis.
+Otherwise passwords are transmitted in clear text over the network.
+
+Use the \verb+redisAuth(password)+ function to authenticate with Redis, or
+optionally supply the \verb+password+ argument to the \verb+redisConnect+
+function.
 
 \end{document}
