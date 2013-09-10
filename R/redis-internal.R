@@ -99,7 +99,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
            if(is.character(x)) charToRaw(x)
            else(.cerealize(x))
        ))
-  if(raw) return(do.call('.redisRawCmd',a))
+  if(raw) a <- c(a,raw=TRUE)
   do.call('.redisCmd', a)
 }
 
@@ -125,16 +125,16 @@ redisCmd <- function(CMD, ..., raw=FALSE)
 # define a little helper function to handle replacing the command.
 # The rename list must have the form:
 # list(OLDCOMMAND="NEWCOMMAND", SOME_OTHER_CMD="SOME_OTHER_NEW_CMD",...)
-  rep = c()
+  rep <- c()
   if(exists("rename",envir=.redisEnv)) rep = get("rename",envir=.redisEnv)
   f <- match.call()
 # Check for raw option (which means don't deserialize returned resuts)
-  raw = FALSE
-  if(any("raw") %in% names(f))
+  raw <- FALSE
+  if(any("raw" %in% names(f)))
   {
-    wr  = which(names(f)=="homer")
-    raw = f[[wr]]
-    f   = f[-wr]
+    wr  <- which(names(f)=="raw")
+    raw <- f[[wr]]
+    f   <- f[-wr]
   }
   n <- length(f) - 1
   hdr <- paste('*', as.character(n), '\r\n',sep='')
