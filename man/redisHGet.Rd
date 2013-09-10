@@ -5,7 +5,7 @@
 from the Redis database.
 }
 \usage{
-redisHGet(key, field, raw = FALSE)
+redisHGet(key, field, ...)
 }
 \arguments{
   \item{key}{
@@ -15,7 +15,8 @@ A key name.
 A field name.
 }
   \item{raw}{
-Set \code{raw=TRUE} to skip de-serialization of the data.
+Optional additional agruments.
+Specify \code{raw=TRUE} to skip de-serialization of the data.
 }
 }
 \details{

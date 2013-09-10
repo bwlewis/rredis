@@ -5,14 +5,14 @@
 from the Redis database.
 }
 \usage{
-redisGet(key, raw = FALSE)
+redisGet(key, ...)
 }
 \arguments{
   \item{key}{
 The (required) character identifier for the value to be looked up.
 }
-  \item{raw}{
-Set \code{raw=TRUE} to skip de-serialization of the data.
+  \item{...}{ Optional additional arguments.
+Specify \code{raw=TRUE} to skip de-serialization of the data.
 }
 }
 \details{

@@ -1,5 +1,5 @@
 \name{redisSetBlocking}
-\alias{redisSetBlocking}
+\alias{redisSetBlocking,redisSetPipeline}
 \title{Set the Redis message blocking state.}
 \description{
 Use \code{redisSetBlocking} to set the rredis client to blocking (default)
@@ -7,6 +7,7 @@ or non-blocking Redis communication mode.
 }
 \usage{
 redisSetBlocking( value = TRUE )
+redisSetPipeline( value = TRUE )
 }
 \arguments{
   \item{value}{
@@ -27,6 +28,10 @@ server.
 
 Note that use of commands like \code{redisMSet} can usually obviate the
 need to use non-blocking mode.
+}
+\note{
+The function name \code{redisSetBlocking} is deprecated and will be
+replaced in a future version by \code{redisSetPipeline}.
 }
 \value{
 The new blocking mode (TRUE/FALSE) is invisibly returned.

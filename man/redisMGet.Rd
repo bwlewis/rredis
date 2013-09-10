@@ -4,13 +4,12 @@
 \description{Retrieve values corresponding to the specified list of keys. 
 }
 \usage{
-redisMGet(keys, raw = FALSE)
+redisMGet(keys, ...)
 }
 \arguments{
   \item{keys}{A vector or list of character strings  corresponding to 
 keys to retrieve.}
-  \item{raw}{Set \code{raw=TRUE} to skip de-serialization of the returned
-values. }
+  \item{...}{Optional arguments. Specify \code{raw=TRUE} to skip de-serialization of the returned values. }
 }
 \value{
 A list of retrieved key/value pairs. Missing values return NULL.
