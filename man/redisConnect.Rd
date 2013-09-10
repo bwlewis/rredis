@@ -3,15 +3,34 @@
 \title{Connect to a Redis server.}
 \description{Connect to an available Redis server on the specified port.}
 \usage{
-redisConnect(host = "localhost", port = 6379, returnRef = FALSE, timeout = 2147483647L)
+redisConnect(host = "localhost", port = 6379, returnRef = FALSE, nodelay=FALSE)
 }
 \arguments{
-  \item{host}{The Redis server host name or inet address (optional, character)}
-  \item{port}{The Redis port number (optional, numeric or integer)}
-  \item{returnRef}{Set returnRef=TRUE to return a list describing the Redis connection (not presently useful).}
-  \item{timeout}{Optional TCP connection timeout value in seconds (integer).}
+  \item{host}{The Redis server host name or inet address (optional, character). The default value is "localhost".}
+  \item{port}{The Redis port number (optional, numeric or integer). The default value is 6379L.}
+  \item{returnRef}{Set returnRef=TRUE to return the environment that contains the Redis connection state (see details). The default value is FALSE.}
+  \item{nodelay}{Set nodelay=TRUE to disbable the TCP Nagle algorithm (see details). The default value is FALSE.}
 }
-\details{A running instance of a Redis server is required.}
+\details{
+A running instance of a Redis server is required.
+Use `returnRef` to return the Redis connection state in an environment.
+Then use the `redisSetContext` function to switch environment state and
+manage multiple open Redis connections.
+
+Set \code{nodelay=FALSE} to disable the TCP Nagle flow control algorithm which
+can improve performance especially for rapid, non-pipelined small-sized
+transactions. However, we discourage users from setting this.
+Possible consequences include:
+
+* A flooded network with many small Redis messages
+
+* Unhappy TCP services other than Redis
+
+* Angry system adiministrators.
+
+A better choice for good performance is to enable Redis pipelining
+using \code{redisSetPipeline(FALSE)} and then use the \code{redisGetResponse}
+}
 
 \value{Nothing is returned by default. 
 Errors are displayed if the function fails to
@@ -34,6 +53,10 @@ B. W. Lewis
 
 \seealso{
 \code{\link{redisClose}}
+\code{\link{redisGetContext}}
+\code{\link{redisSetContext}}
+\code{\link{redisSetPipeline}}
+\code{\link{redisGetResponse}}
 }
 \examples{
 \dontrun{

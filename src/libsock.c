@@ -423,13 +423,18 @@ SEXP SOCK_RECV_N(SEXP S, SEXP N)
   return ans;
 }
 
-SEXP SOCK_NOOP(SEXP S)
+SEXP SOCK_NAGLE(SEXP S, SEXP VAL)
 {
   SEXP ans = R_NilValue;
+  int val = INTEGER(VAL)[0];
 #ifdef WIN32
   SOCKET s = (SOCKET)INTEGER(S)[0];
 #else
   int s = INTEGER(S)[0];
 #endif
-  return ans;
+  if(val==1)
+  {
+    setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &val, sizeof(val));
+  }
+  return ScalarInteger(val);
 }
