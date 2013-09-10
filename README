@@ -2,8 +2,8 @@ rredis: An R client for Redis
 
 NOTE
 
-1. Redis is evolving rapidly. The rredis client supports many commands that are
-only available in Redis versions 1.3 and higher.
+Redis is evolving rapidly. The rredis client supports many commands that are
+only available in Redis versions 2.* and higher.
 
 EXAMPLE
 
@@ -24,3 +24,9 @@ $y
 [1] "Cazart"
 
 > redisClose()
+
+
+PERFORMANCE
+
+Consider using the redisSetPipeline function to enable pipelining, and
+also read help about options available to the redisConnect function.
