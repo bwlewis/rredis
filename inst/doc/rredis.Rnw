@@ -65,11 +65,11 @@ blewis@illposed.net\\
 {\it and contributions from many others}}
 
 \begin{document}
-
 \maketitle
 
 \thispagestyle{empty}
 
+\setlength{\parindent}{0in}
 \section{Introduction}
 
 The {\tt rredis} package provides a native R interface to Redis.  Redis is an
@@ -82,11 +82,11 @@ expiration, clustering, multicast-like publish/subscribe, and it's very fast.
 The following simple example illustrates a typical use of the rredis package:
 \lstset{columns=flexible, basicstyle={\ttfamily\slshape}}
 \begin{lstlisting}
-> library('rredis')
+> library("rredis")
 > redisConnect()
-> redisSet('x',rnorm(5))
-[1] TRUE
-> redisGet('x')
+> redisSet("x",rnorm(5))
+[1] "OK"
+> redisGet("x")
 [1]  0.808448325  0.341482747 -0.728739322 -0.105507214 -0.002349064
 \end{lstlisting}
 The key name ``x'' is associated with the R vector produced by \verb+rnorm(5)+
@@ -125,8 +125,9 @@ than available RAM.
 
 \section{Supported Platforms}
 The Redis server is written in ANSI C and supported on most POSIX systems
-including GNU/Linux, Solaris, *BSD, and Mac OS X. The server is not officially
-supported on Windows systems at the time of this writing (March, 2010).
+including GNU/Linux, Solaris, *BSD, and Mac OS X.
+Microsoft supports a fork of Redis for Windows available here:
+\htmladdnormallink{https://github.com/MSOpenTech/redis}{https://github.com/MSOpenTech/redis}.
 
 The rredis package for R is supported on all supported R platforms, including
 Microsoft Windows, and can connect to a Redis server running on a supported
@@ -187,11 +188,11 @@ and external reference pointers.
 We assume from now on that the rredis package is loaded in the running R
 session using either 
 \begin{lstlisting}
-require('rredis')
+require("rredis")
 \end{lstlisting}
 or
 \begin{lstlisting}
-library('rredis')
+library("rredis")
 \end{lstlisting}
 prior to running any example.
 
@@ -201,7 +202,7 @@ a default port (6379). Explicitly specify a host and/or port to connect
 to a server running on a computer different from the computer on which
 the R session is running, for example, 
 \begin{lstlisting}
-redisConnect(host='illposed.net', port=5555)
+redisConnect(host="illposed.net", port=5555)
 \end{lstlisting}
 to connect to a Redis server running on host 'illposed.net' at port 5555.
 
@@ -212,14 +213,14 @@ database with \texttt{redisSet} and \texttt{redisGet}:
 > x <- rnorm(5)
 > print(x)
 [1] -0.3297596  1.0417431 -1.3216719 -0.8186305 -0.2705817
-> redisSet('x',x)
-[1] TRUE
-> y <- redisGet('x')
+> redisSet("x",x)
+[1] "OK"
+> y <- redisGet("x")
 > print(y)
 [1] -0.3297596  1.0417431 -1.3216719 -0.8186305 -0.2705817
 > all.equal(x,y)
 [1] TRUE
-> redisGet('z')
+> redisGet("z")
 NULL
 \end{lstlisting}
 Note that one must explicitly specify a key name (``x'' in the above example)
@@ -233,9 +234,9 @@ not available in which case it returns NULL (see the example).
 The true power of Redis becomes apparent when we share values across multiple
 clients. For example, start up a new R session and try:
 \begin{lstlisting}
-> library('rredis')
+> library("rredis")
 > redisConnect()
-> y <- redisGet('x')
+> y <- redisGet("x")
 > print(y)
 [1] -0.3297596  1.0417431 -1.3216719 -0.8186305 -0.2705817
 \end{lstlisting}
@@ -274,8 +275,8 @@ values may be expired (in this case, after one second) with
 \texttt{redisExpire}.
 \begin{lstlisting}
 > redisMSet(list(x=pi,y=runif(5),z=sqrt(2)))
-[1] TRUE
-> redisMGet(c('x','y','z'))
+[1] "OK"
+> redisMGet(c("x","y","z"))
 $x
 [1] 3.141593
 $y
@@ -283,10 +284,10 @@ $y
 $z
 [1] 1.414214
 
-> redisExpire('z',1)
-[1] TRUE
+> redisExpire("z",1)
+[1] 1
 > Sys.sleep(1)
-> redisGet('z')
+> redisGet("z")
 NULL
 \end{lstlisting}
 
@@ -304,14 +305,14 @@ OK
 \end{lstlisting}
 Now, leaving the terminal window open, from an R session, try:
 \begin{lstlisting}
-> redisGet('shell')
+> redisGet("shell")
 [1] "Greetings, R client!\n"
 \end{lstlisting}
 And, voil\`{a}, R and shell communicate text through Redis.
 
 The reverse direction requires more scrutiny. From the R session, run:
 \begin{lstlisting}
-> redisSet('R', 'Greetings, shell client!')
+> redisSet("R", "Greetings, shell client!")
 \end{lstlisting}
 And now, switch over to the shell client and run:
 \begin{lstlisting}
@@ -323,8 +324,8 @@ of the R \texttt{redisSet} command is to store data as R objects, which
 the shell client cannot decipher. Instead, we must encode the R object
 (in this case, a character string) in a format that shell can understand:
 \begin{lstlisting}
-> redisSet('R', charToRaw('Greetings, shell client!'))
-[1] TRUE
+> redisSet("R", charToRaw("Greetings, shell client!"))
+[1] "OK"
 \end{lstlisting}
 And now, switch over to the shell client and run:
 \begin{lstlisting}
@@ -335,7 +336,7 @@ It can be tricky to share arbitrary R objects with other languages, but
 raw character strings usually provide a reasonable, if sometimes 
 inefficient, common tongue.
 
-The {\tt RAW=TRUE} option may be set on most package functions that
+The {\tt raw=TRUE} option may be set on most package functions that
 receive data, for example {\tt redisGet}. Use the {\tt{RAW}} option
 to leave the message data as is (otherwise the functions try to deserialize
 it to a standard R object). The {\tt{RAW}} format is useful for binary
@@ -350,13 +351,13 @@ We walk through basic Redis list operation in the first example below.
 The example shows how \texttt{redisLPush} pushes values onto a list from
 the left, and \texttt{redisRPush} pushes values from the right.
 \begin{lstlisting}
-> redisLPush('a',1)
+> redisLPush("a",1)
 [1] 1
-> redisLPush('a',2)
+> redisLPush("a",2)
 [1] 2
-> redisLPush('a',3)
+> redisLPush("a",3)
 [1] 3
-> redisLRange('a',0,2)
+> redisLRange("a",0,2)
 [[1]]
 [1] 3
 [[2]]
@@ -364,19 +365,19 @@ the left, and \texttt{redisRPush} pushes values from the right.
 [[3]]
 [1] 1
 
-> redisLPop('a')
+> redisLPop("a")
 [1] 3
-> redisLRange('a',0,-1)
+> redisLRange("a",0,-1)
 [[1]]
 [1] 2
 [[2]]
 [1] 1
 
-> redisRPush('a','A')
+> redisRPush("a","A")
 [1] 3
-> redisRPush('a','B')
+> redisRPush("a","B")
 [1] 4
-> redisLRange('a',0,-1)
+> redisLRange("a",0,-1)
 [[1]]
 [1] 2
 [[2]]
@@ -386,7 +387,7 @@ the left, and \texttt{redisRPush} pushes values from the right.
 [[4]]
 [1] "B"
 
-> redisRPop('a')
+> redisRPop("a")
 [1] "B"
 \end{lstlisting}
 
@@ -395,12 +396,12 @@ always return immediately, even when no value is available in which case they
 return NULL. Redis includes a blocking variant of the list ``Pop'' commands 
 that is illustrated in the next example.
 \begin{lstlisting}
-> redisBLPop('b',timeout=1)
+> redisBLPop("b",timeout=1)
 NULL
 
-> redisLPush('b',runif(5))
+> redisLPush("b",runif(5))
 [1] 1
-> redisBLPop('b',timeout=1)
+> redisBLPop("b",timeout=1)
 $b
 [1] 0.3423658 0.4188430 0.2494071 0.9960606 0.5643137
 \end{lstlisting}
@@ -413,9 +414,9 @@ on at least one of the lists:
 \begin{lstlisting}
 > redisFlushAll()
 [1] "OK"
-> redisLPush('b',5)
+> redisLPush("b",5)
 [1] 1
-> redisBLPop(c('a','b','c'))
+> redisBLPop(c("a","b","c"))
 $b
 [1] 5
 \end{lstlisting}
@@ -430,7 +431,7 @@ First, open an R window and block on the ``a'' and ``b'' lists:
 \begin{lstlisting}
 > redisFlushAll()
 > for (j in 1:5) {
-+ x <- redisBLPop(c('a','b'))
++ x <- redisBLPop(c("a","b"))
 + print (x)
 + }
 \end{lstlisting}
@@ -483,25 +484,25 @@ The Redis set value type operates somewhat like Redis lists, but only
 allowing unique values within a set. Sets also come equipped with the 
 expected set operations, as illustrated in the following example.
 \begin{lstlisting}
-> redisSAdd('A',runif(2))
-[1] TRUE
-> redisSAdd('A',55)
-[1] TRUE
-> redisSAdd('B',55)
-[1] TRUE
-> redisSAdd('B',rnorm(3))
-[1] TRUE
-> redisSCard('A')
+> redisSAdd("A",runif(2))
+[1] 1
+> redisSAdd("A",55)
+[1] 1
+> redisSAdd("B",55)
+[1] 1
+> redisSAdd("B",rnorm(3))
+[1] 1
+> redisSCard("A")
 [1] 2
-> redisSDiff(c('A','B'))
+> redisSDiff(c("A","B"))
 [[1]]
 [1] 0.5449955 0.7848509
 
-> redisSInter(c('A','B'))
+> redisSInter(c("A","B"))
 [[1]]
 [1] 55
 
-> redisSUnion(c('A','B'))
+> redisSUnion(c("A","B"))
 [[1]]
 [1] 55
 
@@ -521,7 +522,8 @@ support any Redis command, even those not yet explicitly wrapped by R functions
 in the package.
 
 Use the low-level \verb+redisCmd(CMD, ...)+ function
-to perform any Redis operation.  The \verb+CMD+ argument must be a character
+to perform {\it any}
+Redis operation.  The \verb+CMD+ argument must be a character
 string that represents a valid Redis command, see for example
 \htmladdnormallink{http://redis.io/commands}{http://redis.io/commands}.
 
@@ -533,9 +535,13 @@ byte format, and non-character values will be serialized as R objects
 Here is a simple example that emulates the \verb+redisSet+ and \verb+redisGet+
 functions:
 \begin{lstlisting}
-redisCmd('set','x',runif(5))
-redisCmd('get','x')
+> redisCmd("set","x",runif(5))
+[1] "OK"
+
+> redisCmd("get","x")
+[1] 0.0006776408 0.5652672122 0.0985793471 0.5748420910 0.4098101135
 \end{lstlisting}
+
 
 
 \section{Performance Considerations and Limitations}
@@ -552,11 +558,11 @@ A frequent cause for performance anxiety using the rredis package
 occurs when rapidly executing many smallish transactions. Consider the
 next example, run locally on a pretty wimpy Linux laptop:
 \begin{lstlisting}
-library("rredis")
-redisConnect()
-t1 <- proc.time()
-for(j in 1:100) redisSet("x", j)
-print(proc.time() - t1)
+> library("rredis")
+> redisConnect()
+> t1 <- proc.time()
+> for(j in 1:100) redisSet("x", j)
+> print(proc.time() - t1)
 
    user  system elapsed 
   0.990   0.060   4.066 
@@ -566,8 +572,9 @@ That performance seems terrible. After all, isn't Redis capable of tens of
 thousands of transactions per second?
 
 There are at least three approaches to improving the performance of the last
-example: Redis pipelining (the best way), disable TCP Nagle algorithm, or use
-Wush Wu's alternate hiredis-based support package for rredis.
+example: Redis pipelining (the best way), enable TCP\_NODELAY, or use
+Wush Wu's alternate hiredis-based support package for rredis or an alternative
+hiredis-based R client package.
 
 \subsection{Redis Pipelining}
 
@@ -588,13 +595,13 @@ until explicitly requested with the \verb+redisGetResponse+ function.
 
 Here is our example with pipelining enabled:
 \begin{lstlisting}
-library("rredis")
-redisConnect()
-redisSetPipeline(TRUE)
-t1 <- proc.time()
-for(j in 1:100) redisSet("x", j)
-resp <- redisGetResponse()
-print(proc.time() - t1)
+> library("rredis")
+> redisConnect()
+> redisSetPipeline(TRUE)
+> t1 <- proc.time()
+> for(j in 1:100) redisSet("x", j)
+> resp <- redisGetResponse()
+> print(proc.time() - t1)
 
    user  system elapsed 
   0.115   0.020   0.161 
@@ -602,34 +609,36 @@ print(proc.time() - t1)
 \end{lstlisting}
 Now that's much better!
 
-Pipelining should generally be used in cases similar to this example. You may
-not find it generally that useful because it's inconvenient to always have to
-call \verb+getResponse+ when you're done.
+You may find that it's inconvenient to always have to call \verb+getResponse+;
+thus pipelining is best reserved for circumstances similar to the above example
+that substantially benefit from it.
 
-\subsection{Disabling TCP Nagle and setting TCP\_NODELAY}
+\subsection{Enabling TCP\_NODELAY}
 
-This is the performance approach that hiredis (the official Redis C library
-client) takes: see
-\htmladdnormallink{https://github.com/redis/hiredis}{https://github.com/redis/hiredis}
+Enabling the TCP\_NODELAY options is one performance approach that hiredis (the
+official Redis C library client) takes: see
+\htmladdnormallink{https://github.com/redis/hiredis}{https://github.com/redis/hiredis}.
+We don't generally recommend this approach, especially if you're running Redis
+across a network shared with other TCP services. It disables the TCP Nagle
+congestion control algorithm and can flood your network with lots of Redis
+traffic resulting in heartburn for your system administrators. With that
+caveat, we recently added the ability to support this in the rredis package
+using standard R connections. Here is an example:
 
-Note that we don't recommend this approach, especially if you're running Redis
-across a network shared with other TCP services. It can flood your network with
-lots of Redis traffic and cause heartburn for your system administrators. With
-that caveat, we recently added the ability to support this in the rredis
-package using standard R connections. Here is an example:
 \begin{lstlisting}
-library("rredis")
-redisConnect(nodelay=TRUE)
-t1 <- proc.time()
-for(j in 1:100) redisSet("x", j)
-print(proc.time() - t1)
+> library("rredis")
+> redisConnect(nodelay=TRUE)
+> t1 <- proc.time()
+> for(j in 1:100) redisSet("x", j)
+> print(proc.time() - t1)
 
    user  system elapsed 
   0.135   0.025   0.207 
 
 \end{lstlisting}
-We see that this option (at least on my wimpy laptop) gives similar performance
-to the pipelined approach without the added hassle of using \verb+getResponse+.
+We see that enabling TCP\_NODELAY gives similar performance
+to the pipelined approach (at least on a wimpy laptop)
+without the added inconvenience of requiring \verb+getResponse+.
 
 \subsection{Alternate clients}
 Wush Wu and Dirk Eddelbuettel have an R client for Redis based on the hiredis
@@ -637,7 +646,7 @@ C library that generally gives better performance than the rredis
 package a the expense of portability and disabling Nagle all the time. Wush
 is also working on a pluggable hiredis support package for the rredis
 package that should be available soon. Here are some links of interest:
-\htmladdnormallink{https://github.com/eddelbuettel/rhiredis}{https://github.com/eddelbuettel/rhiredis}
+\htmladdnormallink{https://github.com/eddelbuettel/rhiredis}{https://github.com/eddelbuettel/rhiredis}\newline
 \htmladdnormallink{https://github.com/wush978/rredis}{https://github.com/wush978/rredis}
 
 
@@ -686,15 +695,15 @@ entire queued sequence will be discarded. Conditioning transactions with
 The following extremely basic example illustrates transactions conditional
 on no change in value corresponding to the ``z'' key:
 \begin{lstlisting}
-> redisWatch('z')
+> redisWatch("z")
 [1] "OK"
 > redisMulti()
 [1] "OK"
-> redisSet('x',runif(3))
+> redisSet("x",runif(3))
 [1] "QUEUED"
-> redisSet('y',pi)
+> redisSet("y",pi)
 [1] "QUEUED"
-> redisGet('x')
+> redisGet("x")
 [1] "QUEUED"
 > redisExec()
 [[1]]
@@ -722,9 +731,9 @@ for an incoming message on subscribed channels.
 Here is a simple example:
 
 \begin{lstlisting}
-> redisSubscribe('channel1')
+> redisSubscribe("channel1")
 
-# The loop will receive three messages from 'channel1':
+# The loop will receive three messages from "channel1":
 > for(j in 1:3) print(redisGetResponse())
 # A typical message might look like:
 [1]]
@@ -737,7 +746,7 @@ Here is a simple example:
 [1] "message3"
 
 # Finally, unsubscribe to the channel:
-> redisUnsubscribe('channel1')
+> redisUnsubscribe("channel1")
 \end{lstlisting}
 
 Note that the only Redis functions that may be used in between the
@@ -767,16 +776,16 @@ commands have been renamed.
 
 In order to use the new names in the rredis package, create an R list
 with the replacement names as follows and place that list in a special
-environment used by the redis package used to store state associated with
+environment used by the rredis package used to store state associated with
 open Redis connections:
 
 \begin{lstlisting}
-assign("rename", list(SET="NEWSET", GET="NEWGET"), envir=rredis:::.redisEnv)
+> assign("rename", list(SET="NEWSET", GET="NEWGET"), envir=rredis:::.redisEnv)
 \end{lstlisting}
 
 And then the normal \verb+redisSet+ and \verb+redisGet+ functions work again!
 Similarly rename any other renamed Redis commands. Note that this renaming
-strategy applies to the current running R session (althoug it applies to
+strategy applies to the current running R session (not that it applies to
 {\it all} open Redis connections in that session). 
 
 \subsection{Authentication}
