@@ -34,8 +34,10 @@ Possible consequences include:
 
 * Angry system adiministrators.
 
-A better choice for good performance is to enable Redis pipelining using
-\code{redisSetPipeline(FALSE)} and then use the \code{redisGetResponse}
+A better choice for good performance is to enable Redis pipelining
+with
+\code{redisSetPipeline(FALSE)} (q.v.).
+
 }
 
 \value{Nothing is returned by default. 

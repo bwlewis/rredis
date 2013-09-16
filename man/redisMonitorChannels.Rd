@@ -41,6 +41,7 @@ B. W. Lewis
 \code{\link{redisPublish}}
 \code{\link{redisUnsubscribe}}
 \code{\link{redisGetResponse}}
+
 \code{\link{redisMonitorChannels}}
 }
 \examples{
