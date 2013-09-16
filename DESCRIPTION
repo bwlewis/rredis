@@ -2,9 +2,9 @@ Package: rredis
 Type: Package
 Title: Redis client for R
 Version: 1.6.8
-Date: 2013-09-10
+Date: 2013-09-16
 Author: B. W. Lewis
 Maintainer: B. W. Lewis <blewis@illposed.net>
 Description: An R client for the Redis persistent key-value database available from http://redis.io.
-License: Apache License 2.0
+License: BSD_3_clause
 LazyLoad: yes

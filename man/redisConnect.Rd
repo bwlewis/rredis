@@ -3,7 +3,8 @@
 \title{Connect to a Redis server.}
 \description{Connect to an available Redis server on the specified port.}
 \usage{
-redisConnect(host = "localhost", port = 6379, password = NULL, returnRef = FALSE, nodelay=FALSE, timeout=2678399L)
+redisConnect(host = "localhost", port = 6379, password = NULL,
+             returnRef = FALSE, nodelay=FALSE, timeout=2678399L)
 }
 \arguments{
   \item{host}{The Redis server host name or inet address (optional, character). The default value is "localhost".}

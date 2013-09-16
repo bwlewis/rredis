@@ -7,7 +7,8 @@ redisZRange
 Return a subset of an ordered set.
 }
 \usage{
-redisZRange(key, start = 0, end = -1, decreasing = FALSE, withscores = FALSE, ...)
+redisZRange(key, start = 0, end = -1, decreasing = FALSE,
+            withscores = FALSE, ...)
 }
 \arguments{
   \item{key}{

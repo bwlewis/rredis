@@ -7,7 +7,8 @@ redisSort
 Sort a list, set or sorted set (zset).
 }
 \usage{
-redisSort(key, decreasing = FALSE, alpha = FALSE, by = NULL, start = NULL, count = NULL, get = NULL, store = NULL, ...)
+redisSort(key, decreasing = FALSE, alpha = FALSE, by = NULL,
+          start = NULL, count = NULL, get = NULL, store = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

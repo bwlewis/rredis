@@ -10,7 +10,8 @@ Return the all the elements in the sorted set at key with a score between
 \code{min} or \code{max}).
 }
 \usage{
-redisZRangeByScore(key, min, max, offset = NULL, count = NULL, withscores = FALSE, ...)
+redisZRangeByScore(key, min, max, offset = NULL, count = NULL,
+                   withscores = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

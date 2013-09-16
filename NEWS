@@ -1,4 +1,7 @@
 1.6.8:
+- The package author (B W Lewis) has changed the package license from
+  Apache 2.0 to the BSD 3 clause license to bring it in line with the
+  main Redis copyright license.
 - The package now includes support for Redis bit operations thanks to
   conde contributed by Kenny Helsens.
 - Wush Wu helped to add a new performance option on redisConnect to bring the
