@@ -3,7 +3,7 @@
 \title{Store a value in Redis, returning the previously defined value.}
 \description{Store a value identified by a character key name 
 in the Redis database, returning the previously defined value or NULL if
-the key was not already associated with a value. 
+the key was not already associated with a value.
 }
 \usage{
 redisGetSet(key, value, ...)

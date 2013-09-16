@@ -1,6 +1,6 @@
-% \VignetteIndexEntry{rredis Manual}
-% \VignetteDepends{rredis}
-% \VignettePackage{rredis}
+%\VignetteIndexEntry{rredis Manual}
+%\VignetteDepends{rredis}
+%\VignettePackage{rredis}
 \documentclass[12pt]{article}
 \usepackage{amsmath}
 \usepackage[pdftex]{graphicx}
