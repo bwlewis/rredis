@@ -18,6 +18,11 @@ redisHIncrBy <- function(key, field, value, ...)
   .redisCmd(.raw('HINCRBY'),.raw(key),.raw(field),.raw(as.character(value)),...)
 }
 
+redisHIncrByFloat <- function(key, field, value, ...)
+{
+  .redisCmd(.raw('HINCRBY'),.raw(key),.raw(field),.raw(as.character(value)),...)
+}
+
 redisHExists <- function(key, field)
 {
   .redisCmd(.raw('HEXISTS'), .raw(key), .raw(field)) == 1

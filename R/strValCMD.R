@@ -52,6 +52,11 @@ redisIncrBy <- function(key, value)
   .redisCmd(.raw('INCRBY'),.raw(key),.raw(as.character(value)))
 }
 
+redisIncrByFloat <- function(key, value)
+{
+  .redisCmd(.raw('INCRBY'),.raw(key),.raw(as.character(value)))
+}
+
 redisDecrBy <- function(key, value)
 {
   .redisCmd(.raw('DECRBY'),.raw(key),.raw(as.character(value)))

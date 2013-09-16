@@ -1,5 +1,6 @@
 \name{redisHIncrBy}
 \alias{redisHIncrBy}
+\alias{redisHIncrByFloat}
 \title{Increment a value.}
 \description{Increment the value corresponding to the given key/field
 combination by the specified value.
@@ -14,7 +15,8 @@ redisHIncrBy(key, field, value, ...)
   \item{...}{ Optional additional arguments.  Specify \code{raw=TRUE} to skip de-serialization of the data.}
 }
 \details{
-The value should be a character representation of an integer.
+The value should be an integer
+(\code{redisHIncrBy}) or a numeric value (\code{redisHIncrByFloat}).
 If the key/field value does not exist or contains a 
 value of a wrong type, set the 
 key to the value of "0" before to perform the operation.

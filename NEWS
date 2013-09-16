@@ -1,13 +1,15 @@
 1.6.8:
-- Wush Wu helped add a new performance option on redisConnect to bring the
-  rredis package closer to the performance of the hiredis C library. Use
-  the nodelay=TRUE option to disable the TCP Nagle algorithm, which can
-  dramatically improve performance especially for frequent short transactions,
-  at the expense of basically allowing Redis to take over your network
-  (diable TCP Nagle at your own risk, and only enable this option if you
-  really need to). We include this option because that's what hiredis does
-  by default (wow?!!), and we want to make this performance gain available.
-  This TCP trickery unfortunately introduces a little bit of C code.
+- The package now includes support for Redis bit operations thanks to
+  conde contributed by Kenny Helsens.
+- Wush Wu helped to add a new performance option on redisConnect to bring the
+  rredis package closer to the performance of the hiredis C library. Use the
+  nodelay=TRUE option to disable the TCP Nagle congestion control algorithm,
+  which can dramatically improve performance especially for frequent short
+  transactions, at the expense of basically allowing Redis to take over your
+  network (diable TCP Nagle at your own risk, and only enable this option if
+  you really need to). We include this option because that's what hiredis does
+  by default (?!!), and we want to make this performance gain available.
+  This TCP trickery unfortunately introduced a little bit of C code.
 - Use the `redisCmd` function to easily issue *any* Redis command, even
   if the R package does not yet have a wrapper function for it. Useul also
   for prototyping. This has been available for a while but people don't

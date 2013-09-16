@@ -1,9 +1,12 @@
 \name{redisTTL}
 \alias{redisTTL}
+\alias{redisPTTL}
 \title{Return the time to live for a key set to expire.}
-\description{She the time left to live in seconds for the specified key.}
+\description{She the time left to live in seconds (redisTTL) or
+milliseconds (redisPTTL) for the specified key.}
 \usage{
 redisTTL(key)
+redisPTTL(key)
 }
 \arguments{
   \item{key}{The key to look up.}

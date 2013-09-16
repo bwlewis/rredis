@@ -73,6 +73,26 @@ redisRename <- function(old, new, NX=FALSE)
   .redisCmd(.raw(cmd),.raw(old),.raw(new))
 }
 
+redisPexpire <- function(key, milliseconds)
+{
+  .redisCmd(.raw('PEXPIRE'),.raw(key),.raw(as.character(milliseconds)))
+}
+
+redisPexpireAt <- function(key, time)
+{
+  .redisCmd(.raw('PEXPIREAT'),.raw(key),.raw(as.character(time)))
+}
+
+redisPTTL <- function(key)
+{
+  .redisCmd(.raw('PTTL'),.raw(key))
+}
+
+redisPersist <- function(key)
+{
+  .redisCmd(.raw('PERSIST'),.raw(key))
+}
+
 redisExpire <- function(key, seconds) 
 {
   .redisCmd(.raw('EXPIRE'),.raw(key),.raw(as.character(seconds)))

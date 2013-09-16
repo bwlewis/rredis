@@ -1,5 +1,6 @@
 \name{redisIncrBy}
 \alias{redisIncrBy}
+\alias{redisIncrByFloat}
 \title{Increment a value by the specified value.}
 \description{Increment the value corresponding to the specified key.
 }
@@ -11,7 +12,8 @@ redisIncrBy(key, value)
   \item{value}{The value to increment by (integer, numeric, or character).}
 }
 \details{
-The value should be a character representation of an integer.
+The value should be an integer (\code{redisIncrBy}) or a numeric
+value (\code{redisIncrByFloat}).
 If the key does not exist or contains a value of a wrong type, set the 
 key to the value of "0" before to perform the operation.
 }

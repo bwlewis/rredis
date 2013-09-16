@@ -1,5 +1,6 @@
 \name{redisExpire}
 \alias{redisExpire}
+\alias{redisPexpire}
 \title{Set a timeout on the specified key.}
 \description{
 Set a timeout on the specified key, after which the key and
@@ -7,10 +8,12 @@ corresponding value will be deleted.
 }
 \usage{
 redisExpire(key, seconds)
+redisPexpire(key, milliseconds)
 }
 \arguments{
   \item{key}{The character key on which to set the timeout.}
   \item{seconds}{The integer timeout in seconds.}
+  \item{milliseconds}{The integer timeout in milliseconds.}
 }
 \details{Operations that modify value(s) corresponding to a key subsequent
 to the \code{redisExpire} function clear the timeout, removing the expiration.
