@@ -615,7 +615,7 @@ that substantially benefit from it.
 
 \subsection{Enabling TCP\_NODELAY}
 
-Enabling the TCP\_NODELAY options is one performance approach that hiredis (the
+Enabling the TCP\_NODELAY option is one performance approach that hiredis (the
 official Redis C library client) takes: see
 \htmladdnormallink{https://github.com/redis/hiredis}{https://github.com/redis/hiredis}.
 We don't generally recommend this approach, especially if you're running Redis

@@ -1,6 +1,6 @@
 1.6.8:
 - The package now includes support for Redis bit operations thanks to
-  conde contributed by Kenny Helsens.
+  code contributed by Kenny Helsens.
 - Wush Wu helped to add a new performance option on redisConnect to bring the
   rredis package closer to the performance of the hiredis C library. Use the
   nodelay=TRUE option to disable the TCP Nagle congestion control algorithm,
