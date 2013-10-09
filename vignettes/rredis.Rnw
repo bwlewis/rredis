@@ -785,7 +785,7 @@ open Redis connections:
 
 And then the normal \verb+redisSet+ and \verb+redisGet+ functions work again!
 Similarly rename any other renamed Redis commands. Note that this renaming
-strategy applies to the current running R session (not that it applies to
+strategy applies to the current running R session (it applies to
 {\it all} open Redis connections in that session). 
 
 \subsection{Authentication}
