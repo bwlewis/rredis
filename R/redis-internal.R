@@ -14,9 +14,9 @@
 
 .openConnection <- function(host, port, nodelay=FALSE, timeout=2678399L, envir=rredis:::.redisEnv$current)
 {
-  stopifnot(typeof(host)=="character")
-  stopifnot(class(port)=="numeric")
-  stopifnot(typeof(nodelay)=="logical")
+  stopifnot(is.character(host))
+  stopifnot(is.numeric(port))
+  stopifnot(is.logical(nodelay))
 # We track the file descriptor of the new connection in a sneaky way
   fds <- rownames(showConnections(all=TRUE))
   con <- socketConnection(host, port, open="a+b",
