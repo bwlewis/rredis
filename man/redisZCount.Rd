@@ -22,6 +22,7 @@ Minimum score.
   \item{max}{
 Maximum score.
 }
+}
 \value{
 See the Redis documentation for more information.
 %%  If it is a LIST, use
