@@ -24,7 +24,6 @@
  */
 SEXP SOCK_NAGLE(SEXP S, SEXP VAL)
 {
-  SEXP ans = R_NilValue;
   int val = INTEGER(VAL)[0];
 #ifdef WIN32
   SOCKET s = (SOCKET)INTEGER(S)[0];
