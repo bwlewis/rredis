@@ -18,6 +18,7 @@ before_install:
 
 install:
   - ./travis-tool.sh install_aptget redis-server
+  - ./travis-tool.sh install_r RUnit
 
 script: 
   - ./travis-tool.sh run_tests
