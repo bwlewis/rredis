@@ -75,6 +75,13 @@ redisZRemRangeByScore <- function(key, min, max)
   .redisCmd(.raw('ZREMRANGEBYSCORE'), .raw(key), .raw(min), .raw(max))
 }
 
+redisZCount <- function(key, min, max)
+{
+  min <- as.character(min)
+  max <- as.character(max)
+  .redisCmd(.raw('ZCOUNT'), .raw(key), .raw(min), .raw(max))
+}
+
 redisZCard <- function(key)
 {
   .redisCmd(.raw('ZCARD'), .raw(key))
