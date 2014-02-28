@@ -21,7 +21,6 @@
 #include <R.h>
 #define USE_RINTERNALS
 #include <Rinternals.h>
-#include <R_ext/Connections.h>
 
 /* Crudely report open file descriptors on unix-like systems This is used to
  * infer the active socket descriptor to apply TCP_NODELAY. This is a
