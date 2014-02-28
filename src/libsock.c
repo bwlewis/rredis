@@ -31,7 +31,7 @@ SEXP OPEN_FD()
 {
 #ifdef WIN32
   return R_NilValue;
-#endif
+#else
   SEXP ans;
   struct stat s;
   int j, k, l = 0;
@@ -52,6 +52,7 @@ SEXP OPEN_FD()
   }
   UNPROTECT (1);
   return ans;
+#endif
 }
 
 
