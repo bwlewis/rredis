@@ -39,4 +39,10 @@ if (runTests) {
     if (getErrors(tests)$nFail > 0) {
         stop("TEST FAILED!")
     }
+    if (getErrors(tests)$nErr > 0) {
+        stop("TEST HAD ERRORS!")
+    }
+    if (getErrors(tests)$nTestFunc < 1) {
+        stop("NO TEST FUNCTIONS RUN!")
+    }
 }
