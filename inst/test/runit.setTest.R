@@ -23,3 +23,11 @@ test04_redisSCard <- function()
 {
   checkEquals(3, redisSCard("A"))
 }
+
+test05_redisSort <- function()
+{
+  redisSAdd("sort",charToRaw("x"))
+  redisSAdd("sort",charToRaw("y"))
+  redisSAdd("sort",charToRaw("z"))
+  checkEquals(c("z","y","x"),unlist(redisSort("sort",alpha=TRUE,decreasing=TRUE)))
+}
