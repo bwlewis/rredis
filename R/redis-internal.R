@@ -18,11 +18,18 @@
   stopifnot(is.numeric(port))
   stopifnot(is.logical(nodelay))
 # We track the file descriptor of the new connection in a crude way
-  fds <- .Call("OPEN_FD",PACKAGE="rredis")
 #  fds <- rownames(showConnections(all=TRUE)) # this doesn't work FYI
+  fd = NULL
+  if(nodelay)
+  {
+    fds <- .Call("OPEN_FD",PACKAGE="rredis")
+  }
   con <- socketConnection(host, port, open="a+b",
                           blocking=TRUE, timeout=timeout)
-  fd <- as.integer(setdiff(.Call("OPEN_FD",PACKAGE="rredis"),fds))
+  if(nodelay)
+  {
+    fd <- as.integer(setdiff(.Call("OPEN_FD",PACKAGE="rredis"),fds))
+  }
   if(length(fd)>0 && nodelay)
   {
     Nagle <- .Call("SOCK_NAGLE",fd,1L,PACKAGE="rredis")
