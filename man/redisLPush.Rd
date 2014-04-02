@@ -1,17 +1,19 @@
 \name{redisLPush}
 \alias{redisLPush}
-\title{Add a value to the tail of a list.
+\alias{redisRPush}
+\title{Add a value to the head tail of a list.
 }
 \description{
-Add a value to the tail of a list corresponding to the specified key.
+Add values to the tail (LPush) or head (RPush) of a list
+corresponding to the specified key.
 }
 \usage{
-redisLPush(key, value)
+redisLPush(key, value, ...)
 }
 \arguments{
   \item{key}{The desired key corresponding to a list.}
-  \item{value}{The element to add to the list.
-}
+  \item{value}{The element to add to the list.}
+  \item{...}{Optional additional values to add to the list.}
 }
 \details{
 If the key does not exist an empty list is created just before the 
@@ -35,5 +37,9 @@ redisConnect()
 redisLPush('x',1)
 redisLPush('x',2)
 redisLPush('x',3)
+redisRPush('x',11)
+redisRPush('x',21)
+redisRPush('x',31)
+redisLLen('x')
 }
 }

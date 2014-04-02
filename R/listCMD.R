@@ -1,13 +1,13 @@
 # This file contains functions that operate on Redis lists.
 
-redisRPush <- function(key, value)
+redisRPush <- function(key, value,...)
 {
-  .redisCmd(.raw('RPUSH'), .raw(key),value)
+  .redisCmd(.raw('RPUSH'), .raw(key),value,...)
 }
 
-redisLPush <- function(key, value)
+redisLPush <- function(key, value,...)
 {
-  .redisCmd(.raw('LPUSH'), .raw(key),value)
+  .redisCmd(.raw('LPUSH'), .raw(key),value,...)
 }
 
 redisRPop <- function(key,...)
