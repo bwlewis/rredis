@@ -11,13 +11,15 @@ env:
     - _R_CHECK_FORCE_SUGGESTS_=FALSE
     - RunRRedisTests=yes
 
+services:
+  - redis-server
+
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
   - chmod 755 ./travis-tool.sh
   - ./travis-tool.sh bootstrap
 
 install:
-  - ./travis-tool.sh install_aptget redis-server
   - ./travis-tool.sh install_r RUnit
 
 script: 
@@ -30,4 +32,3 @@ notifications:
   email:
     on_success: change
     on_failure: change
-
