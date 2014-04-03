@@ -1,3 +1,4 @@
+# Run a Redis Lua script
 redisEval <- function(script, keys=vector("list",0), SHA=FALSE, ...)
 {
   if(!is.list(keys)) keys = list(keys)
