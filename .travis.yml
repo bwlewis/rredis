@@ -9,7 +9,10 @@ language: c
 env:
   global:
     - _R_CHECK_FORCE_SUGGESTS_=FALSE
-    # - RunRRedisTests=yes
+    - RunRRedisTests=yes
+
+services:
+  - redis-server
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
@@ -17,7 +20,7 @@ before_install:
   - ./travis-tool.sh bootstrap
 
 install:
-  - ./travis-tool.sh install_aptget redis-server r-cran-runit
+  - ./travis-tool.sh install_aptget r-cran-runit
 
 script: 
   - ./travis-tool.sh run_tests
@@ -29,4 +32,3 @@ notifications:
   email:
     on_success: change
     on_failure: change
-

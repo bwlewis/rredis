@@ -1,3 +1,8 @@
+1.6.8.2:
+- The TCP Nagle disabling scheme has been improved. The default remains
+  standard R connections.
+- A bug in the Lua script function 'redisEval' was fixed.
+
 1.6.8:
 - The package now includes support for Redis bit operations thanks to
   code contributed by Kenny Helsens.
