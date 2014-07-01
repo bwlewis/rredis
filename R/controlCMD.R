@@ -93,6 +93,7 @@ function()
   z <- strsplit(x,'\r\n')[[1]]
   rj <- c(grep("^$",z), grep("^#",z))
   if(length(rj)>0) z <- z[-rj]
+  z <- gsub(":$",": ",z,perl=TRUE)
   w <- unlist(lapply(z,strsplit,':'))
   n <- length(w)
   e <- seq(from=2,to=n,by=2)
