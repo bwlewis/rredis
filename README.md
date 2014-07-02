@@ -29,4 +29,6 @@ read help about options available to the redisConnect function.  Also see the
 available options in the redisConnect function.
 
 ## Status
-![TravisCI status](https://travis-ci.org/bwlewis/rredis.svg?branch=master)
+<a href="https://travis-ci.org/bwlewis/rredis">
+<img src="https://travis-ci.org/bwlewis/rredis.svg?branch=master" alt="Travis CI status"></img>
+</a>
