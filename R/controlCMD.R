@@ -86,23 +86,19 @@ function()
   remove(list='con',envir=.redisEnv$current)
 }
 
+
 `redisInfo` <-
-function()
-{
+function(){
   x <- .redisCmd(.raw('INFO'))
-  z <- strsplit(x,'\r\n')[[1]]
-  rj <- c(grep("^$",z), grep("^#",z))
-  if(length(rj)>0) z <- z[-rj]
-  z <- gsub(":$",": ",z,perl=TRUE)
-  z <- z[grep(":",z)]
-  if(length(z)<1) return(NULL)
-  w <- unlist(lapply(z,strsplit,':'))
-  n <- length(w)
-  e <- seq(from=2,to=n,by=2)
-  o <- seq(from=1,to=n,by=2)
-  z <- as.list(w[e])
-  names(z) <- w[o]
-  z
+  str <- strsplit(x,'\r\n')[[1]]
+  
+  splitvec <- regexec('^(.*?):([^#]*)(#.*)?',str)
+  matches <- regmatches(str,splitvec)
+  matches <- Filter(function(x)(length(x) > 0),matches)
+  keys <- sapply(matches,function(x)x[2])
+  vals <- lapply(matches,function(x)x[3])
+  names(vals) <- keys
+  return(vals)
 }
 
 `redisSlaveOf` <-
