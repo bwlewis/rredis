@@ -4,39 +4,35 @@
 \description{Connect to an available Redis server on the specified port.}
 \usage{
 redisConnect(host = "localhost", port = 6379, password = NULL,
-             returnRef = FALSE, nodelay=FALSE, timeout=2678399L)
+             returnRef = FALSE, nodelay=TRUE, timeout=2678399L)
 }
 \arguments{
   \item{host}{The Redis server host name or inet address (optional, character). The default value is "localhost".}
   \item{port}{The Redis port number (optional, numeric or integer). The default value is 6379L.}
   \item{password}{Redis authentication password.}
-  \item{returnRef}{Set returnRef=TRUE to return the environment that contains the Redis connection state (see details). The default value is FALSE.}
-  \item{nodelay}{Set nodelay=TRUE to disbable the TCP Nagle algorithm (see details). The default value is FALSE.}
+  \item{returnRef}{Set \code{returnRef=TRUE} to return the environment that contains the Redis connection state (see details). The default value is FALSE.}
+  \item{nodelay}{Set \code{nodelay=TRUE} to use TCP_NODELAY
+      (that is, to disbable the TCP Nagle algorithm). The default value is
+       \code{TRUE}, see the details below.}
   \item{timeout}{Set the R connection timeout (in seconds).
           Beware that some OSes may treat very large
           values as zero: however the POSIX standard requires values up
           to 31 days to be supported.}
 }
 \details{
-A running instance of a Redis server is required.
-Use `returnRef` to return the Redis connection state in an environment.
-Then use the `redisSetContext` function to switch environment state and
-manage multiple open Redis connections.
+A running instance of a Redis server is required.  Use `returnRef` to return
+the Redis connection state in an environment.  Then use the `redisSetContext`
+function to switch environment state and manage multiple open Redis
+connections.
 
-Set \code{nodelay=FALSE} to disable the TCP Nagle flow control algorithm which
-can improve performance especially for rapid, non-pipelined small-sized
-transactions. However, we discourage users from setting this.
-Possible consequences include:
+Set \code{nodelay=TRUE} to use the TCP_NODELY socket setting (disabling the TCP
+Nagle flow control algorithm) which can improve performance especially for
+rapid, non-pipelined small-sized transactions. We follow the convention of
+other popular Redis clients like the hiredis C library interface and use
+TCP_NODELAY as the default choice.
 
-* A flooded network with many small Redis messages
-
-* Unhappy TCP services other than Redis
-
-* Angry system adiministrators.
-
-A better choice for good performance is to enable Redis pipelining
-with
-\code{redisSetPipeline(FALSE)} (q.v.).
+Note that Redis pipelining can also increase performance:
+\code{redisSetPipeline(TRUE)} (q.v.).
 
 }
 
@@ -56,8 +52,6 @@ http://redis.io/commands
 \author{
 B. W. Lewis
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{redisClose}}

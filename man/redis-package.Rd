@@ -4,15 +4,14 @@
 \docType{package}
 \title{An R client for Redis}
 \description{
-Redis is a high-performance, in-memory, networked, key/value-like database.
-The redis package for R provides a native R language interface
-to Redis. The R client can store and retrieve arbitrary serializable R objects 
-as well as raw data objects like strings and binary blobs from other clients.
-Redis supports a number of innovative value types beyond arbitrary
-binary data, including sets and lifo/fifo-like lists,
-database replication, database persistence, high-performance virtual
-memory management and much more. Please see the rredis vignette for 
-more information and examples on using Redis and R together.
+Redis is a high-performance, in-memory, networked, key/value database.  The
+redis package for R provides a native R language interface to Redis. The R
+client can store and retrieve arbitrary serializable R objects as well as raw
+data objects like strings and binary blobs from other clients.  Redis supports
+a number of innovative value types beyond arbitrary binary data, including sets
+and lifo/fifo-like lists, database replication, database persistence,
+high-performance virtual memory management and much more. Please see the rredis
+vignette for more information and examples on using Redis and R together.
 }
 \details{
 \tabular{ll}{
@@ -25,7 +24,8 @@ LazyLoad: \tab yes\cr
 }
 }
 \author{
-B. W. Lewis, with substantial assistance from Pat Sheilds
+B. W. Lewis, with substantial assistance from Pat Sheilds and contributions
+from many others.
 
 Maintainer: B. W. Lewis <blewis@illposed.net>
 }

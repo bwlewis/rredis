@@ -3,7 +3,7 @@
 # Basic response handler, only really useful in pipelined cases
 # all function argument is left in for backward compatibility,
 # it is not used.
-`redisGetResponse` <- function(all=TRUE)
+redisGetResponse <- function(all=TRUE)
 {
   if(!exists('count',where=.redisEnv$current)) return(.getResponse())
   if(.redisEnv$current$count < 1) return(NULL)
@@ -11,21 +11,21 @@
 }
 
 # Maintained for compatability.
-`redisSetBlocking` <- function(value=TRUE)
+redisSetBlocking <- function(value=TRUE)
 {
   warning("redisSetBlocking is deprecated. Use redisSetPipeline instead.")
   redisSetPipeline(!value)
 }
-`redisSetPipeline` <- function(value=FALSE)
+redisSetPipeline <- function(value=FALSE)
 {
   value <- as.logical(value)
   if(is.na(value)) stop("logical value required")
   assign('pipeline',value,envir=.redisEnv$current)
 }
 
-`redisConnect` <-
+redisConnect <-
 function(host='localhost', port=6379, password=NULL,
-         returnRef=FALSE, nodelay=FALSE, timeout=2678399L)
+         returnRef=FALSE, nodelay=TRUE, timeout=2678399L)
 {
   .redisEnv$current <- new.env()
   assign('pipeline',FALSE,envir=.redisEnv$current)
@@ -46,7 +46,7 @@ function(host='localhost', port=6379, password=NULL,
   invisible()
 }
 
-`redisClose` <- 
+redisClose <- 
 function(e)
 {
   if(missing(e)) e = .redisEnv$current
@@ -55,31 +55,31 @@ function(e)
   remove(list='con',envir=e)
 }
 
-`redisAuth` <- 
+redisAuth <- 
 function(pwd)
 {
   .redisCmd(.raw('AUTH'), .raw(pwd))
 }
 
-`redisSave` <-
+redisSave <-
 function()
 {
   .redisCmd(.raw('SAVE'))
 }
 
-`redisBgSave` <-
+redisBgSave <-
 function()
 {
   .redisCmd(.raw('BGSAVE'))
 }
 
-`redisBgRewriteAOF` <-
+redisBgRewriteAOF <-
 function()
 {
   .redisCmd(.raw('BGREWRITEAOF'))
 }
 
-`redisShutdown` <-
+redisShutdown <-
 function()
 {
   .redisCmd(.raw('SHUTDOWN'))
@@ -87,7 +87,7 @@ function()
 }
 
 
-`redisInfo` <-
+redisInfo <-
 function(){
   x <- .redisCmd(.raw('INFO'))
   str <- strsplit(x,'\r\n')[[1]]
@@ -101,7 +101,7 @@ function(){
   return(vals)
 }
 
-`redisSlaveOf` <-
+redisSlaveOf <-
 function(host,port)
 {
 # Use host="no" port="one" to disable slave replication

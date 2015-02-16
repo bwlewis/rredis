@@ -79,6 +79,10 @@
 
 .cerealize <- function(value) 
 {
+  if("redis string value" %in% names(attributes(value)))
+  {
+    value <- tryCatch(charToRaw(value) , error=function(e) value)
+  }
   if(!is.raw(value)) serialize(value,ascii=FALSE,connection=NULL)
   else value
 }
@@ -124,6 +128,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
 # We use match.call here instead of, for example, as.list() to try to 
 # avoid making unnecessary copies of (potentially large) function arguments.
 #
+# TODO
 # We can further improve this by writing a shadow serialization routine that
 # quickly computes the length of a serialized object without serializing it.
 # Then, we could serialize directly to the connection, avoiding the temporary
@@ -226,7 +231,12 @@ redisCmd <- function(CMD, ..., raw=FALSE)
                  return(dat)
                else
                  return(tryCatch(unserialize(dat),
-                         error=function(e) rawToChar(dat)))
+                         error=function(e) 
+                         {
+                           un <- rawToChar(dat)
+                           attr(un, "redis string value") <- TRUE
+                           un
+                         }))
              }
 # The message was not fully recieved in one pass for whatever reason.
 # We allocate a list to hold incremental messages and then concatenate it.

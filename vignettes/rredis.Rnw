@@ -119,9 +119,6 @@ Expiration intervals or absolute expiration times may be set on any Redis
 value. The Redis server can handle lots
 of small transactions with aplomb, easily exceeding 50,000 transactions/second
 even on very limited hardware\footnote{Redis easily exceeds 100,000 transactions/second on typical high-end workstations}. 
-Although Redis is primarily an in-memory database, it uses
-a virtual memory scheme to support large objects and databases larger
-than available RAM.
 
 \section{Supported Platforms}
 The Redis server is written in ANSI C and supported on most POSIX systems
@@ -134,7 +131,7 @@ Microsoft Windows, and can connect to a Redis server running on a supported
 platform.
 
 Redis clients are available for lots of languages other than R, including
-Java, C, C\#, Ruby, Python, PHP, Tcl, Perl, Erlang, Clojure, Javascript,
+Java, C, C\#, Ruby, Python, PHP, Tcl, Perl, Erlang, Clojure, JavaScript,
 Scala, and more...
 
 \subsection{Obtaining and Installing the Redis server}\label{install}
@@ -182,7 +179,7 @@ excellent Redis Wiki referenced therein for additional help and examples.
 \subsection{Basic Operation and Redis Strings}
 Redis {\it strings} represent the canonical value type. They are used to
 store any R object that can be serialized to a bit-stream. Most R objects
-are serializeable. Notable exceptions include objects with open connections
+are serializable. Notable exceptions include objects with open connections
 and external reference pointers.
 
 We assume from now on that the rredis package is loaded in the running R
@@ -292,10 +289,11 @@ NULL
 \end{lstlisting}
 
 \subsection{Sharing Data with Clients other than R}
-Redis provides a particularly convenient system for sharing data between
-diverse applications. We illustrate cross-application communication with
-simple examples using R and the \texttt{redis-cli} command-line program
-that is included with the Redis server. 
+
+Redis is a particularly convenient system for sharing data between many
+different applications. We illustrate cross-application communication with
+simple examples using R and the \texttt{redis-cli} command-line program that is
+included with the Redis server. 
 
 Store a sample value in the Redis database with the {\texttt{redis-cli}}
 program from the command line as follows:
@@ -306,11 +304,33 @@ OK
 Now, leaving the terminal window open, from an R session, try:
 \begin{lstlisting}
 > redisGet("shell")
-[1] "Greetings, R client!\n"
+[1] "Greetings, R client!"
+attr(,"redis string value")
+[1] TRUE
 \end{lstlisting}
 And, voil\`{a}, R and shell communicate text through Redis.
+The returned character string value is decorated with an attribute
+named "redis string value" to indicate that the original value in
+Redis was not a serialized R object.
 
-The reverse direction requires more scrutiny. From the R session, run:
+When R values with the "redis string value" attribute are uploaded
+to Redis, R serialization is bypassed and the value is uploaded
+as raw binary data. This mechanism was introduced to preserve
+the original nature of Redis values through download/upload
+sequences. For example:
+\begin{lstlisting}
+> x <- redisGet("shell")
+> redisSet("hello", x)
+\end{lstlisting}
+We can now use the {\texttt{redis-cli}} client to recover the
+value inserted by R from the new key:
+\begin{lstlisting}
+redis-cli get hello
+"Greetings, R client!"
+\end{lstlisting}
+
+In general, however, R objects are serialized by default before
+uploading to Redis. Consider the following example:
 \begin{lstlisting}
 > redisSet("R", "Greetings, shell client!")
 \end{lstlisting}
@@ -618,8 +638,7 @@ that substantially benefit from it.
 Enabling the TCP\_NODELAY option is one performance approach that hiredis (the
 official Redis C library client) takes: see
 \htmladdnormallink{https://github.com/redis/hiredis}{https://github.com/redis/hiredis}.
-We don't generally recommend this approach, especially if you're running Redis
-across a network shared with other TCP services. It disables the TCP Nagle
+It disables the TCP Nagle
 congestion control algorithm and can flood your network with lots of Redis
 traffic resulting in heartburn for your system administrators. With that
 caveat, we recently added the ability to support this in the rredis package
