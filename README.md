@@ -34,6 +34,7 @@ Consider the following interplay between the `redis-cli` client and R:
 ```
 redis-cli set key "string value"
 ```
+And now in R:
 ```r
 > library(rredis)
 > redisConnect()
