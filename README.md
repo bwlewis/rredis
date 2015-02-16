@@ -1,4 +1,4 @@
-rredis: An R client for Redis
+# rredis: An R client for Redis
 
 ## Example
 
@@ -18,9 +18,41 @@ $z
 
 $y
 [1] "Cazart"
-
-> redisClose()
 ```
+
+## New in version 1.6.10
+
+We implemented a great suggestion by Simon Urbanek. Values obtained from Redis
+that are *not* serialized R objects are now decorated with an attribute named
+"redis string value." The package uses this to automatically maintain fidelity
+of the original Redis value through repeated download/upload cycles. Previous
+versions of the rredis package uploaded everything as serialized R values
+unless explictly told otherwise.
+
+Consider the following interplay between the `redis-cli` client and R:
+
+```
+redis-cli set key "string value"
+```
+```r
+> library(rredis)
+> redisConnect()
+> redisGet("key")
+[1] "string value"
+attr(,"redis string value")     # <- note the new attribute
+[1] TRUE
+
+> redisSet("new key", redisGet("key"))
+```
+Recovering the "new key" value from the `redis-cli` client returns a string
+value now:
+```
+redis-cli get "new key"
+"string value"
+```
+Before this change, users needed to be careful about converting strings to
+raw values in R. Now things work much more intuitively.
+
 
 ## Performance
 
