@@ -215,7 +215,12 @@ redisCmd <- function(CMD, ..., raw=FALSE)
     switch(s,
          '-' = stop(substr(l,2,nchar(l))),
          '+' = substr(l,2,nchar(l)),
-         ':' = as.numeric(substr(l,2,nchar(l))),
+         ':' = {
+               if(!is.null(getOption('redis:num'))) return(as.numeric(substr(l,2,nchar(l))))
+               un <- substr(l,2,nchar(l))
+               attr(un, "redis string value") <- TRUE
+               un
+               },
          '$' = {
              n <- as.numeric(substr(l,2,nchar(l)))
              if (n < 0) {

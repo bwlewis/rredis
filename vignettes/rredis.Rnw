@@ -74,10 +74,10 @@ blewis@illposed.net\\
 
 The {\tt rredis} package provides a native R interface to Redis.  Redis is an
 in memory key/value database with many innovative features written by Salvatore
-Sanfilippo\footnote{https://github.com/antirez}.
-It supports data persistence, networked client/server operation,
-command pipelining, structured value types, server replication, data
-expiration, clustering, multicast-like publish/subscribe, and it's very fast.
+Sanfilippo\footnote{https://github.com/antirez}.  It supports data persistence,
+networked client/server operation, command pipelining, structured value types,
+server replication, data expiration, clustering, multicast-like
+publish/subscribe, and it's very fast.
 
 The following simple example illustrates a typical use of the rredis package:
 \lstset{columns=flexible, basicstyle={\ttfamily\slshape}}

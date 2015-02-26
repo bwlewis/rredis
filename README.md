@@ -20,7 +20,9 @@ $y
 [1] "Cazart"
 ```
 
-## New in version 1.6.10
+## New in version 1.7.0
+
+### Saner value exchange between R and Redis
 
 We implemented a great suggestion by Simon Urbanek. Values obtained from Redis
 that are *not* serialized R objects are now decorated with an attribute named
@@ -54,6 +56,38 @@ redis-cli get "new key"
 Before this change, users needed to be careful about converting strings to
 raw values in R. Now things work much more intuitively.
 
+### API change, and option to revert behavior
+
+Set `options('redis:num'=TRUE)` to return
+Redis "`:`" messages as numeric values. This was the default behavior
+of the rredis package for all versions prior to 1.6.9. For versions
+of the R package later than that, redis "`:`" messages are returned
+as raw Redis string values to correspond to the data types stored in Redis.
+Set this option to revert to the old behavior.
+
+Redis commands affected by this option importantly include the increment
+and decrement operations. This change is outlined in the following example:
+```
+> library(rredis)
+> redisConnect()
+> redisSet('x',charToRaw('1'))
+[1] "OK"
+
+> redisIncr('x')
+[1] "2"
+attr(,"redis string value")
+[1] TRUE
+
+> options('redis:num'=TRUE)
+> redisIncr('x')
+[1] 3
+
+> options('redis:num'=c())
+> redisIncr('x')
+[1] "4"
+attr(,"redis string value")
+[1] TRUE
+```
 
 ## Performance
 

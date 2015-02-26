@@ -37,7 +37,8 @@ B. W. Lewis
 }
 \examples{
 \dontrun{
-redisHSet('A','x',5)
+# Note initial value must be a raw character string!
+redisHSet('A','x',charToRaw('5'))
 redisHIncrBy('A','x',3)
 }
 }
