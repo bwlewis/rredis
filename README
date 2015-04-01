@@ -24,7 +24,7 @@ $y
 
 ## New in version 1.7.0
 
-### Saner value exchange between R and Redis
+### Better value exchange between R and Redis
 
 We implemented a great suggestion by Simon Urbanek. Values obtained from Redis
 that are *not* serialized R objects are now decorated with an attribute named

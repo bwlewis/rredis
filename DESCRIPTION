@@ -1,6 +1,6 @@
 Package: rredis
 Type: Package
-Title: Redis client for R
+Title: Redis Client for R
 Version: 1.7.0
 Date: 2014-01-05
 Author: B. W. Lewis

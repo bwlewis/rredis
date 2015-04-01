@@ -22,7 +22,7 @@ $y
 
 ## New in version 1.7.0
 
-### Saner value exchange between R and Redis
+### Better value exchange between R and Redis
 
 We implemented a great suggestion by Simon Urbanek. Values obtained from Redis
 that are *not* serialized R objects are now decorated with an attribute named
@@ -60,7 +60,7 @@ raw values in R. Now things work much more intuitively.
 
 Set `options('redis:num'=TRUE)` to return
 Redis "`:`" messages as numeric values. This was the default behavior
-of the rredis package for all versions prior to 1.6.9. For versions
+of the rredis package for all versions up to 1.6.9. For versions
 of the R package later than that, redis "`:`" messages are returned
 as raw Redis string values to correspond to the data types stored in Redis.
 Set this option to revert to the old behavior.
