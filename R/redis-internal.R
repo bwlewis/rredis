@@ -169,7 +169,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
       writeBin(.raw('\r\n'), con)
     }
   },
-    error=function(e) {.redisError("Invalid agrument");invisible()},
+    error=function(e) {.redisError("Invalid argument");invisible()},
     interrupt=function(e) .burn(e)
   )
 
