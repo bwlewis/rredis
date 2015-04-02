@@ -15,8 +15,8 @@ redisPTTL(key)
 the \code{redisExpire} and \code{redisExpireAt} functions. This function
 shows the time left before exipraton in seconds for such a key.
 }
-\value{Integer time left to live or -1 if the key is not set to expire or
-not found.
+\value{A Redis string value representtion of the integer time left to live or -1 if the key is not set to expire or
+-2 if not found.
 }
 \references{
 http://redis.io/commands
