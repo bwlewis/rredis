@@ -1,3 +1,17 @@
+1.7.0:
+- We implemented a great suggestion by Simon Urbanek. Values obtained from
+  Redis that are *not* serialized R objects are now decorated with an attribute
+  named "redis string value." The package uses this to automatically maintain
+  fidelity of the original Redis value through repeated download/upload cycles.
+  Previous versions of the rredis package uploaded everything as serialized R
+  values unless explictly told otherwise.  
+- Set `options('redis:num'=TRUE)` to return Redis "`:`" messages as numeric
+  values. This was the default behavior of the rredis package for all versions
+  up to 1.6.9. For versions of the R package later than that, redis "`:`"
+  messages are returned as raw Redis string values to correspond to the data
+  types stored in Redis.  Redis commands affected by this option include all
+  increment and decrement operations.
+
 1.6.8.2:
 - The TCP Nagle disabling scheme has been improved. The default remains
   standard R connections.
