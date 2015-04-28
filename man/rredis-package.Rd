@@ -6,7 +6,7 @@
 
 The \code{rredis} package provides a native R interface to Redis.  Redis is an
 in memory key/value database with many innovative features, see
-\url{http://redis.io} for details.  It supports data persistence, networked
+\url{http://redis.io/} for details.  It supports data persistence, networked
 client/server operation, command pipelining, structured value types, data
 expiration, multicast-like publish/subscribe, and it's very fast. 
 

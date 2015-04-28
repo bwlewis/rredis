@@ -5,7 +5,7 @@ Version: 1.7.0
 Date: 2015-04-05
 Author: B. W. Lewis
 Maintainer: B. W. Lewis <blewis@illposed.net>
-Description: An R client for the Redis key-value database available from http://redis.io.
+Description: R client interface to the Redis key-value database.
 License: Apache License (>= 2.0)
 LazyLoad: yes
 Suggests: RUnit

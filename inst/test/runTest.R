@@ -1,0 +1,6 @@
+require(rredis)
+require(RUnit)
+runTestFile('basicTest.R')
+runTestFile('zsetTest.R')
+runTestFile('setTest.R')
+runTestFile('endTest.R')
