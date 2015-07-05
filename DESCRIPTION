@@ -1,11 +1,11 @@
 Package: rredis
 Type: Package
-Title: Redis Client for R
+Title: "Redis" Key/Value Database Client
 Version: 1.7.0
-Date: 2015-04-05
+Date: 2015-07-04
 Author: B. W. Lewis
 Maintainer: B. W. Lewis <blewis@illposed.net>
-Description: R client interface to the Redis key-value database.
+Description: R client interface to the "Redis" key-value database.
 License: Apache License (>= 2.0)
 LazyLoad: yes
 Suggests: RUnit
