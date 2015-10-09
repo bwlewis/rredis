@@ -99,3 +99,5 @@ available options in the redisConnect function.
 <a href="https://travis-ci.org/bwlewis/rredis">
 <img src="https://travis-ci.org/bwlewis/rredis.svg?branch=master" alt="Travis CI status"></img>
 </a>
+[![CRAN version](http://www.r-pkg.org/badges/version/rredis)](http://cran.rstudio.com/web/packages/rredis/index.html)
+![](http://cranlogs-dev.r-pkg.org/badges/rredis)
