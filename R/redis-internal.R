@@ -12,7 +12,9 @@
   e$con
 }
 
-.openConnection <- function(host, port, nodelay=FALSE, timeout=2678399L, envir=rredis:::.redisEnv$current)
+.openConnection <- function(host, port, nodelay=FALSE,
+                            timeout=2678399L, envir=rredis:::.redisEnv$current,
+                            keepalive)
 {
   stopifnot(is.character(host))
   stopifnot(is.numeric(port))
@@ -38,6 +40,10 @@
       nodelay <- FALSE
       warning("Unable to set nodelay.")
     }
+    if(!missing(keepalive)) cat("KEEPALIVE!\n")
+#      keepalive <- .Call("SOCK_KEEPALIVE", fd, as.integer(keepalive$val),
+#                         as.integer(keepalive$idle), as.integer(keepalive$count),
+#                         as.integer(keepalive$interval), PACKAGE="rredis")
   }
 # Stash state in the redis enivronment describing this connection:
   assign('fd',fd,envir=envir)
@@ -91,8 +97,12 @@
 .burn <- function(e)
 {
   con <- .redis()
-  while(socketSelect(list(con),timeout=1L))
-    readBin(con, raw(), 1000000L)
+  count <- 0
+  while(socketSelect(list(con),timeout=1L) && count < 5)
+  {
+    readBin(con, raw(), 5000000L)
+    count <- count + 1
+  }
   .redisError("Interrupted communincation with Redis",e)
 }
 
@@ -132,7 +142,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
 # We can further improve this by writing a shadow serialization routine that
 # quickly computes the length of a serialized object without serializing it.
 # Then, we could serialize directly to the connection, avoiding the temporary
-# copy (which is limited to 2GB due to R indexing).
+# copy.
 .redisCmd <- function(...)
 {
   env <- .redisEnv$current

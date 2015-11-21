@@ -1,7 +1,7 @@
 Package: rredis
 Type: Package
 Title: "Redis" Key/Value Database Client
-Version: 1.7.0
+Version: 1.7.1
 Date: 2015-07-04
 Author: B. W. Lewis
 Maintainer: B. W. Lewis <blewis@illposed.net>
