@@ -1,15 +1,12 @@
 \name{redisUnwatch}
 \alias{redisUnwatch}
 \title{redisUnwatch}
-\description{Stop watching the specified keys for changes.}
+\description{Stop watching for keys to change.}
 \usage{
-redisUnwatch(keys)
-}
-\arguments{
-  \item{keys}{A character vector or list of key names to stop watching.}
+redisUnwatch()
 }
 \details{
-Stop watching the specified keys. See \code{redisWatch} for details.
+Stop watching all watched keys. See \code{\link{redisWatch}} for details.
 }
 \value{"OK"}
 \references{
