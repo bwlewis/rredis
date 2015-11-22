@@ -29,7 +29,8 @@ redisPfcount(keys)
 redisPfmerge(destkey, sourcekeys)
 }
 \arguments{
-  \item{key}{A Redis key name.}
+  \item{key}{A Redis key name corresponding to a HyperLogLog value.}
+  \item{keys}{A Redis key name or a vector of Redis key names corresponding to HyperLogLog values.}
   \item{elements}{A vector or list of elements to add to the HyperLogLog data structure associated with \code{key}.}
   \item{destkey}{The computed merged HyperLogLog is set to the destination key, which is
 created if does not exist (defaulting to an empty HyperLogLog).}
