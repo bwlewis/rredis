@@ -7,7 +7,7 @@ redisHGet <- function(key, field, ...)
 
 redisHSet <- function(key, field, value, NX=FALSE)
 {
-  value <- .cerealize(value)
+  value <- .raw(value)
   cmd <- 'HSET'
   if(NX) cmd <- 'HSETNX'
   .redisCmd(.raw(cmd), .raw(key), .raw(field), value)
@@ -77,7 +77,7 @@ redisHMSet <- function(key, values) {
   fieldnames <- lapply(names(values), charToRaw)
   for(j in 1:length(values)) {
     a <- c(a, fieldnames[j])
-    a <- c(a,list(.cerealize(values[[j]])))
+    a <- c(a,list(.raw(values[[j]])))
   }
   do.call('.redisCmd', a)
 }
