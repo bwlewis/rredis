@@ -116,9 +116,10 @@ by a hashed set of secondary keys.
 \end{itemize}
 
 Expiration intervals or absolute expiration times may be set on any Redis
-value. The Redis server can handle lots
-of small transactions with aplomb, easily exceeding 50,000 transactions/second
-even on very limited hardware\footnote{Redis easily exceeds 100,000 transactions/second on typical high-end workstations}. 
+value. The Redis server can handle lots of small transactions with aplomb,
+easily exceeding 50,000 transactions/second even on very limited
+hardware\footnote{Redis easily exceeds 100,000 transactions/second on typical
+high-end workstations}. 
 
 \section{Supported Platforms}
 The Redis server is written in ANSI C and supported on most POSIX systems
