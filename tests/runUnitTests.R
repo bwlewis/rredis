@@ -1,4 +1,3 @@
-
 ## doRUnit.R --- Run RUnit tests
 ##
 ## with credits to package fUtilities in RMetrics

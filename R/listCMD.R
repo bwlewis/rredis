@@ -1,23 +1,23 @@
 # This file contains functions that operate on Redis lists.
 
-redisRPush <- function(key, value,...)
+redisRPush <- function(key, value, ...)
 {
-  .redisCmd(.raw('RPUSH'), .raw(key),value,...)
+  .redisCmd(.raw('RPUSH'), .raw(key),value, ...)
 }
 
-redisLPush <- function(key, value,...)
+redisLPush <- function(key, value, ...)
 {
-  .redisCmd(.raw('LPUSH'), .raw(key),value,...)
+  .redisCmd(.raw('LPUSH'), .raw(key), value, ...)
 }
 
-redisRPop <- function(key,...)
+redisRPop <- function(key, ...)
 {
-  .redisCmd(.raw('RPOP'), .raw(key),...)
+  .redisCmd(.raw('RPOP'), .raw(key), ...)
 }
 
-redisLPop <- function(key,...)
+redisLPop <- function(key, ...)
 {
-  .redisCmd(.raw('LPOP'), .raw(key),...)
+  .redisCmd(.raw('LPOP'), .raw(key), ...)
 }
 
 redisLLen <- function(key)
@@ -32,7 +32,7 @@ redisLRange <- function(key, start, end, ...)
   .redisCmd(.raw('LRANGE'), .raw(key), start, end, ...)
 }
 
-redisLTrim <- function(key,start,end)
+redisLTrim <- function(key, start, end)
 {
   start <- charToRaw(as.character(start))
   end <- charToRaw(as.character(end))
