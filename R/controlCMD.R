@@ -10,12 +10,6 @@ redisGetResponse <- function(all=TRUE)
   replicate(.redisEnv$current$count, .getResponse(), simplify=FALSE)
 }
 
-# Maintained for compatability.
-redisSetBlocking <- function(value=TRUE)
-{
-  warning("redisSetBlocking is deprecated. Use redisSetPipeline instead.")
-  redisSetPipeline(!value)
-}
 redisSetPipeline <- function(value=FALSE)
 {
   value <- as.logical(value)
