@@ -25,8 +25,9 @@ redisSetPipeline <- function(value=FALSE)
 
 redisConnect <-
 function(host='localhost', port=6379, password=NULL,
-         returnRef=FALSE, nodelay=TRUE, timeout=2678399L)
+         returnRef=FALSE, nodelay=TRUE, timeout=2678399L, closeExisting=TRUE)
 {
+  if(closeExisting) tryCatch(redisClose(), error=invisible)
   .redisEnv$current <- new.env()
   assign('pipeline',FALSE,envir=.redisEnv$current)
   con <- .openConnection(host=host, port=port, nodelay=nodelay, timeout=timeout, envir=.redisEnv$current)

@@ -18,7 +18,11 @@
   stopifnot(is.character(host))
   stopifnot(is.numeric(port))
   stopifnot(is.logical(nodelay))
-  tryCatch(redisClose(), error=invisible)
+  con <- envir$con
+  if(!is.null(con))
+  {
+    .closeConnection(con)
+  }
 # We track the file descriptor of the new connection in a crude way
 #  fds <- rownames(showConnections(all=TRUE)) # this doesn't work FYI
   fd = NULL

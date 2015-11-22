@@ -4,7 +4,7 @@
 \description{Connect to an available Redis server on the specified port.}
 \usage{
 redisConnect(host = "localhost", port = 6379, password = NULL,
-             returnRef = FALSE, nodelay=TRUE, timeout=2678399L)
+             returnRef = FALSE, nodelay=TRUE, timeout=2678399L, closeExisting=TRUE)
 }
 \arguments{
   \item{host}{The Redis server host name or inet address (optional, character). The default value is "localhost".}
@@ -18,6 +18,7 @@ redisConnect(host = "localhost", port = 6379, password = NULL,
           Beware that some OSes may treat very large
           values as zero: however the POSIX standard requires values up
           to 31 days to be supported.}
+  \item{closeExisting}{Set to \code{FALSE} to keep any existing Redis connection open (for use with \code{setContext}).}
 }
 \details{
 A running instance of a Redis server is required.  Use `returnRef` to return
