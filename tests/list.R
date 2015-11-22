@@ -16,7 +16,7 @@ if(Sys.getenv("RunRRedisTests") == "yes")
   redisLTrim("x", 0, 0)
   checkEquals("1", redisLLen("x"))
   checkEquals(2, redisLIndex("x", 0))
-
-
+  redisLRem("x", 1, 2)
+  checkEquals("0", redisLLen("x"))
   redisFlushAll()
 }
