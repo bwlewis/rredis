@@ -115,4 +115,8 @@ read help about options available to the redisConnect function.  Also see the
 available options in the redisConnect function.
 
 ## Status
-![TravisCI status](https://travis-ci.org/bwlewis/rredis.svg?branch=master)
+<a href="https://travis-ci.org/bwlewis/rredis">
+<img src="https://travis-ci.org/bwlewis/rredis.svg?branch=master" alt="Travis CI status"></img>
+</a>
+[![codecov.io](https://codecov.io/github/bwlewis/rredis/coverage.svg?branch=master)](https://codecov.io/github/bwlewis/rredis?branch=master)
+[![CRAN version](http://www.r-pkg.org/badges/version/rredis)](http://cran.rstudio.com/web/packages/rredis/index.html)
