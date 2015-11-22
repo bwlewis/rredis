@@ -121,9 +121,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
 {
   a <- c(alist(),list(.raw(CMD)),
          lapply(list(...), function(x) 
-           if(is.character(x)) charToRaw(x)
-           else(.cerealize(x))
-       ))
+           .cerealize(x)))
   if(raw) a <- c(a,raw=TRUE)
   do.call('.redisCmd', a)
 }

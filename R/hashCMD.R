@@ -77,8 +77,7 @@ redisHMSet <- function(key, values) {
   fieldnames <- lapply(names(values), charToRaw)
   for(j in 1:length(values)) {
     a <- c(a, fieldnames[j])
-    if(is.character(values[[j]])) a <- c(a, list(charToRaw(values[[j]])))
-    else(a <- c(a,list(.cerealize(values[[j]]))))
+    a <- c(a,list(.cerealize(values[[j]])))
   }
   do.call('.redisCmd', a)
 }
