@@ -20,9 +20,9 @@
 .redisSetOp <- function(cmd, keys, ...)
 {
   L <- .redisStripRawArg(list(...))
-  sets <- c(as.list(keys),L$List)
-  call <- lapply(c(list(cmd),sets),charToRaw)
-  if(!is.null(L$raw)) call <- c(call,raw=L$raw)
+  sets <- c(as.list(keys), L$List)
+  call <- lapply(c(list(cmd), sets), charToRaw)
+  if(!is.null(L$raw)) call <- c(call, raw=L$raw)
   do.call(".redisCmd", call)
 }
 
@@ -38,12 +38,12 @@ redisSUnion <- function(keys, ...)
 
 redisSUnionStore <- function(dest, keys, ...)
 {
-  .redisSetOp("SUNIONSTORE", keys, ...)
+  .redisSetOp("SUNIONSTORE", c(dest, keys), ...)
 }
 
 redisSInterStore <- function(dest, keys, ...)
 {
-  .redisSetOp("SINTERSTORE", keys, ...)
+  .redisSetOp("SINTERSTORE", c(dest, keys), ...)
 }
 
 redisSDiff <- function(keys, ...)
@@ -53,7 +53,7 @@ redisSDiff <- function(keys, ...)
 
 redisSDiffStore <- function(dest, keys, ...)
 {
-  .redisSetOp("SDIFFSTORE", keys, ...)
+  .redisSetOp("SDIFFSTORE", c(dest, keys), ...)
 }
 
 redisSIsMember <- function(set, element)
