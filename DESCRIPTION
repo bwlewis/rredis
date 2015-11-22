@@ -8,4 +8,3 @@ Maintainer: B. W. Lewis <blewis@illposed.net>
 Description: R client interface to the "Redis" key-value database.
 License: Apache License (>= 2.0)
 LazyLoad: yes
-Suggests: RUnit

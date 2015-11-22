@@ -1,11 +1,11 @@
-test01_connect <- function()
+library(rredis)
+checkEquals <- function(x, y) if(!isTRUE(all.equal(x, y, check.attributes=FALSE))) stop()
+
+if(Sys.getenv("RunRRedisTests") == "yes")
 {
   redisConnect()
-  redisFlushDB()
-}
+  redisFlushAll()
 
-test02_redisPfadd <- function()
-{
   redisPfadd("testcounter", letters[1:10])
   redisPfadd("testcounter", letters[1:20])
   redisPfcount("testcounter")
@@ -14,4 +14,6 @@ test02_redisPfadd <- function()
   x = as.integer(redisPfcount("testcounter"))
 # Note! HyperLogLog is only an approximate count!
   checkEquals(TRUE, x > 10 && x < 30)
+
+  redisFlushAll()
 }
