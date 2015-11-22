@@ -1,31 +1,30 @@
 # Redis ordered set functions
-
 redisZAdd <- function(key, score, member)
 {
-  .redisCmd(.raw('ZADD'),.raw(key), .raw(as.character(score)), member)
+  .redisCmd(.raw('ZADD'), .raw(key), .raw(as.character(score)), .raw(member))
 }
 
 redisZRem <- function(key, member)
 {
-  .redisCmd(.raw('ZREM'),.raw(key), member)
+  .redisCmd(.raw('ZREM'), .raw(key), .raw(member))
 }
 
 redisZIncrBy <- function(key, member, increment)
 {
   z <- NULL
-  .redisCmd(.raw('ZINCRBY'),.raw(key), .raw(as.character(increment)),
-                 member)
+  .redisCmd(.raw('ZINCRBY'), .raw(key), .raw(as.character(increment)),
+                 .raw(member))
 }
 
 redisZRank <- function(key, member, decreasing=FALSE)
 {
   cmd <- .raw('ZRANK')
   if(decreasing) cmd <- .raw('ZREVRANK')
-  .redisCmd(cmd,.raw(key), member)
+  .redisCmd(cmd, .raw(key), .raw(member))
 }
 
 redisZRange <- function(key, start=0, end=-1, decreasing=FALSE,
-                        withscores=FALSE,...)
+                        withscores=FALSE, ...)
 {
   cmd <- .raw('ZRANGE')
   if(decreasing) cmd <- .raw('ZREVRANGE')

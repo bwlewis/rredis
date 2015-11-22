@@ -13,12 +13,12 @@
 }
 
 .openConnection <- function(host, port, nodelay=FALSE,
-                            timeout=2678399L, envir=rredis:::.redisEnv$current,
-                            keepalive)
+                            timeout=2678399L, envir=rredis:::.redisEnv$current)
 {
   stopifnot(is.character(host))
   stopifnot(is.numeric(port))
   stopifnot(is.logical(nodelay))
+  tryCatch(redisClose(), error=invisible)
 # We track the file descriptor of the new connection in a crude way
 #  fds <- rownames(showConnections(all=TRUE)) # this doesn't work FYI
   fd = NULL
@@ -40,10 +40,6 @@
       nodelay <- FALSE
       warning("Unable to set nodelay.")
     }
-    if(!missing(keepalive)) cat("KEEPALIVE!\n")
-#      keepalive <- .Call("SOCK_KEEPALIVE", fd, as.integer(keepalive$val),
-#                         as.integer(keepalive$idle), as.integer(keepalive$count),
-#                         as.integer(keepalive$interval), PACKAGE="rredis")
   }
 # Stash state in the redis enivronment describing this connection:
   assign('fd',fd,envir=envir)
@@ -107,12 +103,15 @@
 }
 
 #
-# .raw is just a shorthand wrapper for charToRaw:
+# .raw converts single length character values to raw via charToRaw,
+# otherwise serializes the value
 #
 .raw <- function(word) 
 {
-  tryCatch(charToRaw(word),
-           warning=function(w) stop(w),
+  tryCatch({
+    if(is.character(word) && length(word) == 1) charToRaw(word)
+    else .cerealize(word)
+    }, warning=function(w) stop(w),
            error=function(e) stop(e))
 }
 
@@ -121,11 +120,7 @@
 redisCmd <- function(CMD, ..., raw=FALSE)
 {
   a <- c(alist(),list(.raw(CMD)),
-         lapply(list(...), function(x) 
-         {
-           if(is.character(x) && length(x) == 1) charToRaw(x)
-           else .cerealize(x)
-         }))
+         lapply(list(...), function(x)  .raw(x)))
   if(raw) a <- c(a,raw=TRUE)
   do.call('.redisCmd', a)
 }
