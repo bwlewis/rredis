@@ -19,10 +19,7 @@
   stopifnot(is.numeric(port))
   stopifnot(is.logical(nodelay))
   con <- envir$con
-  if(!is.null(con))
-  {
-    .closeConnection(con)
-  }
+  if(!is.null(con)) tryCatch(.closeConnection(con), error=invisible)
 # We track the file descriptor of the new connection in a crude way
 #  fds <- rownames(showConnections(all=TRUE)) # this doesn't work FYI
   fd = NULL
@@ -168,7 +165,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
   writeBin(.raw(hdr), con)
   tryCatch({
     for(j in seq_len(n)) {
-      if(j==1)
+      if(j == 1)
         v <- .renameCommand(eval(f[[j+1]],envir=sys.frame(-1)), rep)
       else
         v <- eval(f[[j+1]],envir=sys.frame(-1))

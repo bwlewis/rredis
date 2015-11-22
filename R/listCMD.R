@@ -41,7 +41,7 @@ redisLTrim <- function(key, start, end)
 
 redisLIndex <- function(key, index, ...)
 {
-  .redisCmd(.raw('LINDEX'), .raw(key), index, ...)
+  .redisCmd(.raw('LINDEX'), .raw(key), .raw(as.character(index)), ...)
 }
 
 redisLSet <- function(key, index, value)
