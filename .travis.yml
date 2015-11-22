@@ -1,39 +1,45 @@
-# Sample .travis.yml for R projects.
-#
-# See the r-travis repo and its wiki 
-#   https://github.com/craigcitro/r-travis/wiki
-#   https://github.com/eddelbuettel/r-travis/
-
 language: c
-
-env:
-  global:
-    - _R_CHECK_FORCE_SUGGESTS_=FALSE
-    - RunRRedisTests=yes
+sudo: false
 
 services:
   - redis-server
 
-before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - chmod 755 ./travis-tool.sh
-  - ./travis-tool.sh bootstrap
+addons:
+  apt:
+    sources:
+      - r-packages-precise
+    packages:
+      - r-base-dev
+      - r-recommended
+      - pandoc
+      - texinfo
+      - texlive
+      - texlive-latex-base
+      - texlive-latex-extra
+      - texlive-latex-recommended
+      - texlive-fonts-recommended
+      - texlive-fonts-extra
+      - texlive-math-extra
+      - qpdf
 
-install:
-  - ./travis-tool.sh install_aptget r-cran-runit
+env:
+  global:
+    - RunRRedisTests=yes
+    - R_LIBS_USER=~/R/library
 
-script: 
-  - ./travis-tool.sh run_tests
+cache:
+  directories:
+    $R_LIBS_USER
 
-after_failure:
-  - ./travis-tool.sh dump_logs
+before_script:
+  - mkdir -p "$R_LIBS_USER"
+  - Rscript -e 'if (length(find.package("devtools", quiet = TRUE)) == 0L) { install.packages("devtools", repos = "http://cran.rstudio.com") }'
+  - Rscript -e 'devtools::update_packages("devtools", repos = "http://cran.rstudio.com")'
+  - Rscript -e 'devtools::install_deps(repos = "http://cran.rstudio.com", dependencies = TRUE)'
+  - Rscript -e 'devtools::install_github("jimhester/covr")'
 
-notifications:
-  email:
-    on_success: change
-    on_failure: change
+script:
+  - Rscript -e 'devtools::check()'
 
-r_github_packages:
-  - jimhester/covr
 after_success:
-  - Rscript -e 'library(covr);codecov()'
+  - Rscript -e 'library(rredis); covr::codecov()'
