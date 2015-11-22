@@ -116,12 +116,16 @@
            error=function(e) stop(e))
 }
 
-# Expose the basic Redis interface to the user
+# Expose the basic Redis interface to the user, interpreting single-length
+# character values as raw for user convenience (cf. the internal .redisCmd)
 redisCmd <- function(CMD, ..., raw=FALSE)
 {
   a <- c(alist(),list(.raw(CMD)),
          lapply(list(...), function(x) 
-           .cerealize(x)))
+         {
+           if(is.character(x) && length(x) == 1) charToRaw(x)
+           else .cerealize(x)
+         }))
   if(raw) a <- c(a,raw=TRUE)
   do.call('.redisCmd', a)
 }
@@ -131,7 +135,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
 # are not of type raw are serialized.
 # Examples:
 # .redisCmd(.raw('INFO'))
-# .redisCmd(.raw('SET'),.raw('X'), runif(5))
+# .redisCmd(.raw('SET'), .raw('X'), runif(5))
 #
 # We use match.call here instead of, for example, as.list() to try to 
 # avoid making unnecessary copies of (potentially large) function arguments.
