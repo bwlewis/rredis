@@ -18,5 +18,16 @@ if(Sys.getenv("RunRRedisTests") == "yes")
   checkEquals(2, redisLIndex("x", 0))
   redisLRem("x", 1, 2)
   checkEquals("0", redisLLen("x"))
+
+  redisLPush("x", 1)
+  redisRPush("x", 2)
+  checkEquals(list(1,2), redisLRange("x", 0, 2))
+  redisBRPopLPush('x','x')
+  checkEquals(list(2,1), redisLRange("x", 0, 2))
+  redisRPopLPush('x','x')
+  redisBLPop("x")
+  redisBRPop("x")
+  checkEquals("0", redisLLen("x"))
+
   redisFlushAll()
 }
