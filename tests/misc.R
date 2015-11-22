@@ -37,4 +37,14 @@ if(Sys.getenv("RunRRedisTests") == "yes")
 
   redisConnect()
   redisFlushAll()
+
+
+  redisWatch("x")
+  redisMulti()
+  redisSet("x", 1)
+  checkEquals("OK", redisDiscard())
+
+  redisUnwatch()
+  checkEquals(FALSE, redisExists("x"))
+
 }

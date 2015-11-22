@@ -23,12 +23,10 @@ redisWatch <- function(keys)
   do.call('.redisCmd', c(list(.raw(cmd)),keys))
 }
 
-redisUnwatch <- function(keys)
+redisUnwatch <- function()
 {
   cmd <- 'UNWATCH'
-  keys <- as.list(keys)
-  keys <- lapply(keys, charToRaw)
-  do.call('.redisCmd', c(list(.raw(cmd)),keys))
+  do.call('.redisCmd', list(.raw(cmd)))
 }
 
 redisExists <- function(key) 
