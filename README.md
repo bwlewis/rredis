@@ -1,4 +1,4 @@
-# rredis: An R client for Redis
+rredis: An R client for Redis
 
 ## Example
 
@@ -18,6 +18,24 @@ $z
 
 $y
 [1] "Cazart"
+
+> redisClose()
+```
+
+### Use `redisCmd` to run any Redis command
+
+Most Redis commands have corresponding convenience wrappers with online
+help in the R package. Use the generic `redisCmd` function to run _any_
+Redis command, even ones not specifically implemented by the package.
+For example:
+
+```r
+> redisCmd("set","key1","foobar")
+> redisCmd("set","key2","abcdef")
+> redisCmd("bitop", "and", "dest", "key1", "key2")
+  [1] "6"
+> redisCmd("get", "dest")
+  [1] "`bc`ab"
 ```
 
 ## New in version 1.7.0
@@ -60,7 +78,7 @@ raw values in R. Now things work much more intuitively.
 
 Set `options('redis:num'=TRUE)` to return
 Redis "`:`" messages as numeric values. This was the default behavior
-of the rredis package for all versions up to 1.6.9. For versions
+of the rredis package for all versions prior to 1.6.9. For versions
 of the R package later than that, redis "`:`" messages are returned
 as raw Redis string values to correspond to the data types stored in Redis.
 Set this option to revert to the old behavior.
@@ -89,6 +107,7 @@ attr(,"redis string value")
 [1] TRUE
 ```
 
+
 ## Performance
 
 Consider using the redisSetPipeline function to enable pipelining, and also
@@ -96,8 +115,4 @@ read help about options available to the redisConnect function.  Also see the
 available options in the redisConnect function.
 
 ## Status
-<a href="https://travis-ci.org/bwlewis/rredis">
-<img src="https://travis-ci.org/bwlewis/rredis.svg?branch=master" alt="Travis CI status"></img>
-</a>
-[![CRAN version](http://www.r-pkg.org/badges/version/rredis)](http://cran.rstudio.com/web/packages/rredis/index.html)
-![](http://cranlogs-dev.r-pkg.org/badges/rredis)
+![TravisCI status](https://travis-ci.org/bwlewis/rredis.svg?branch=master)
