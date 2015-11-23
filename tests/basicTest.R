@@ -79,4 +79,19 @@ if(Sys.getenv("RunRRedisTests") == "yes")
   checkEquals("1", redisMSet(list(foo=1,bar=2), NX=TRUE))
 
   redisFlushAll()
+
+  # Incr/Decr
+  redisSet("x", charToRaw("1"))
+  y <- redisGet("x")
+  redisSet("x", y)  # tests a case internal to Pat's ".cerealize" function
+  checkEquals("2", redisIncr("x"))
+  checkEquals("3", redisIncrBy("x", 1))
+  checkEquals("4", redisIncrByFloat("x", 1))
+  checkEquals("3", redisDecrBy("x", 1))
+  checkEquals("2", redisDecr("x"))
+
+
+
+
+  redisFlushAll()
 }
