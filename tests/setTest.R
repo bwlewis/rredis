@@ -21,7 +21,7 @@ if(Sys.getenv("RunRRedisTests") == "yes")
   redisSUnionStore("C", c("A", "B"))  # Alternate form
   checkEquals(TRUE, all(list(1, 2, 3) %in% redisSMembers("C")))
 
-  checkEquals(list(1, 3), redisSDiff("A","B"))
+  checkEquals(TRUE, all(list(1, 3) %in% redisSDiff("A","B")))
   redisSDiffStore("C", "A", "B")
   checkEquals(TRUE, all(list(1, 3) %in% redisSMembers("C")))
 
