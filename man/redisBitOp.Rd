@@ -24,4 +24,3 @@
   (containing string values) and store the result in the
   destination key
 }
-
