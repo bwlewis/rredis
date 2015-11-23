@@ -1,4 +1,4 @@
-library(rredis)
+require(rredis)
 checkEquals <- function(x, y) if(!isTRUE(all.equal(x, y, check.attributes=FALSE))) stop()
 
 # redusMonitorChannels blocks forever until a message is received. We

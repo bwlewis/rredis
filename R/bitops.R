@@ -17,7 +17,7 @@ redisSetBit <- function(key, offset, bit)
 #' @param offset integer index
 #' @return bit binary integer
 #' @detail Official redis documentation: http://redis.io/commands/getbit
-redisGetBit <- function(key, offset,...)
+redisGetBit <- function(key, offset, ...)
 {
   .redisCmd(.raw('GETBIT'), .raw(key), .raw(as.character(offset)),...)
 }
@@ -33,7 +33,6 @@ redisBitCount <- function(key)
   .redisCmd(.raw('BITCOUNT'), .raw(key))
 }
 
-
 #' @title Redis BITOP - execute bitoperations on multiple bitsets 
 #' @description Perform a bitwise operation between multiple keys (containing string values) and store the result in the destination key
 #' @param operation bit operation as character: 'AND', 'OR', 'XOR', 'NOT'
@@ -41,7 +40,7 @@ redisBitCount <- function(key)
 #' @param sourcekeys one or more source keys subject to the bit operations
 #' @return the counted bits as an integer value
 #' @detail Official redis documentation: http://redis.io/commands/bitop
-redisBitOp <- function(operation, destkey, sourcekeys,...)
+redisBitOp <- function(operation, destkey, sourcekeys, ...)
 {
   sets <- c(as.list(sourcekeys))
   do.call('.redisCmd',c(lapply(c(list('BITOP'),operation, destkey, sets),charToRaw),...))
