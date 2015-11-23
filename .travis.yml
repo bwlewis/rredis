@@ -39,7 +39,7 @@ before_script:
   - Rscript -e 'devtools::install_github("jimhester/covr")'
 
 script:
-  - Rscript -e 'devtools::check()'
+  - Rscript -e 'devtools::check(document=FALSE)'
 
 after_success:
   - Rscript -e 'library(rredis); covr::codecov()'
