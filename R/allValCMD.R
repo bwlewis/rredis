@@ -38,18 +38,7 @@ redisDelete <- function(key)
 {
   keylist <- as.list(key)
   nkeys <- length(keylist)
-  ans <- do.call('.redisCmd',lapply(c(list('DEL'),keylist),charToRaw))
-  tryCatch(
-  {
-    if (ans == 0) warning(paste('No keys were deleted!'))
-    else if(nkeys != ans) {
-      w1 = ifelse(ans==1,'was','were')
-      w2 = ifelse((nkeys-ans)==1,' was',' were')
-      warning(paste(as.character(ans), ' keys ',w1,' deleted, but ',
-                  as.character(nkeys - ans), w2, ' not!', sep=''))
-    }
-  }, error=function(e) NULL) # in case imbedded in redisMulti()
-  ans
+  as.numeric(do.call('.redisCmd',lapply(c(list('DEL'),keylist),charToRaw)))
 }
 
 redisType <- function(key) 

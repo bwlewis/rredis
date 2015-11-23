@@ -8,7 +8,7 @@ if(Sys.getenv("RunRRedisTests") == "yes")
   checkEquals(FALSE, redisExists("foo"))
 
   # delete test
-  checkEquals("0", suppressWarnings(redisDelete("foo")))
+  checkEquals(0, suppressWarnings(redisDelete("foo")))
 
   # empty get test
   checkEquals(TRUE, is.null(redisGet("foo")))

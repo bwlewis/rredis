@@ -16,8 +16,7 @@ The (required) character identifier to be looked up.
 The key must not contain spaces or newline characters (otherwise an error will be thrown).
 }
 \value{
-Nothing is returned if the key/value pair is successfully deleted.
-A warning is thrown if the they key could not be found.
+Integer number of keys successfully deleted.
 }
 \references{
 http://redis.io/commands
