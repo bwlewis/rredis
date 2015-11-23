@@ -14,6 +14,27 @@ if(Sys.getenv("RunRRedisTests") == "yes")
   redisGetResponse()
   checkEquals(pi, redisGet("x"))
 
+  checkEquals("x", redisKeys())
+  checkEquals("x", redisRandomKey())
+
+  redisPexpire("x", 1000)
+  redisPTTL("x")
+  redisPersist("x")
+  
+  redisPexpireAt("x", 1000*(as.numeric(format(Sys.time(), "%s")) + 10))
+  redisPersist("x")
+  redisExpireAt("x", as.numeric(format(Sys.time(), "%s")) + 10)
+  redisTTL("x")
+  redisPersist("x")
+  redisExpire("x", 1)
+
+# Need to trap this as it depends on external Redis configuration and could
+# fail simply due to that
+  tryCatch({
+    redisSet("y", pi)
+    redisMove("y", 1)
+  }, error=invisible)
+
   redisSave()
   redisBgSave()
   redisBgRewriteAOF()

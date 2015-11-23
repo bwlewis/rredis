@@ -14,6 +14,12 @@ if(Sys.getenv("RunRRedisTests") == "yes")
   redisSAdd("B",2)
   checkEquals(2, redisSInter("A","B")[[1]])
 
+  redisSInterStore("C", c("A", "B"))
+  checkEquals(TRUE, all(2 %in% redisSMembers("C")))
+
+  checkEquals(TRUE, redisSIsMember("A", 3))
+  checkEquals(2, redisSRandMember("B"))
+
   checkEquals(TRUE, all(list(1, 2, 3) %in% redisSUnion("A", "B")))
   redisSUnionStore("C", "A", "B")
   checkEquals(TRUE, all(list(1, 2, 3) %in% redisSMembers("C")))
@@ -30,6 +36,10 @@ if(Sys.getenv("RunRRedisTests") == "yes")
 
   redisSPop("A")
   checkEquals("1", redisSCard("A"))
+
+  x <- redisSMembers("A")[[1]]
+  redisSMove("A", "B", x)
+  checkEquals(TRUE, all(x %in% redisSMembers("B")))
 
   redisFlushAll()
 }

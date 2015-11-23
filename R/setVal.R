@@ -59,41 +59,40 @@ redisSDiffStore <- function(dest, keys, ...)
 redisSIsMember <- function(set, element)
 {
   set <- as.character(set)
-  element <- as.character(element)
-  1 == .redisCmd(.raw('SISMEMBER'),.raw(set),.raw(element))
+  1 == .redisCmd(.raw('SISMEMBER'), .raw(set), .raw(element))
 }
 
-redisSRandMember <- function(set,...)
+redisSRandMember <- function(set, ...)
 {
-  .redisCmd(.raw('SRANDMEMBER'),.raw(set),...)
+  .redisCmd(.raw('SRANDMEMBER'), .raw(set),...)
 }
 
 redisSAdd <- function(set, element)
 {
-  .redisCmd(.raw('SADD'),.raw(set),element)
+  .redisCmd(.raw('SADD'), .raw(set), element)
 }
 
-redisSPop <- function(set,...)
+redisSPop <- function(set, ...)
 {
-  .redisCmd(.raw('SPOP'),.raw(set),...)
+  .redisCmd(.raw('SPOP'), .raw(set), ...)
 }
 
-redisSMembers <- function(set,...)
+redisSMembers <- function(set, ...)
 {
-  .redisCmd(.raw('SMEMBERS'),.raw(set),...)
+  .redisCmd(.raw('SMEMBERS'), .raw(set), ...)
 }
 
 redisSRem <- function(set, element)
 {
-  .redisCmd(.raw('SREM'),.raw(set),element)
+  .redisCmd(.raw('SREM'), .raw(set), element)
 }
 
 redisSCard <- function(set)
 {
-  .redisCmd(.raw('SCARD'),.raw(set))
+  .redisCmd(.raw('SCARD'), .raw(set))
 }
 
 redisSMove <- function(setA, setB, element)
 {
-  .redisCmd(.raw('SMOVE'),.raw(setA),.raw(setB),element)
+  .redisCmd(.raw('SMOVE'), .raw(setA), .raw(setB), .raw(element))
 }
