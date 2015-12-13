@@ -110,11 +110,8 @@
 .raw <- function(word) 
 {
   if(is.raw(word)) word
-  tryCatch({
     if(is.character(word) && length(word) == 1) charToRaw(word)
     else .cerealize(word)
-    }, warning=function(w) stop(w),
-           error=function(e) stop(e))
 }
 
 # Expose the basic Redis interface to the user, interpreting single-length
@@ -162,7 +159,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
     f   <- f[-wr]
   }
   n <- length(f) - 1
-  hdr <- paste('*', as.character(n), '\r\n',sep='')
+  hdr <- sprintf('*%d\r\n', n)
   writeBin(.raw(hdr), con)
   tryCatch({
     for(j in seq_len(n)) {
@@ -172,10 +169,8 @@ redisCmd <- function(CMD, ..., raw=FALSE)
         v <- eval(f[[j+1]],envir=sys.frame(-1))
       if(!is.raw(v)) v <- .cerealize(v)
       l <- length(v)
-      hdr <- paste('$', as.character(l), '\r\n', sep='')
-      writeBin(.raw(hdr), con)
-      writeBin(v, con)
-      writeBin(.raw('\r\n'), con)
+      hdr <- sprintf('$%d\r\n', l)
+      writeBin(c(.raw(hdr), v, .raw('\r\n')), con)
     }
   },
     error=function(e) {.redisError("Invalid argument");invisible()},
