@@ -35,8 +35,8 @@
   }
   if(length(fd)>0 && nodelay)
   {
-    Nagle <- .Call("SOCK_NAGLE",fd,1L,PACKAGE="rredis")
-    if(Nagle!=1)
+    Nagle <- vapply(fd, function(j) tryCatch(.Call("SOCK_NAGLE",j,1L,PACKAGE="rredis"), error=function(e) 0L), 1L)
+    if(!(any(Nagle==1)))
     {
       nodelay <- FALSE
       warning("Unable to set nodelay.")
@@ -109,6 +109,7 @@
 #
 .raw <- function(word) 
 {
+  if(is.raw(word)) word
   tryCatch({
     if(is.character(word) && length(word) == 1) charToRaw(word)
     else .cerealize(word)
