@@ -78,7 +78,7 @@ redisShutdown <-
 function()
 {
   .redisCmd(.raw('SHUTDOWN'))
-  remove(list='con',envir=.redisEnv$current)
+  remove(list='con', envir=.redisEnv$current)
 }
 
 
@@ -87,9 +87,9 @@ function(){
   x <- .redisCmd(.raw('INFO'))
   str <- strsplit(x,'\r\n')[[1]]
   
-  splitvec <- regexec('^(.*?):([^#]*)(#.*)?',str)
-  matches <- regmatches(str,splitvec)
-  matches <- Filter(function(x)(length(x) > 0),matches)
+  splitvec <- regexec('^(.*?):([^#]*)(#.*)?', str)
+  matches <- regmatches(str, splitvec)
+  matches <- Filter(function(x)(length(x) > 0), matches)
   keys <- sapply(matches,function(x)x[2])
   vals <- lapply(matches,function(x)x[3])
   names(vals) <- keys
