@@ -34,7 +34,6 @@ cache:
 before_script:
   - mkdir -p "$R_LIBS_USER"
   - Rscript -e 'install.packages(c("devtools", "covr"), repos="https://cran.rstudio.com", dependencies=TRUE)'
-  - Rscript -e 'devtools::install_deps(repos = "https://cran.rstudio.com", dependencies = TRUE)'
 
 script:
   - Rscript -e 'devtools::check(document=FALSE)'
