@@ -33,10 +33,10 @@ cache:
 
 before_script:
   - mkdir -p "$R_LIBS_USER"
-  - Rscript -e 'if (length(find.package("devtools", quiet = TRUE)) == 0L) { install.packages("devtools", repos = "http://cran.rstudio.com") }'
-  - Rscript -e 'devtools::update_packages("devtools", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'devtools::install_deps(repos = "http://cran.rstudio.com", dependencies = TRUE)'
-  - Rscript -e 'devtools::install_github("jimhester/covr")'
+  - Rscript -e 'if (length(find.package("devtools", quiet = TRUE)) == 0L) { install.packages("devtools", repos = "https://cran.rstudio.com") }'
+  - Rscript -e 'devtools::update_packages("devtools", repos = "https://cran.rstudio.com")'
+  - Rscript -e 'devtools::install_deps(repos = "https://cran.rstudio.com", dependencies = TRUE)'
+  - Rscript -e 'install.packages("covr", repos="https://cran.rstudio.com", dependencies=TRUE)'
 
 script:
   - Rscript -e 'devtools::check(document=FALSE)'
