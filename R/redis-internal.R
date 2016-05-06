@@ -70,7 +70,6 @@
 # May stop with an error here on connect fail
   con <- .openConnection(host=env$host,
                          port=env$port, nodelay=env$nodelay, envir=env)
-  if(!is.null(e)) print(as.character(e))
   stop(msg)
 }
 
@@ -100,7 +99,7 @@
     readBin(con, raw(), 5000000L)
     count <- count + 1
   }
-  .redisError("Interrupted communincation with Redis",e)
+  .redisError("Interrupted communincation with Redis", e)
 }
 
 #
@@ -173,7 +172,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
       writeBin(c(.raw(hdr), v, .raw('\r\n')), con)
     }
   },
-    error=function(e) {.redisError("Invalid argument");invisible()},
+    error=function(e) {.redisError("Invalid argument"); invisible()},
     interrupt=function(e) .burn(e)
   )
 
