@@ -62,7 +62,7 @@
 # .redisError may be called by any function when a serious error occurs.
 # It will print an indicated error message, attempt to reset the current
 # Redis server connection, and signal the error.
-.redisError <- function(msg, e=NULL)
+.redisError <- function(msg)
 {
   env <- .redisEnv$current
   con <- .redis()
@@ -70,7 +70,7 @@
 # May stop with an error here on connect fail
   con <- .openConnection(host=env$host,
                          port=env$port, nodelay=env$nodelay, envir=env)
-  stop(msg)
+  stop(as.character(msg))
 }
 
 .redisPP <- function() 
@@ -99,7 +99,7 @@
     readBin(con, raw(), 5000000L)
     count <- count + 1
   }
-  .redisError("Interrupted communincation with Redis", e)
+  .redisError(e)
 }
 
 #
@@ -173,7 +173,7 @@ redisCmd <- function(CMD, ..., raw=FALSE)
     }
   },
     error=function(e) {.redisError("Invalid argument"); invisible()},
-    interrupt=function(e) .burn(e)
+    interrupt=function(e) .burn(e$message)
   )
 
   pipeline <- FALSE
@@ -283,6 +283,6 @@ redisCmd <- function(CMD, ..., raw=FALSE)
          },
        stop('Unknown message type')
     )
-    }, interrupt=function(e) .burn(e)
+    }, interrupt=function(e) .burn(e$message)
   )
 }
