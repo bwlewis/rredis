@@ -13,7 +13,7 @@
 }
 
 .openConnection <- function(host, port, nodelay=FALSE,
-                            timeout=2678399L, envir=rredis:::.redisEnv$current)
+                            timeout=86400L, envir=rredis:::.redisEnv$current)
 {
   stopifnot(is.character(host))
   stopifnot(is.numeric(port))
