@@ -15,7 +15,7 @@ redisKeys(pattern = "*")
 any single character and '*' to match zero or more characters.
 }
 \value{A space-delimited character string containing all keys that match
-the patern in the active Redis database.
+the pattern in the active Redis database.
 }
 \references{
 http://redis.io/commands
