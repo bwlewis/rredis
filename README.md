@@ -1,4 +1,22 @@
-rredis: An R client for Redis
+# *IMPORTANT NOTICE*
+
+The rredis is really old and not really all that well designed.
+I plan to eventually make it defunct. I urge all rredis users
+to switch to the **redux** package, https://github.com/richfitz/redux
+(also on CRAN). The redux package provides a more complete interface
+to Redis, with a much better (consistent, flexible, simpler) internal
+design.
+
+It's easy to convert projects that rely on rredis to use redux. I will
+add some examples of this in the near future.
+
+I'll keep rredis around for a long time until I'm sure most folks that depend
+on it have moved over to redux, so there is no great urgency to switch. But
+redux is better and you should use it!
+
+
+
+# rredis: An R client for Redis
 
 ## Example
 
