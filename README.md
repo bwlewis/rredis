@@ -1,14 +1,12 @@
 # *IMPORTANT NOTICE*
 
-The rredis is really old and not really all that well designed.
-I plan to eventually make it defunct. I urge all rredis users
-to switch to the **redux** package, https://github.com/richfitz/redux
-(also on CRAN). The redux package provides a more complete interface
-to Redis, with a much better (consistent, flexible, simpler) internal
-design.
+The rredis is defunct and I will not continue developing it.  I urge all rredis
+users to switch to the **redux** package, https://github.com/richfitz/redux
+(also on CRAN). The redux package provides a more complete interface to Redis,
+with a much better (consistent, flexible, simpler) internal design.
 
-It's easy to convert projects that rely on rredis to use redux. I will
-add some examples of this in the near future.
+It's easy to convert projects that rely on rredis to use redux. See the
+examples below.
 
 I'll keep rredis around for a long time until I'm sure most folks that depend
 on it have moved over to redux, so there is no great urgency to switch. But
@@ -21,39 +19,53 @@ redux is better and you should use it!
 ## Example
 
 ```R
-> library(rredis)
-> redisConnect()         
-> redisSet('foo', runif(10))
-> bar <- redisGet('foo') 
-> bar
- [1] 0.93499818 0.47159536 0.30597259 0.58325228 0.41589498 0.63914212
- [7] 0.34658694 0.08633471 0.18111369 0.15763507
+library(rredis)
+redisConnect()
+redisSet('foo', runif(10))
+bar <- redisGet('foo')
+bar
+# [1] 0.93499818 0.47159536 0.30597259 0.58325228 0.41589498 0.63914212 0.34658694 0.08633471 0.18111369 0.15763507
 
-> redisMSet(list(x=pi,y='Cazart',z=runif(2)))
-> redisMGet(list('z','y'))
-$z
-[1] 0.1155711 0.7166137
+redisMSet(list(x=pi,y='Cazart',z=runif(2)))
+redisMGet(list('z','y'))
+#$z
+#[1] 0.1155711 0.7166137
+#
+#$y
+#[1] "Cazart"
 
-$y
-[1] "Cazart"
-
-> redisClose()
+redisClose()
 ```
+
 
 ### Use `redisCmd` to run any Redis command
 
-Most Redis commands have corresponding convenience wrappers with online
+This is more or less how the `redux` package works.
+
+Some Redis commands have corresponding convenience wrappers with online
 help in the R package. Use the generic `redisCmd` function to run _any_
 Redis command, even ones not specifically implemented by the package.
 For example:
 
 ```r
-> redisCmd("set","key1","foobar")
-> redisCmd("set","key2","abcdef")
-> redisCmd("bitop", "and", "dest", "key1", "key2")
-  [1] "6"
-> redisCmd("get", "dest")
-  [1] "`bc`ab"
+redisCmd("set","key1","foobar")
+redisCmd("set","key2","abcdef")
+redisCmd("bitop", "and", "dest", "key1", "key2")
+#  [1] "6"
+redisCmd("get", "dest")
+#  [1] "`bc`ab"
+
+# in redux:
+library(redux)
+con <- hiredis()
+con$set("key1", "foobar")
+con$get("key1")
+# [1] "foobar"
+
+# setting/getting a serialized R value in redux
+con$set("key2", serialize(pi, NULL))
+unserialize(con$get("key2"))
+# [1] 3.14159
 ```
 
 ## New in version 1.7.0

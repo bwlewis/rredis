@@ -33,7 +33,7 @@
   {
     fd <- as.integer(setdiff(.Call("OPEN_FD",PACKAGE="rredis"),fds))
   }
-  if(length(fd)>0 && nodelay)
+  if(length(fd) > 0 && nodelay)
   {
     Nagle <- vapply(fd, function(j) tryCatch(.Call("SOCK_NAGLE",j,1L,PACKAGE="rredis"), error=function(e) 0L), 1L)
     if(!(any(Nagle==1)))

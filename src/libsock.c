@@ -88,8 +88,7 @@ SEXP SOCK_NAGLE(SEXP S, SEXP VAL)
   if(val>=0)
   {
     val = (int)(setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (const void *)&val, len) == 0);
-    if(val<0) error("Error setting TCP_NODELAY");
   }
-  if(getsockopt(s, IPPROTO_TCP, TCP_NODELAY, (void *)&val, &len) < 0) error("Error setting TCP_NODELAY");
+  getsockopt(s, IPPROTO_TCP, TCP_NODELAY, (void *)&val, &len);
   return ScalarInteger(val);
 }
