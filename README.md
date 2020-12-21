@@ -12,7 +12,7 @@ I'll keep rredis around for a long time until I'm sure most folks that depend
 on it have moved over to redux, so there is no great urgency to switch. But
 redux is better and you should use it!
 
-
+This package will be removed from CRAN soon, so switch to the redux package please.
 
 # rredis: An R client for Redis
 
