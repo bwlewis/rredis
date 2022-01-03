@@ -11,9 +11,7 @@ redisConnect(host = "localhost", port = 6379, password = NULL,
   \item{port}{The Redis port number (optional, numeric or integer). The default value is 6379L.}
   \item{password}{Redis authentication password.}
   \item{returnRef}{Set \code{returnRef=TRUE} to return the environment that contains the Redis connection state (see details). The default value is FALSE.}
-  \item{nodelay}{Set \code{nodelay=TRUE} to use TCP_NODELAY
-      (that is, to disbable the TCP Nagle algorithm). The default value is
-       \code{TRUE}, see the details below.}
+  \item{nodelay}{No longer used, always TRUE.}
   \item{timeout}{Set the R connection timeout (in seconds).
           Beware that some OSes may treat very large
           values as zero: however the POSIX standard requires values up
@@ -26,13 +24,7 @@ the Redis connection state in an environment.  Then use the \code{redisSetContex
 function to switch environment state and manage multiple open Redis
 connections.
 
-Set \code{nodelay=TRUE} to use the TCP_NODELY socket setting (disabling the TCP
-Nagle flow control algorithm) which can improve performance especially for
-rapid, non-pipelined small-sized transactions. We follow the convention of
-other popular Redis clients like the hiredis C library interface and use
-TCP_NODELAY as the default choice.
-
-Note that Redis pipelining can also increase performance:
+Note that Redis pipelining can increase performance:
 \code{redisSetPipeline(TRUE)} (q.v.).
 
 }

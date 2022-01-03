@@ -1,3 +1,6 @@
+1.7.2:
+- Removed old, now unnecessary, TCP Nagle code. `nodelay` options is now
+  always TRUE.
 1.7.0:
 - We implemented a great suggestion by Simon Urbanek. Values obtained from
   Redis that are *not* serialized R objects are now decorated with an attribute

@@ -20,30 +20,9 @@
   stopifnot(is.logical(nodelay))
   con <- envir$con
   if(!is.null(con)) tryCatch(.closeConnection(con), error=invisible)
-# We track the file descriptor of the new connection in a crude way
-#  fds <- rownames(showConnections(all=TRUE)) # this doesn't work FYI
-  fd = NULL
-  if(nodelay)
-  {
-    fds <- .Call("OPEN_FD",PACKAGE="rredis")
-  }
-  con <- socketConnection(host, port, open="a+b",
+  con <- socketConnection(host, port, open="a+b", options="no-delay",
                           blocking=TRUE, timeout=timeout)
-  if(nodelay)
-  {
-    fd <- as.integer(setdiff(.Call("OPEN_FD",PACKAGE="rredis"),fds))
-  }
-  if(length(fd) > 0 && nodelay)
-  {
-    Nagle <- vapply(fd, function(j) tryCatch(.Call("SOCK_NAGLE",j,1L,PACKAGE="rredis"), error=function(e) 0L), 1L)
-    if(!(any(Nagle==1)))
-    {
-      nodelay <- FALSE
-      warning("Unable to set nodelay.")
-    }
-  }
 # Stash state in the redis enivronment describing this connection:
-  assign('fd',fd,envir=envir)
   assign('con',con,envir=envir)
   assign('host',host,envir=envir)
   assign('port',port,envir=envir)
